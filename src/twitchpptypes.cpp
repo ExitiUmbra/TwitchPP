@@ -1100,3 +1100,41 @@ std::string TwitchPP::TwitchCheermote::to_json() {
     }
     return json + "]}";
 }
+
+TwitchPP::TwitchBlockedTerm::TwitchBlockedTerm(const std::string& json) {
+    this->m_broadcaster_id = TwitchPP::get_object_param("\"broadcaster_id\"", json);
+    this->m_moderator_id = TwitchPP::get_object_param("\"moderator_id\"", json);
+    this->m_id = TwitchPP::get_object_param("\"id\"", json);
+    this->m_text = TwitchPP::get_object_param("\"text\"", json);
+    this->m_created_at = TwitchPP::get_object_param("\"created_at\"", json);
+    this->m_updated_at = TwitchPP::get_object_param("\"updated_at\"", json);
+    this->m_expires_at = TwitchPP::get_object_param("\"expires_at\"", json);
+}
+
+TwitchPP::TwitchBlockedTerm::TwitchBlockedTerm(const std::string& broadcaster_id,
+                                               const std::string& moderator_id,
+                                               const std::string& id,
+                                               const std::string& text,
+                                               const std::string& created_at,
+                                               const std::string& updated_at,
+                                               const std::string& expires_at)
+                                               : m_broadcaster_id{broadcaster_id},
+                                                 m_moderator_id{moderator_id},
+                                                 m_id{id},
+                                                 m_text{text},
+                                                 m_created_at{created_at},
+                                                 m_updated_at{updated_at},
+                                                 m_expires_at{expires_at} {
+}
+
+std::string TwitchPP::TwitchBlockedTerm::to_json() {
+    std::string json = "{\"broadcaster_id\":\"" + this->m_broadcaster_id
+        + "\",\"moderator_id\":\"" + this->m_moderator_id
+        + "\",\"id\":\"" + this->m_id
+        + "\",\"text\":\"" + this->m_text
+        + "\",\"created_at\":\"" + this->m_created_at
+        + "\",\"updated_at\":\"" + this->m_updated_at
+        + "\",\"expires_at\":" + (this->m_expires_at == "null" ? this->m_expires_at : ("\"" + this->m_expires_at + "\""))
+        + "}";
+    return json;
+}

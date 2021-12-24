@@ -26,6 +26,10 @@ namespace TwitchPP {
     constexpr std::string_view MODERATOR_MANAGE_AUTOMOD { "moderator:manage:automod" };
     constexpr std::string_view MODERATOR_MANAGE_CHAT_SETTINGS { "moderator:manage:chat_settings" };
     constexpr std::string_view MODERATOR_READ_CHAT_SETTINGS { "moderator:read:chat_settings" };
+    constexpr std::string_view MODERATOR_READ_AUTOMOD_SETTINGS { "moderator:read:automod_settings" };
+    constexpr std::string_view MODERATOR_MANAGE_AUTOMOD_SETTINGS { "moderator:manage:automod_settings" };
+    constexpr std::string_view MODERATOR_READ_BLOCKED_TERMS { "moderator:read:blocked_terms" };
+    constexpr std::string_view MODERATOR_MANAGE_BLOCKED_TERMS { "moderator:manage:blocked_terms" };
     constexpr std::string_view USER_EDIT { "user:edit" };
     constexpr std::string_view USER_EDIT_FOLLOWS { "user:edit:follows" };
     constexpr std::string_view USER_MANAGE_BLOCKED_USERS { "user:manage:blocked_users" };
@@ -766,6 +770,28 @@ namespace TwitchPP {
                             const std::string& last_updated,
                             const bool& is_charitable,
                             std::vector<TwitchCheermoteTier> tiers);
+            std::string to_json();
+    };
+
+    class TwitchBlockedTerm {
+        protected:
+            std::string m_broadcaster_id {""};
+            std::string m_moderator_id {""};
+            std::string m_id {""};
+            std::string m_text {""};
+            std::string m_created_at {""};
+            std::string m_updated_at {""};
+            std::string m_expires_at {""};
+        public:
+            TwitchBlockedTerm() = default;
+            explicit TwitchBlockedTerm(const std::string& json);
+            TwitchBlockedTerm(const std::string& broadcaster_id,
+                              const std::string& moderator_id,
+                              const std::string& id,
+                              const std::string& text,
+                              const std::string& created_at,
+                              const std::string& updated_at,
+                              const std::string& expires_at);
             std::string to_json();
     };
 }

@@ -13,5 +13,8 @@ namespace TwitchPP {
             VectorResponse<TwitchBasicUser> get_user_block_list(std::string_view broadcaster_id,
                                                                 std::optional<size_t> first = std::nullopt,
                                                                 std::optional<std::string_view> after = std::nullopt);
+            VectorResponse<TwitchBlockedTerm> get_blocked_terms(std::string_view broadcaster_id,
+                                                                std::optional<size_t> first = std::nullopt,
+                                                                std::optional<std::string_view> after = std::nullopt);
     };
 }
