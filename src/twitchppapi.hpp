@@ -52,8 +52,9 @@ namespace TwitchPP {
             VectorResponse<TwitchUser> get_users(std::vector<std::string> game_query,
                                                  bool search_by_login = false);
             VectorResponse<TwitchEmote> get_global_emotes();
-            VectorResponse<TwitchBadgeSet> get_global_chat_badges();
             VectorResponse<TwitchChannelEmote> get_channel_emotes(std::string_view broadcaster_id);
+            VectorResponse<TwitchBadgeSet> get_global_chat_badges();
+            VectorResponse<TwitchBadgeSet> get_channel_chat_badges(std::string_view broadcaster_id);
             VectorResponse<TwitchChannelEmote> get_emote_sets(std::string_view emote_set_id);
             VectorResponse<TwitchChannelEmote> get_emote_sets(std::vector<std::string> emote_set_ids);
             VectorResponse<TwitchChannelInformation> get_channel_information(std::string_view broadcaster_id);
