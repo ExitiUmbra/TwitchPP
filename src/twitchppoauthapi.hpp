@@ -16,5 +16,6 @@ namespace TwitchPP {
             VectorResponse<TwitchBlockedTerm> get_blocked_terms(std::string_view broadcaster_id,
                                                                 std::optional<size_t> first = std::nullopt,
                                                                 std::optional<std::string_view> after = std::nullopt);
+            VectorResponse<TwitchAutoModSettings> get_automod_settings(std::string_view broadcaster_id);
     };
 }

@@ -794,4 +794,34 @@ namespace TwitchPP {
                               const std::string& expires_at);
             std::string to_json();
     };
+
+    class TwitchAutoModSettings {
+        protected:
+            std::string m_broadcaster_id {""};
+            std::string m_moderator_id {""};
+            int m_overall_level {};
+            int m_disability {};
+            int m_aggression {};
+            int m_sexuality_sex_or_gender {};
+            int m_misogyny {};
+            int m_bullying {};
+            int m_swearing {};
+            int m_race_ethnicity_or_religion {};
+            int m_sex_based_terms {};
+        public:
+            TwitchAutoModSettings();
+            explicit TwitchAutoModSettings(const std::string& json);
+            TwitchAutoModSettings(const std::string& broadcaster_id,
+                                  const std::string& moderator_id,
+                                  const int& overall_level,
+                                  const int& disability,
+                                  const int& aggression,
+                                  const int& sexuality_sex_or_gender,
+                                  const int& misogyny,
+                                  const int& bullying,
+                                  const int& swearing,
+                                  const int& race_ethnicity_or_religion,
+                                  const int& sex_based_terms);
+            std::string to_json();
+    };
 }

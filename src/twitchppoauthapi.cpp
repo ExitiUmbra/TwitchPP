@@ -81,4 +81,14 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchBlockedTerm>(response);
     }
+
+    VectorResponse<TwitchAutoModSettings> TwitchOauthAPI::get_automod_settings(std::string_view broadcaster_id) {
+        std::string options {"?moderator_id=" + this->m_moderator_id + "&broadcaster_id=" + std::string(broadcaster_id)};
+        std::string url {TWITCH_API_BASE + "moderation/automod/settings" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchAutoModSettings>(response);
+    }
 }

@@ -1138,3 +1138,58 @@ std::string TwitchPP::TwitchBlockedTerm::to_json() {
         + "}";
     return json;
 }
+
+TwitchPP::TwitchAutoModSettings::TwitchAutoModSettings(const std::string& json) {
+    this->m_broadcaster_id = TwitchPP::get_object_param("\"broadcaster_id\"", json);
+    this->m_moderator_id = TwitchPP::get_object_param("\"moderator_id\"", json);
+    std::string overall {TwitchPP::get_object_param("\"overall_level\"", json)};
+    this->m_overall_level = overall == "null" ? -1 : std::stoi(overall);
+    this->m_disability = std::stoi(TwitchPP::get_object_param("\"disability\"", json));
+    this->m_aggression = std::stoi(TwitchPP::get_object_param("\"aggression\"", json));
+    this->m_sexuality_sex_or_gender = std::stoi(TwitchPP::get_object_param("\"sexuality_sex_or_gender\"", json));
+    this->m_misogyny = std::stoi(TwitchPP::get_object_param("\"misogyny\"", json));
+    this->m_bullying = std::stoi(TwitchPP::get_object_param("\"bullying\"", json));
+    this->m_swearing = std::stoi(TwitchPP::get_object_param("\"swearing\"", json));
+    this->m_race_ethnicity_or_religion = std::stoi(TwitchPP::get_object_param("\"race_ethnicity_or_religion\"", json));
+    this->m_sex_based_terms = std::stoi(TwitchPP::get_object_param("\"sex_based_terms\"", json));
+}
+
+TwitchPP::TwitchAutoModSettings::TwitchAutoModSettings(const std::string& broadcaster_id,
+                                                       const std::string& moderator_id,
+                                                       const int& overall_level,
+                                                       const int& disability,
+                                                       const int& aggression,
+                                                       const int& sexuality_sex_or_gender,
+                                                       const int& misogyny,
+                                                       const int& bullying,
+                                                       const int& swearing,
+                                                       const int& race_ethnicity_or_religion,
+                                                       const int& sex_based_terms)
+                                                       : m_broadcaster_id{broadcaster_id},
+                                                         m_moderator_id{moderator_id},
+                                                         m_overall_level{overall_level},
+                                                         m_disability{disability},
+                                                         m_aggression{aggression},
+                                                         m_sexuality_sex_or_gender{sexuality_sex_or_gender},
+                                                         m_misogyny{misogyny},
+                                                         m_bullying{bullying},
+                                                         m_swearing{swearing},
+                                                         m_race_ethnicity_or_religion{race_ethnicity_or_religion},
+                                                         m_sex_based_terms{sex_based_terms} {
+}
+
+std::string TwitchPP::TwitchAutoModSettings::to_json() {
+    std::string json = "{\"broadcaster_id\":\"" + this->m_broadcaster_id
+        + "\",\"moderator_id\":\"" + this->m_moderator_id
+        + "\",\"overall_level\":" + (this->m_overall_level > -1 ? std::to_string(this->m_overall_level) : "null")
+        + ",\"disability\":" + std::to_string(this->m_disability)
+        + ",\"aggression\":" + std::to_string(this->m_aggression)
+        + ",\"sexuality_sex_or_gender\":" + std::to_string(this->m_sexuality_sex_or_gender)
+        + ",\"misogyny\":" + std::to_string(this->m_misogyny)
+        + ",\"bullying\":" + std::to_string(this->m_bullying)
+        + ",\"swearing\":" + std::to_string(this->m_swearing)
+        + ",\"race_ethnicity_or_religion\":" + std::to_string(this->m_race_ethnicity_or_religion)
+        + ",\"sex_based_terms\":" + std::to_string(this->m_sex_based_terms)
+        + "}";
+    return json;
+}
