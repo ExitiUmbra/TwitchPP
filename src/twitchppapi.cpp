@@ -417,4 +417,10 @@ namespace TwitchPP {
         return this->process_response<TwitchBadgeSet>(response);
     }
 
+    Response<std::string> TwitchAPI::get_channel_icalendar(std::string_view broadcaster_id) {
+        std::string url {TWITCH_API_BASE + "schedule/icalendar?broadcaster_id=" + std::string(broadcaster_id)};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        return response;
+    }
+
 }
