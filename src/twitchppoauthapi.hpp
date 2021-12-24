@@ -10,5 +10,8 @@ namespace TwitchPP {
             VectorResponse<TwitchModeratorChatSettings> get_chat_settings(std::string_view broadcaster_id, bool chat_delay);
             VectorResponse<TwitchModeratorChatSettings> update_chat_settings(TwitchModeratorChatSettings& settings);
             VectorResponse<TwitchModeratorChatSettings> update_chat_settings(std::string_view broadcaster_id, std::string_view settings);
+            VectorResponse<TwitchBasicUser> get_user_block_list(std::string_view broadcaster_id,
+                                                                std::optional<size_t> first = std::nullopt,
+                                                                std::optional<std::string_view> after = std::nullopt);
     };
 }

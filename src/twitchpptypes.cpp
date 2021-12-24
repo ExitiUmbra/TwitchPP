@@ -110,6 +110,9 @@ TwitchPP::TwitchBasicUser::TwitchBasicUser(const std::string& json) {
     this->m_user_id = get_object_param("\"user_id\"", json);
     this->m_user_name = get_object_param("\"user_name\"", json);
     this->m_user_login = get_object_param("\"user_login\"", json);
+    if (this->m_user_name == "") {
+        this->m_user_name = get_object_param("\"display_name\"", json);
+    }
 }
 
 TwitchPP::TwitchBasicUser::TwitchBasicUser(const std::string& user_id, const std::string& user_name, const std::string& user_login)
@@ -904,7 +907,7 @@ std::string TwitchPP::TwitchBadgeVersion::to_json() {
     std::string json = "{\"id\":\"" + this->m_id
         + "\",\"image_url_1x\":\"" + this->m_image_url_1x
         + "\",\"image_url_2x\":\"" + this->m_image_url_2x
-        + "\",\"image_url_4x\":\"" + this->m_image_url_4x 
+        + "\",\"image_url_4x\":\"" + this->m_image_url_4x
         + "\"}";
     return json;
 }
@@ -961,8 +964,8 @@ std::string TwitchPP::TwitchImageUrls::to_json() {
     std::string json = (this->m_1 != "" ? "{\"1\":\"" + this->m_1
         + "\",\"1.5\":\"" + this->m_15
         + "\",\"2\":\"" + this->m_2
-        + "\",\"3\":\"" + this->m_3 
-        + "\",\"4\":\"" + this->m_4 
+        + "\",\"3\":\"" + this->m_3
+        + "\",\"4\":\"" + this->m_4
         + "\"}" : "");
     return json;
 }

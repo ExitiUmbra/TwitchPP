@@ -45,4 +45,22 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchModeratorChatSettings>(response);
     }
+
+    VectorResponse<TwitchBasicUser> TwitchOauthAPI::get_user_block_list(std::string_view broadcaster_id,
+                                                                        std::optional<size_t> first,
+                                                                        std::optional<std::string_view> after) {
+        std::string options {"?moderator_id=" + this->m_moderator_id + "&broadcaster_id=" + std::string(broadcaster_id)};
+        if (first) {
+            options += "&first=" + std::to_string(first.value());
+        }
+        if (after) {
+            options += "&after=" + std::string(after.value());
+        }
+        std::string url {TWITCH_API_BASE + "users/blocks" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchBasicUser>(response);
+    }
 }
