@@ -882,3 +882,57 @@ std::string TwitchPP::TwitchTeam::to_json() {
     }
     return json + "]}";
 }
+
+TwitchPP::TwitchBadgeVersion::TwitchBadgeVersion(const std::string& json) {
+    this->m_id = TwitchPP::get_object_param("\"id\"", json);
+    this->m_image_url_1x = TwitchPP::get_object_param("\"image_url_1x\"", json);
+    this->m_image_url_2x = TwitchPP::get_object_param("\"image_url_2x\"", json);
+    this->m_image_url_4x = TwitchPP::get_object_param("\"image_url_4x\"", json);
+}
+
+TwitchPP::TwitchBadgeVersion::TwitchBadgeVersion(const std::string& id,
+                                                 const std::string& image_url_1x,
+                                                 const std::string& image_url_2x,
+                                                 const std::string& image_url_4x)
+                                                 : m_id{id},
+                                                   m_image_url_1x{image_url_1x},
+                                                   m_image_url_2x{image_url_2x},
+                                                   m_image_url_4x{image_url_4x} {
+}
+
+std::string TwitchPP::TwitchBadgeVersion::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"image_url_1x\":\"" + this->m_image_url_1x
+        + "\",\"image_url_2x\":\"" + this->m_image_url_2x
+        + "\",\"image_url_4x\":\"" + this->m_image_url_4x 
+        + "\"}";
+    return json;
+}
+
+TwitchPP::TwitchBadgeSet::TwitchBadgeSet(const std::string& json) {
+    this->m_set_id = TwitchPP::get_object_param("\"set_id\"", json);
+    std::string string_with_versions = TwitchPP::get_object_param("\"versions\"", json);
+    std::vector<std::string> str_versions = TwitchPP::json_to_vector(string_with_versions);
+    for (std::string version : str_versions) {
+        this->m_versions.push_back(TwitchPP::TwitchBadgeVersion(version));
+    }
+}
+
+TwitchPP::TwitchBadgeSet::TwitchBadgeSet(const std::string& set_id,
+                                         std::vector<TwitchBadgeVersion> versions)
+                                         : m_set_id{set_id},
+                                           m_versions{versions} {
+}
+
+std::string TwitchPP::TwitchBadgeSet::to_json() {
+    std::string json = "{\"set_id\":\"" + this->m_set_id
+        + "\",\"versions\":[";
+    for (size_t i {0}; i < this->m_versions.size(); ++i) {
+        json += this->m_versions.at(i).to_json();
+        if (i + 1 < this->m_versions.size()) {
+            json += ',';
+        }
+    }
+    json += "]}";
+    return json;
+}

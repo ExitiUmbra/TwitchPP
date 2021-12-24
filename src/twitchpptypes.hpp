@@ -661,4 +661,30 @@ namespace TwitchPP {
                        std::vector<TwitchBasicUser> users);
             std::string to_json();
     };
+
+    class TwitchBadgeVersion {
+        protected:
+            std::string m_id {""};
+            std::string m_image_url_1x {""};
+            std::string m_image_url_2x {""};
+            std::string m_image_url_4x {""};
+        public:
+            explicit TwitchBadgeVersion(const std::string& json);
+            TwitchBadgeVersion(const std::string& id,
+                               const std::string& image_url_1x,
+                               const std::string& image_url_2x,
+                               const std::string& image_url_4x);
+            std::string to_json();
+    };
+
+    class TwitchBadgeSet {
+        protected:
+            std::string m_set_id {""};
+            std::vector<TwitchBadgeVersion> m_versions {};
+        public:
+            explicit TwitchBadgeSet(const std::string& json);
+            TwitchBadgeSet(const std::string& set_id,
+                           std::vector<TwitchBadgeVersion> versions);
+            std::string to_json();
+    };
 }

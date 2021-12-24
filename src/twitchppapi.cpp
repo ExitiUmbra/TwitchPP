@@ -399,4 +399,13 @@ namespace TwitchPP {
         return this->process_response<TwitchTeam>(response);
     }
 
+    VectorResponse<TwitchBadgeSet> TwitchAPI::get_global_chat_badges() {
+        std::string url {TWITCH_API_BASE + "chat/badges/global"};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchBadgeSet>(response);
+    }
+
 }
