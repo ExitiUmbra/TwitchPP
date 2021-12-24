@@ -1,7 +1,6 @@
 #include <curl/curl.h>
 #include <string>
 #include <string_view>
-#include <span>
 #include <iostream>
 #include <vector>
 #include <optional>
@@ -29,7 +28,7 @@ namespace TwitchPP {
                                    std::string_view client_id,
                                    std::optional<std::string_view> request_type = std::nullopt,
                                    std::optional<std::string> request_body = std::nullopt);
-    std::string generate_oauth_url(std::string_view client_id, std::string_view redirect_url, std::span<std::string_view> scope);
+    std::string generate_oauth_url(std::string_view client_id, std::string_view redirect_url, std::vector<std::string_view> scope);
     std::pair<std::string, std::string> get_first_value(std::string initial_string);
     std::string get_object_param(std::string_view param_name, std::string_view obj_string, size_t tmp_first_pos=0, size_t tmp_second_pos=std::string::npos);
     std::string replace_string(std::string subject, std::string_view search, std::string_view replace);

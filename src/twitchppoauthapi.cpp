@@ -21,7 +21,7 @@ namespace TwitchPP {
         }
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
         if (response.data == "") {
-            return {.data={}, .cursor="", .code=response.code, .message="Bad request"};
+            return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchModeratorChatSettings>(response);
     }
@@ -32,7 +32,7 @@ namespace TwitchPP {
             + "&moderator_id=" + this->m_moderator_id};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PATCH, settings.to_request());
         if (response.data == "") {
-            return {.data={}, .cursor="", .code=response.code, .message="Bad request"};
+            return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchModeratorChatSettings>(response);
     }
@@ -41,7 +41,7 @@ namespace TwitchPP {
         std::string url {TWITCH_API_BASE + "chat/settings?broadcaster_id=" + std::string(broadcaster_id) + "&moderator_id=" + this->m_moderator_id};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PATCH, settings.data());
         if (response.data == "") {
-            return {.data={}, .cursor="", .code=response.code, .message="Bad request"};
+            return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchModeratorChatSettings>(response);
     }

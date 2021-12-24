@@ -34,14 +34,14 @@ TwitchPP::Response<std::string> TwitchPP::call_api(std::string_view url,
 
         if (res != CURLE_OK) {
             std::cout << "Error: " << curl_easy_strerror(res) << std::endl;
-            return {.data="", .cursor="", .code=response_code, .message=""};
+            return {"", "", response_code, ""};
         }
 
         curl_slist_free_all(chunk);
         curl_easy_cleanup(curl);
     }
     curl_global_cleanup();
-    return {.data=result, .cursor="", .code=response_code, .message=""};
+    return {result, "", response_code, ""};
 }
 
 size_t TwitchPP::resp_size_cb(char *ptr, size_t size, size_t nmemb, void *stream) {
@@ -49,7 +49,7 @@ size_t TwitchPP::resp_size_cb(char *ptr, size_t size, size_t nmemb, void *stream
     return size * nmemb;
 }
 
-std::string TwitchPP::generate_oauth_url(std::string_view client_id, std::string_view redirect_url, std::span<std::string_view> scope) {
+std::string TwitchPP::generate_oauth_url(std::string_view client_id, std::string_view redirect_url, std::vector<std::string_view> scope) {
     std::string url {"https://id.twitch.tv/oauth2/authorize?client_id="};
     url.append(client_id.data()).append("&redirect_uri=").append(redirect_url.data()).append("&response_type=token&scope=");
     for (size_t i {0}; i < scope.size(); i++) {
@@ -178,7 +178,7 @@ std::vector<TwitchPP::VideoSegment> TwitchPP::json_to_segment_vector(std::string
     for (size_t start_pos {elements.find("{", 0)}; start_pos < std::string::npos; start_pos = elements.find("\"", start_pos)) {
         end_pos = elements.find("}", start_pos + 1);
         std::string_view obj = elements.substr(start_pos + 1, end_pos - start_pos - 1);
-        result.push_back(TwitchPP::VideoSegment{.duration=std::stoul(TwitchPP::get_object_param("\"duration\"", obj)), .offset=std::stoul(TwitchPP::get_object_param("\"offset\"", obj))});
+        result.push_back(TwitchPP::VideoSegment{std::stoul(TwitchPP::get_object_param("\"duration\"", obj)), std::stoul(TwitchPP::get_object_param("\"offset\"", obj))});
         start_pos = end_pos + 1;
     }
     return result;

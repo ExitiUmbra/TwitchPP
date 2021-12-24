@@ -22,7 +22,7 @@ namespace TwitchPP {
                     }
                 } while(cycle.second != "");
 
-                return {.data=elements, .cursor=cursor, .code=response.code, .message=message};
+                return {elements, cursor, response.code, message};
             }
             template<typename T>
             VectorResponse<T> process_single_response(Response<std::string>& response) {
@@ -31,7 +31,7 @@ namespace TwitchPP {
                 std::string cursor = get_object_param("\"cursor\"", cursor_string);
                 std::string message = !data_string.size() ? get_object_param("\"message\"", response.data) : "";
 
-                return {.data={T(data_string)}, .cursor=cursor, .code=response.code, .message=message};
+                return {{T(data_string)}, cursor, response.code, message};
             }
             template<typename T>
             VectorResponse<T> process_response(Response<std::string>& response, std::string_view additional_field);
