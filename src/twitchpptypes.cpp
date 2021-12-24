@@ -936,3 +936,164 @@ std::string TwitchPP::TwitchBadgeSet::to_json() {
     json += "]}";
     return json;
 }
+
+TwitchPP::TwitchImageUrls::TwitchImageUrls(const std::string& json) {
+    this->m_1 = TwitchPP::get_object_param("\"1\"", json);
+    this->m_15 = TwitchPP::get_object_param("\"1.5\"", json);
+    this->m_2 = TwitchPP::get_object_param("\"2\"", json);
+    this->m_3 = TwitchPP::get_object_param("\"3\"", json);
+    this->m_4 = TwitchPP::get_object_param("\"4\"", json);
+}
+
+TwitchPP::TwitchImageUrls::TwitchImageUrls(const std::string& url_1,
+                                           const std::string& url_15,
+                                           const std::string& url_2,
+                                           const std::string& url_3,
+                                           const std::string& url_4)
+                                           : m_1{url_1},
+                                             m_15{url_15},
+                                             m_2{url_2},
+                                             m_3{url_3},
+                                             m_4{url_4} {
+}
+
+std::string TwitchPP::TwitchImageUrls::to_json() {
+    std::string json = (this->m_1 != "" ? "{\"1\":\"" + this->m_1
+        + "\",\"1.5\":\"" + this->m_15
+        + "\",\"2\":\"" + this->m_2
+        + "\",\"3\":\"" + this->m_3 
+        + "\",\"4\":\"" + this->m_4 
+        + "\"}" : "");
+    return json;
+}
+
+TwitchPP::TwitchImageTypes::TwitchImageTypes(const std::string& json) {
+    std::string animated_str = TwitchPP::get_object_param("\"animated\"", json);
+    std::string static_str = TwitchPP::get_object_param("\"static\"", json);
+    this->m_animated = (animated_str == "" ? nullptr : std::make_shared<TwitchImageUrls>(animated_str));
+    this->m_static = (static_str == "" ? nullptr : std::make_shared<TwitchImageUrls>(static_str));
+}
+
+TwitchPP::TwitchImageTypes::TwitchImageTypes(TwitchImageUrls& animated,
+                                             TwitchImageUrls& img_static)
+                                             : m_animated{&animated},
+                                               m_static{&img_static} {
+}
+
+std::string TwitchPP::TwitchImageTypes::to_json() {
+    std::string json {"{"};
+    if (this->m_animated) {
+        json += "\"animated\":" + this->m_animated->to_json();
+    }
+    if (this->m_static) {
+        if (this->m_animated) {
+            json += ",";
+        }
+        json += "\"static\":" + this->m_static->to_json();
+    }
+    return json + "}";
+}
+
+TwitchPP::TwitchImageThemes::TwitchImageThemes(const std::string& json) {
+    std::string dark_str = TwitchPP::get_object_param("\"dark\"", json);
+    std::string light_str = TwitchPP::get_object_param("\"light\"", json);
+    this->m_dark = (dark_str == "" ? nullptr : std::make_shared<TwitchImageTypes>(dark_str));
+    this->m_light = (light_str == "" ? nullptr : std::make_shared<TwitchImageTypes>(light_str));
+}
+
+TwitchPP::TwitchImageThemes::TwitchImageThemes(TwitchImageTypes& dark,
+                                               TwitchImageTypes& light)
+                                               : m_dark{&dark},
+                                                 m_light{&light} {
+}
+
+std::string TwitchPP::TwitchImageThemes::to_json() {
+    std::string json {"{"};
+    if (this->m_dark) {
+        json += "\"dark\":" + this->m_dark->to_json();
+    }
+    if (this->m_light) {
+        if (this->m_dark) {
+            json += ",";
+        }
+        json += "\"light\":" + this->m_light->to_json();
+    }
+    return json + "}";
+}
+
+TwitchPP::TwitchCheermoteTier::TwitchCheermoteTier(const std::string& json) {
+    this->m_id = TwitchPP::get_object_param("\"id\"", json);
+    this->m_min_bits = std::stoul(TwitchPP::get_object_param("\"min_bits\"", json));
+    this->m_color = TwitchPP::get_object_param("\"color\"", json);
+    this->m_can_cheer = TwitchPP::get_object_param("\"can_cheer\"", json) == "true";
+    this->m_show_in_bits_card = TwitchPP::get_object_param("\"show_in_bits_card\"", json) == "true";
+    this->m_images = TwitchImageThemes(TwitchPP::get_object_param("\"images\"", json));
+}
+
+TwitchPP::TwitchCheermoteTier::TwitchCheermoteTier(const std::string& id,
+                                                   const size_t& min_bits,
+                                                   const std::string& color,
+                                                   const bool& can_cheer,
+                                                   const bool& show_in_bits_card,
+                                                   TwitchImageThemes& images)
+                                                   : m_id{id},
+                                                     m_min_bits{min_bits},
+                                                     m_color{color},
+                                                     m_can_cheer{can_cheer},
+                                                     m_show_in_bits_card{show_in_bits_card},
+                                                     m_images{images} {
+}
+
+std::string TwitchPP::TwitchCheermoteTier::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"min_bits\":" + std::to_string(this->m_min_bits)
+        + ",\"color\":\"" + this->m_color
+        + "\",\"can_cheer\":" + (this->m_can_cheer ? "true" : "false")
+        + ",\"show_in_bits_card\":" + (this->m_show_in_bits_card ? "true" : "false")
+        + ",\"images\":" + this->m_images.to_json()
+        + "}";
+    return json;
+}
+
+TwitchPP::TwitchCheermote::TwitchCheermote(const std::string& json) {
+    this->m_prefix = TwitchPP::get_object_param("\"prefix\"", json);
+    this->m_type = TwitchPP::get_object_param("\"type\"", json);
+    this->m_order = std::stoul(TwitchPP::get_object_param("\"order\"", json));
+    this->m_last_updated = TwitchPP::get_object_param("\"last_updated\"", json);
+    this->m_is_charitable = TwitchPP::get_object_param("\"is_charitable\"", json) == "true";
+    std::string string_with_tiers = TwitchPP::get_object_param("\"tiers\"", json);
+    std::vector<std::string> str_tiers = TwitchPP::json_to_vector(string_with_tiers);
+    for (std::string tier : str_tiers) {
+        this->m_tiers.push_back(TwitchPP::TwitchCheermoteTier(tier));
+    }
+}
+
+TwitchPP::TwitchCheermote::TwitchCheermote(const std::string& prefix,
+                                           const std::string& type,
+                                           const size_t& order,
+                                           const std::string& last_updated,
+                                           const bool& is_charitable,
+                                           std::vector<TwitchCheermoteTier> tiers)
+                                           : m_prefix{prefix},
+                                             m_type{type},
+                                             m_order{order},
+                                             m_last_updated{last_updated},
+                                             m_is_charitable{is_charitable},
+                                             m_tiers{tiers} {
+}
+
+std::string TwitchPP::TwitchCheermote::to_json() {
+    std::string json = "{\"prefix\":\"" + this->m_prefix
+        + "\",\"type\":\"" + this->m_type
+        + "\",\"order\":" + std::to_string(this->m_order)
+        + ",\"last_updated\":\"" + this->m_last_updated
+        + "\",\"is_charitable\":" + (this->m_is_charitable ? "true" : "false")
+        + ",\"tiers\":[";
+    for (size_t i {0}; i < this->m_tiers.size(); ++i) {
+        json += this->m_tiers.at(i).to_json();
+        if (i + 1 < this->m_tiers.size()) {
+            json += ',';
+        }
+    }
+    return json + "]}";
+}

@@ -423,4 +423,17 @@ namespace TwitchPP {
         return response;
     }
 
+    VectorResponse<TwitchCheermote> TwitchAPI::get_cheermotes(std::optional<std::string_view> broadcaster_id) {
+        std::string options {""};
+        if (broadcaster_id) {
+            options += "?broadcaster_id=" + std::string(broadcaster_id.value());
+        }
+        std::string url {TWITCH_API_BASE + "bits/cheermotes" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchCheermote>(response);
+    }
+
 }

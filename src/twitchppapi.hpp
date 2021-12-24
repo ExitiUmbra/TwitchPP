@@ -78,5 +78,6 @@ namespace TwitchPP {
             VectorResponse<TwitchTeam> get_teams(std::vector<std::string> team_query,
                                                  bool search_by_name = false);
             Response<std::string> get_channel_icalendar(std::string_view broadcaster_id);
+            VectorResponse<TwitchCheermote> get_cheermotes(std::optional<std::string_view> broadcaster_id = std::nullopt);
     };
 }

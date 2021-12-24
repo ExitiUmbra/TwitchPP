@@ -687,4 +687,85 @@ namespace TwitchPP {
                            std::vector<TwitchBadgeVersion> versions);
             std::string to_json();
     };
+
+    class TwitchImageUrls {
+        protected:
+            std::string m_1 {""};
+            std::string m_15 {""};
+            std::string m_2 {""};
+            std::string m_3 {""};
+            std::string m_4 {""};
+        public:
+            TwitchImageUrls() = default;
+            explicit TwitchImageUrls(const std::string& json);
+            TwitchImageUrls(const std::string& url_1,
+                            const std::string& url_15,
+                            const std::string& url_2,
+                            const std::string& url_3,
+                            const std::string& url_4);
+            std::string to_json();
+    };
+
+    class TwitchImageTypes {
+        protected:
+            std::shared_ptr<TwitchImageUrls> m_animated = nullptr;
+            std::shared_ptr<TwitchImageUrls> m_static = nullptr;
+        public:
+            TwitchImageTypes() = default;
+            explicit TwitchImageTypes(const std::string& json);
+            TwitchImageTypes(TwitchImageUrls& animated,
+                             TwitchImageUrls& img_static);
+            std::string to_json();
+    };
+
+    class TwitchImageThemes {
+        protected:
+            std::shared_ptr<TwitchImageTypes> m_dark = nullptr;
+            std::shared_ptr<TwitchImageTypes> m_light = nullptr;
+        public:
+            TwitchImageThemes() = default;
+            explicit TwitchImageThemes(const std::string& json);
+            TwitchImageThemes(TwitchImageTypes& dark,
+                              TwitchImageTypes& light);
+            std::string to_json();
+    };
+
+    class TwitchCheermoteTier {
+        protected:
+            std::string m_id {""};
+            size_t m_min_bits {};
+            std::string m_color {""};
+            bool m_can_cheer {};
+            bool m_show_in_bits_card {};
+            TwitchImageThemes m_images {};
+        public:
+            TwitchCheermoteTier() = default;
+            explicit TwitchCheermoteTier(const std::string& json);
+            TwitchCheermoteTier(const std::string& id,
+                                const size_t& min_bits,
+                                const std::string& color,
+                                const bool& can_cheer,
+                                const bool& show_in_bits_card,
+                                TwitchImageThemes& images);
+            std::string to_json();
+    };
+
+    class TwitchCheermote {
+        protected:
+            std::string m_prefix {""};
+            std::string m_type {""};
+            size_t m_order {};
+            std::string m_last_updated {""};
+            bool m_is_charitable {};
+            std::vector<TwitchCheermoteTier> m_tiers {};
+        public:
+            explicit TwitchCheermote(const std::string& json);
+            TwitchCheermote(const std::string& prefix,
+                            const std::string& type,
+                            const size_t& order,
+                            const std::string& last_updated,
+                            const bool& is_charitable,
+                            std::vector<TwitchCheermoteTier> tiers);
+            std::string to_json();
+    };
 }
