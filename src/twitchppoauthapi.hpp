@@ -18,5 +18,8 @@ namespace TwitchPP {
                                                                 std::optional<std::string_view> after = std::nullopt);
             VectorResponse<TwitchAutoModSettings> get_automod_settings(std::string_view broadcaster_id);
             Response<std::string> unblock_user(std::string_view target_user_id);
+            Response<std::string> block_user(std::string_view target_user_id,
+                                             std::optional<std::string_view> source_context = std::nullopt,
+                                             std::optional<std::string_view> reason = std::nullopt);
     };
 }

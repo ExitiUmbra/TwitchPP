@@ -98,4 +98,19 @@ namespace TwitchPP {
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
         return response;
     }
+
+    Response<std::string> TwitchOauthAPI::block_user(std::string_view target_user_id,
+                                                     std::optional<std::string_view> source_context,
+                                                     std::optional<std::string_view> reason) {
+        std::string options {"?target_user_id=" + std::string(target_user_id)};
+        if (source_context) {
+            options += "&source_context=" + std::string(source_context.value());
+        }
+        if (reason) {
+            options += "&reason=" + std::string(reason.value());
+        }
+        std::string url {TWITCH_API_BASE + "users/blocks" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PUT");
+        return response;
+    }
 }
