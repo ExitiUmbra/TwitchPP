@@ -91,4 +91,11 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchAutoModSettings>(response);
     }
+
+    Response<std::string> TwitchOauthAPI::unblock_user(std::string_view target_user_id) {
+        std::string options {"?target_user_id=" + std::string(target_user_id)};
+        std::string url {TWITCH_API_BASE + "users/blocks" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
+        return response;
+    }
 }
