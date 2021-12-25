@@ -179,7 +179,7 @@ namespace TwitchPP {
     };
 
     class TwitchBasicUser {
-        private:
+        protected:
             std::string m_user_id {""};
             std::string m_user_name {""};
             std::string m_user_login {""};
@@ -188,6 +188,26 @@ namespace TwitchPP {
             TwitchBasicUser(const std::string& user_id,
                             const std::string& user_name,
                             const std::string& user_login);
+            std::string to_json();
+    };
+
+    class TwitchBannedUser : TwitchBasicUser {
+        protected:
+            std::string m_moderator_id {""};
+            std::string m_moderator_login {""};
+            std::string m_moderator_name {""};
+            std::string m_expires_at {""};
+            std::string m_reason {""};
+        public:
+            explicit TwitchBannedUser(const std::string& json);
+            TwitchBannedUser(const std::string& user_id,
+                             const std::string& user_name,
+                             const std::string& user_login,
+                             const std::string& moderator_id,
+                             const std::string& moderator_login,
+                             const std::string& moderator_name,
+                             const std::string& expires_at,
+                             const std::string& reason);
             std::string to_json();
     };
 

@@ -31,5 +31,12 @@ namespace TwitchPP {
                                                            std::vector<std::string> user_ids = {},
                                                            std::optional<size_t> first = std::nullopt,
                                                            std::optional<std::string> after = std::nullopt);
+            VectorResponse<TwitchBannedUser> get_banned_users(std::string_view broadcaster_id,
+                                                              std::vector<std::string> user_ids = {},
+                                                              std::optional<size_t> first = std::nullopt);
+            VectorResponse<TwitchBannedUser> get_banned_users(std::string_view broadcaster_id,
+                                                              const bool& is_after,
+                                                              std::optional<size_t> first = std::nullopt,
+                                                              std::optional<std::string> cursor = std::nullopt);
     };
 }

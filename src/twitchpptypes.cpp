@@ -127,6 +127,43 @@ std::string TwitchPP::TwitchBasicUser::to_json() {
     return json;
 }
 
+TwitchPP::TwitchBannedUser::TwitchBannedUser(const std::string& json) : TwitchPP::TwitchBasicUser{json} {
+    this->m_moderator_id = get_object_param("\"moderator_id\"", json);
+    this->m_moderator_login = get_object_param("\"moderator_login\"", json);
+    this->m_moderator_name = get_object_param("\"moderator_name\"", json);
+    this->m_expires_at = get_object_param("\"expires_at\"", json);
+    this->m_reason = get_object_param("\"reason\"", json);
+}
+
+TwitchPP::TwitchBannedUser::TwitchBannedUser(const std::string& user_id,
+                                             const std::string& user_name,
+                                             const std::string& user_login,
+                                             const std::string& moderator_id,
+                                             const std::string& moderator_login,
+                                             const std::string& moderator_name,
+                                             const std::string& expires_at,
+                                             const std::string& reason)
+                                             : TwitchPP::TwitchBasicUser{user_id, user_name, user_login},
+                                               m_moderator_id{moderator_id},
+                                               m_moderator_login{moderator_login},
+                                               m_moderator_name{moderator_name},
+                                               m_expires_at{expires_at},
+                                               m_reason{reason} {
+}
+
+std::string TwitchPP::TwitchBannedUser::to_json() {
+    std::string json = "{\"user_id\":\"" + this->m_user_id
+        + "\",\"user_name\":\"" + this->m_user_name
+        + "\",\"user_login\":\"" + this->m_user_login
+        + "\",\"moderator_id\":\"" + this->m_moderator_id
+        + "\",\"moderator_login\":\"" + this->m_moderator_login
+        + "\",\"moderator_name\":\"" + this->m_moderator_name
+        + "\",\"expires_at\":\"" + this->m_expires_at
+        + "\",\"reason\":\"" + this->m_reason
+        + "\"}";
+    return json;
+}
+
 TwitchPP::DatetimePeriod::DatetimePeriod(const std::string& json) {
     this->m_start_time = get_object_param("\"start_time\"", json);
     this->m_end_time = get_object_param("\"end_time\"", json);
