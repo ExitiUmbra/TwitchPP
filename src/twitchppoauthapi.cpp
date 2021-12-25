@@ -142,4 +142,12 @@ namespace TwitchPP {
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PUT");
         return response;
     }
+
+    Response<std::string> TwitchOauthAPI::get_stream_key(std::string_view broadcaster_id) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        std::string url {TWITCH_API_BASE + "streams/key" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        response.data = get_object_param("\"stream_key\"", response.data);
+        return response;
+    }
 }
