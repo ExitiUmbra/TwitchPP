@@ -209,4 +209,22 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchBannedUser>(response);
     }
+
+    VectorResponse<TwitchStream> TwitchOauthAPI::get_followed_streams(std::string_view user_id,
+                                                                      std::optional<size_t> first,
+                                                                      std::optional<std::string> after) {
+        std::string options {"?user_id=" + std::string(user_id)};
+        if (first) {
+            options += "&first=" + std::to_string(first.value());
+        }
+        if (after) {
+            options += "&after=" + after.value();
+        }
+        std::string url {TWITCH_API_BASE + "streams/followed" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchStream>(response);
+    }
 }

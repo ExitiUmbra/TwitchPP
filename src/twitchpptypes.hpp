@@ -450,7 +450,7 @@ namespace TwitchPP {
                          const std::string& thumbnail_url,
                          std::vector<std::string>& tag_ids,
                          const size_t& viewer_count,
-                         const bool& is_mature);
+                         const bool& is_mature = false);
             std::string to_json();
     };
 
