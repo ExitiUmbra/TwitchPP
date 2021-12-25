@@ -85,7 +85,7 @@ std::string TwitchPP::get_object_param(std::string_view param_name, std::string_
                     return "";
                 } else if (obj_string[tmp_second_pos - 1] == '\\') {
                     tmp_first_pos = tmp_second_pos + 1;
-                } else if(checkpoint != std::string::npos && checkpoint < tmp_second_pos) {
+                } else if(checkpoint != std::string::npos && checkpoint < tmp_second_pos && obj_string[checkpoint - 1] != '\\') {
                     tmp_first_pos = tmp_second_pos + 1;
                     checkpoint = obj_string.find(opening_char, checkpoint + 1);
                 } else {

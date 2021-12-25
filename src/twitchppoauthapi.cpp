@@ -92,6 +92,25 @@ namespace TwitchPP {
         return this->process_response<TwitchAutoModSettings>(response);
     }
 
+    VectorResponse<TwitchBlockedTerm> TwitchOauthAPI::add_blocked_term(std::string_view broadcaster_id,
+                                                                       std::string_view text) {
+        std::string options {"?moderator_id=" + this->m_moderator_id + "&broadcaster_id=" + std::string(broadcaster_id)};
+        std::string url {TWITCH_API_BASE + "moderation/blocked_terms" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "POST", std::string("{\"text\":\"") + std::string(text) + "\"}");
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchBlockedTerm>(response);
+    }
+
+    Response<std::string> TwitchOauthAPI::remove_blocked_term(std::string_view broadcaster_id,
+                                                              std::string_view term_id) {
+        std::string options {"?moderator_id=" + this->m_moderator_id + "&broadcaster_id=" + std::string(broadcaster_id) + "&id=" + std::string(term_id)};
+        std::string url {TWITCH_API_BASE + "moderation/blocked_terms" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
+        return response;
+    }
+
     Response<std::string> TwitchOauthAPI::unblock_user(std::string_view target_user_id) {
         std::string options {"?target_user_id=" + std::string(target_user_id)};
         std::string url {TWITCH_API_BASE + "users/blocks" + options};

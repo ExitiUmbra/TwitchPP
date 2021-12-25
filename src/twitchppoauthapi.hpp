@@ -21,5 +21,9 @@ namespace TwitchPP {
             Response<std::string> block_user(std::string_view target_user_id,
                                              std::optional<std::string_view> source_context = std::nullopt,
                                              std::optional<std::string_view> reason = std::nullopt);
+            VectorResponse<TwitchBlockedTerm> add_blocked_term(std::string_view broadcaster_id,
+                                                               std::string_view text);
+            Response<std::string> remove_blocked_term(std::string_view broadcaster_id,
+                                                      std::string_view term_id);
     };
 }
