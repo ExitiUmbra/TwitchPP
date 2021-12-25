@@ -61,9 +61,13 @@ std::string TwitchPP::generate_oauth_url(std::string_view client_id, std::string
     return url;
 }
 
-std::string TwitchPP::get_object_param(std::string_view param_name, std::string_view obj_string, size_t tmp_first_pos, size_t tmp_second_pos) {
+std::string TwitchPP::get_object_param(std::string_view param_name,
+                                       std::string_view obj_string,
+                                       std::optional<std::string_view> fallback,
+                                       size_t tmp_first_pos,
+                                       size_t tmp_second_pos) {
     if (!obj_string.size()) {
-        return "";
+        return std::string(fallback.value_or(""));
     }
     size_t tmp_start_pos {obj_string.find(param_name)};
     tmp_second_pos = std::string::npos > tmp_second_pos ? tmp_second_pos : std::string::npos;
@@ -82,7 +86,7 @@ std::string TwitchPP::get_object_param(std::string_view param_name, std::string_
                 tmp_second_pos = obj_string.find(closing_char, tmp_first_pos);
                 if (tmp_second_pos == std::string::npos) {
                     found = true;
-                    return "";
+                    return std::string(fallback.value_or(""));
                 } else if (obj_string[tmp_second_pos - 1] == '\\') {
                     tmp_first_pos = tmp_second_pos + 1;
                 } else if(checkpoint != std::string::npos && checkpoint < tmp_second_pos && obj_string[checkpoint - 1] != '\\') {
@@ -104,7 +108,7 @@ std::string TwitchPP::get_object_param(std::string_view param_name, std::string_
             }
         }
     } else {
-        return "";
+        return std::string(fallback.value_or(""));
     }
     return static_cast<std::string>(obj_string.substr(tmp_start_pos, tmp_second_pos - tmp_start_pos));
 }

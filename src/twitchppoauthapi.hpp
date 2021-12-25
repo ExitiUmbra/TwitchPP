@@ -25,5 +25,6 @@ namespace TwitchPP {
                                                                std::string_view text);
             Response<std::string> remove_blocked_term(std::string_view broadcaster_id,
                                                       std::string_view term_id);
+            VectorResponse<TwitchAutoModSettings> update_automod_settings(std::string_view broadcaster_id, TwitchAutoModSettings& settings, const bool& is_overall = false);
     };
 }

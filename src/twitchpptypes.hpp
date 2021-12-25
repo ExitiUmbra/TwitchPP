@@ -823,5 +823,6 @@ namespace TwitchPP {
                                   const int& race_ethnicity_or_religion,
                                   const int& sex_based_terms);
             std::string to_json();
+            std::string to_request(const bool& is_overall = true);
     };
 }

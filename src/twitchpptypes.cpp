@@ -1142,16 +1142,16 @@ std::string TwitchPP::TwitchBlockedTerm::to_json() {
 TwitchPP::TwitchAutoModSettings::TwitchAutoModSettings(const std::string& json) {
     this->m_broadcaster_id = TwitchPP::get_object_param("\"broadcaster_id\"", json);
     this->m_moderator_id = TwitchPP::get_object_param("\"moderator_id\"", json);
-    std::string overall {TwitchPP::get_object_param("\"overall_level\"", json)};
+    std::string overall {TwitchPP::get_object_param("\"overall_level\"", json, "null")};
     this->m_overall_level = overall == "null" ? -1 : std::stoi(overall);
-    this->m_disability = std::stoi(TwitchPP::get_object_param("\"disability\"", json));
-    this->m_aggression = std::stoi(TwitchPP::get_object_param("\"aggression\"", json));
-    this->m_sexuality_sex_or_gender = std::stoi(TwitchPP::get_object_param("\"sexuality_sex_or_gender\"", json));
-    this->m_misogyny = std::stoi(TwitchPP::get_object_param("\"misogyny\"", json));
-    this->m_bullying = std::stoi(TwitchPP::get_object_param("\"bullying\"", json));
-    this->m_swearing = std::stoi(TwitchPP::get_object_param("\"swearing\"", json));
-    this->m_race_ethnicity_or_religion = std::stoi(TwitchPP::get_object_param("\"race_ethnicity_or_religion\"", json));
-    this->m_sex_based_terms = std::stoi(TwitchPP::get_object_param("\"sex_based_terms\"", json));
+    this->m_disability = std::stoi(TwitchPP::get_object_param("\"disability\"", json, "0"));
+    this->m_aggression = std::stoi(TwitchPP::get_object_param("\"aggression\"", json, "0"));
+    this->m_sexuality_sex_or_gender = std::stoi(TwitchPP::get_object_param("\"sexuality_sex_or_gender\"", json, "0"));
+    this->m_misogyny = std::stoi(TwitchPP::get_object_param("\"misogyny\"", json, "0"));
+    this->m_bullying = std::stoi(TwitchPP::get_object_param("\"bullying\"", json, "0"));
+    this->m_swearing = std::stoi(TwitchPP::get_object_param("\"swearing\"", json, "0"));
+    this->m_race_ethnicity_or_religion = std::stoi(TwitchPP::get_object_param("\"race_ethnicity_or_religion\"", json, "0"));
+    this->m_sex_based_terms = std::stoi(TwitchPP::get_object_param("\"sex_based_terms\"", json, "0"));
 }
 
 TwitchPP::TwitchAutoModSettings::TwitchAutoModSettings(const std::string& broadcaster_id,
@@ -1191,5 +1191,19 @@ std::string TwitchPP::TwitchAutoModSettings::to_json() {
         + ",\"race_ethnicity_or_religion\":" + std::to_string(this->m_race_ethnicity_or_religion)
         + ",\"sex_based_terms\":" + std::to_string(this->m_sex_based_terms)
         + "}";
+    return json;
+}
+
+std::string TwitchPP::TwitchAutoModSettings::to_request(const bool& is_overall) {
+    std::string json = (is_overall ? ("{\"overall_level\":" + (this->m_overall_level > -1 ? std::to_string(this->m_overall_level) : "null") + "}")
+        : ("{\"disability\":" + std::to_string(this->m_disability)
+        + ",\"aggression\":" + std::to_string(this->m_aggression)
+        + ",\"sexuality_sex_or_gender\":" + std::to_string(this->m_sexuality_sex_or_gender)
+        + ",\"misogyny\":" + std::to_string(this->m_misogyny)
+        + ",\"bullying\":" + std::to_string(this->m_bullying)
+        + ",\"swearing\":" + std::to_string(this->m_swearing)
+        + ",\"race_ethnicity_or_religion\":" + std::to_string(this->m_race_ethnicity_or_religion)
+        + ",\"sex_based_terms\":" + std::to_string(this->m_sex_based_terms)
+        + "}"));
     return json;
 }
