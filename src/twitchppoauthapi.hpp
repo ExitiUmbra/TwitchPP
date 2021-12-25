@@ -27,5 +27,9 @@ namespace TwitchPP {
                                                       std::string_view term_id);
             VectorResponse<TwitchAutoModSettings> update_automod_settings(std::string_view broadcaster_id, TwitchAutoModSettings& settings, const bool& is_overall = false);
             Response<std::string> get_stream_key(std::string_view broadcaster_id);
+            VectorResponse<TwitchBasicUser> get_moderators(std::string_view broadcaster_id,
+                                                           std::vector<std::string> user_ids = {},
+                                                           std::optional<size_t> first = std::nullopt,
+                                                           std::optional<std::string> after = std::nullopt);
     };
 }

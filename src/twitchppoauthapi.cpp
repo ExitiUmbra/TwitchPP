@@ -150,4 +150,26 @@ namespace TwitchPP {
         response.data = get_object_param("\"stream_key\"", response.data);
         return response;
     }
+
+    VectorResponse<TwitchBasicUser> TwitchOauthAPI::get_moderators(std::string_view broadcaster_id,
+                                                                   std::vector<std::string> user_ids,
+                                                                   std::optional<size_t> first,
+                                                                   std::optional<std::string> after) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        for (std::string user_id : user_ids) {
+            options += "&user_id=" + user_id;
+        }
+        if (first) {
+            options += "&first=" + std::to_string(first.value());
+        }
+        if (after) {
+            options += "&after=" + after.value();
+        }
+        std::string url {TWITCH_API_BASE + "moderation/moderators" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchBasicUser>(response);
+    }
 }
