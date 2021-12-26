@@ -191,7 +191,7 @@ namespace TwitchPP {
             std::string to_json();
     };
 
-    class TwitchBannedUser : TwitchBasicUser {
+    class TwitchBannedUser : public TwitchBasicUser {
         protected:
             std::string m_moderator_id {""};
             std::string m_moderator_login {""};
@@ -208,6 +208,44 @@ namespace TwitchPP {
                              const std::string& moderator_name,
                              const std::string& expires_at,
                              const std::string& reason);
+            std::string to_json();
+    };
+
+    class TwitchBannedUserEx : public TwitchBannedUser {
+        protected:
+            std::string m_broadcaster_id {""};
+            std::string m_broadcaster_login {""};
+            std::string m_broadcaster_name {""};
+        public:
+            explicit TwitchBannedUserEx(const std::string& json);
+            TwitchBannedUserEx(const std::string& user_id,
+                               const std::string& user_name,
+                               const std::string& user_login,
+                               const std::string& moderator_id,
+                               const std::string& moderator_login,
+                               const std::string& moderator_name,
+                               const std::string& expires_at,
+                               const std::string& reason,
+                               const std::string& broadcaster_id,
+                               const std::string& broadcaster_login,
+                               const std::string& broadcaster_name);
+            std::string to_json();
+    };
+
+    class TwitchBannedEvent {
+        protected:
+            std::string m_id {""};
+            std::string m_event_type {""};
+            std::string m_event_timestamp {""};
+            std::string m_version {""};
+            std::shared_ptr<TwitchBannedUserEx> m_event_data = nullptr;
+        public:
+            explicit TwitchBannedEvent(const std::string& json);
+            TwitchBannedEvent(const std::string& id,
+                              const std::string& event_type,
+                              const std::string& event_timestamp,
+                              const std::string& version,
+                              TwitchBannedUserEx& event_data);
             std::string to_json();
     };
 

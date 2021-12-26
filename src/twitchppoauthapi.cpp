@@ -227,4 +227,40 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchStream>(response);
     }
+
+    VectorResponse<TwitchBannedEvent> TwitchOauthAPI::get_banned_events(std::string_view broadcaster_id,
+                                                                        std::vector<std::string> user_ids,
+                                                                        std::optional<size_t> first) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        for (std::string user_id : user_ids) {
+            options += "&user_id=" + user_id;
+        }
+        if (first) {
+            options += "&first=" + std::to_string(first.value());
+        }
+        std::string url {TWITCH_API_BASE + "moderation/banned/events" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchBannedEvent>(response);
+    }
+
+    VectorResponse<TwitchBannedEvent> TwitchOauthAPI::get_banned_events(std::string_view broadcaster_id,
+                                                                      std::optional<size_t> first,
+                                                                      std::optional<std::string> cursor) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        if (first) {
+            options += "&first=" + std::to_string(first.value());
+        }
+        if (cursor) {
+            options += "after=" + cursor.value();
+        }
+        std::string url {TWITCH_API_BASE + "moderation/banned/events" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchBannedEvent>(response);
+    }
 }
