@@ -178,6 +178,19 @@ namespace TwitchPP {
             std::string to_json();
     };
 
+    class TwitchChannelEditor {
+        protected:
+            std::string m_user_id {""};
+            std::string m_user_name {""};
+            std::string m_created_at {""};
+        public:
+            explicit TwitchChannelEditor(const std::string& json);
+            TwitchChannelEditor(const std::string& user_id,
+                                const std::string& user_name,
+                                const std::string& created_at);
+            std::string to_json();
+    };
+
     class TwitchBasicUser {
         protected:
             std::string m_user_id {""};

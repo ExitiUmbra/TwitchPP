@@ -106,6 +106,24 @@ std::string TwitchPP::TwitchChannelEmote::to_json() {
     return json;
 }
 
+TwitchPP::TwitchChannelEditor::TwitchChannelEditor(const std::string& json) {
+    this->m_user_id = get_object_param("\"user_id\"", json);
+    this->m_user_name = get_object_param("\"user_name\"", json);
+    this->m_created_at = get_object_param("\"created_at\"", json);
+}
+
+TwitchPP::TwitchChannelEditor::TwitchChannelEditor(const std::string& user_id, const std::string& user_name, const std::string& created_at)
+    : m_user_id{user_id}, m_user_name{user_name}, m_created_at{created_at} {
+}
+
+std::string TwitchPP::TwitchChannelEditor::to_json() {
+    std::string json = "{\"user_id\":\"" + this->m_user_id
+        + "\",\"user_name\":\"" + this->m_user_name
+        + "\",\"created_at\":\"" + this->m_created_at
+        + "\"}";
+    return json;
+}
+
 TwitchPP::TwitchBasicUser::TwitchBasicUser(const std::string& json) {
     this->m_user_id = get_object_param("\"user_id\"", json);
     this->m_user_name = get_object_param("\"user_name\"", json);

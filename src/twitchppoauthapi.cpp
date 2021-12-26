@@ -353,4 +353,14 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchCreatorsGoal>(response);
     }
+
+    VectorResponse<TwitchChannelEditor> TwitchOauthAPI::get_channel_editors(std::string_view broadcaster_id) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        std::string url {TWITCH_API_BASE + "channels/editors" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchChannelEditor>(response);
+    }
 }

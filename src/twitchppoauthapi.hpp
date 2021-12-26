@@ -62,5 +62,6 @@ namespace TwitchPP {
                                                              std::optional<size_t> first = std::nullopt,
                                                              std::optional<std::string> after = std::nullopt);
             VectorResponse<TwitchCreatorsGoal> get_creators_goals(std::string_view broadcaster_id);
+            VectorResponse<TwitchChannelEditor> get_channel_editors(std::string_view broadcaster_id);
     };
 }
