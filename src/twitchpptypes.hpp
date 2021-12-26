@@ -191,6 +191,22 @@ namespace TwitchPP {
             std::string to_json();
     };
 
+    class TwitchModeratorEventData : public TwitchBasicUser {
+        protected:
+            std::string m_broadcaster_id {""};
+            std::string m_broadcaster_login {""};
+            std::string m_broadcaster_name {""};
+        public:
+            explicit TwitchModeratorEventData(const std::string& json);
+            TwitchModeratorEventData(const std::string& user_id,
+                                     const std::string& user_name,
+                                     const std::string& user_login,
+                                     const std::string& broadcaster_id,
+                                     const std::string& broadcaster_login,
+                                     const std::string& broadcaster_name);
+            std::string to_json();
+    };
+
     class TwitchBannedUser : public TwitchBasicUser {
         protected:
             std::string m_moderator_id {""};
@@ -246,6 +262,23 @@ namespace TwitchPP {
                               const std::string& event_timestamp,
                               const std::string& version,
                               TwitchBannedUserEx& event_data);
+            std::string to_json();
+    };
+
+    class TwitchModeratorEvent {
+        protected:
+            std::string m_id {""};
+            std::string m_event_type {""};
+            std::string m_event_timestamp {""};
+            std::string m_version {""};
+            std::shared_ptr<TwitchModeratorEventData> m_event_data = nullptr;
+        public:
+            explicit TwitchModeratorEvent(const std::string& json);
+            TwitchModeratorEvent(const std::string& id,
+                                 const std::string& event_type,
+                                 const std::string& event_timestamp,
+                                 const std::string& version,
+                                 TwitchModeratorEventData& event_data);
             std::string to_json();
     };
 

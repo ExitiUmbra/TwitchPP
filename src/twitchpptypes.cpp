@@ -164,6 +164,35 @@ std::string TwitchPP::TwitchBannedUser::to_json() {
     return json;
 }
 
+TwitchPP::TwitchModeratorEventData::TwitchModeratorEventData(const std::string& json) : TwitchPP::TwitchBasicUser{json} {
+    this->m_broadcaster_id = get_object_param("\"broadcaster_id\"", json);
+    this->m_broadcaster_login = get_object_param("\"broadcaster_login\"", json);
+    this->m_broadcaster_name = get_object_param("\"broadcaster_name\"", json);
+}
+
+TwitchPP::TwitchModeratorEventData::TwitchModeratorEventData(const std::string& user_id,
+                                                             const std::string& user_name,
+                                                             const std::string& user_login,
+                                                             const std::string& broadcaster_id,
+                                                             const std::string& broadcaster_login,
+                                                             const std::string& broadcaster_name)
+                                                             : TwitchPP::TwitchBasicUser{user_id, user_name, user_login},
+                                                               m_broadcaster_id{broadcaster_id},
+                                                               m_broadcaster_login{broadcaster_login},
+                                                               m_broadcaster_name{broadcaster_name} {
+}
+
+std::string TwitchPP::TwitchModeratorEventData::to_json() {
+    std::string json = "{\"user_id\":\"" + this->m_user_id
+        + "\",\"user_name\":\"" + this->m_user_name
+        + "\",\"user_login\":\"" + this->m_user_login
+        + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
+        + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
+        + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
+        + "\"}";
+    return json;
+}
+
 TwitchPP::TwitchBannedUserEx::TwitchBannedUserEx(const std::string& json) : TwitchPP::TwitchBannedUser{json} {
     this->m_broadcaster_id = get_object_param("\"broadcaster_id\"", json);
     this->m_broadcaster_login = get_object_param("\"broadcaster_login\"", json);
@@ -231,6 +260,36 @@ TwitchPP::TwitchBannedEvent::TwitchBannedEvent(const std::string& id,
 }
 
 std::string TwitchPP::TwitchBannedEvent::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"event_type\":\"" + this->m_event_type
+        + "\",\"event_timestamp\":\"" + this->m_event_timestamp
+        + "\",\"version\":\"" + this->m_version
+        + "\",\"event_data\":" + this->m_event_data->to_json()
+        + "}";
+    return json;
+}
+
+TwitchPP::TwitchModeratorEvent::TwitchModeratorEvent(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_event_type = get_object_param("\"event_type\"", json);
+    this->m_event_timestamp = get_object_param("\"event_timestamp\"", json);
+    this->m_version = get_object_param("\"version\"", json);
+    this->m_event_data = std::make_shared<TwitchModeratorEventData>(get_object_param("\"event_data\"", json));
+}
+
+TwitchPP::TwitchModeratorEvent::TwitchModeratorEvent(const std::string& id,
+                                                     const std::string& event_type,
+                                                     const std::string& event_timestamp,
+                                                     const std::string& version,
+                                                     TwitchModeratorEventData& event_data)
+                                                     : m_id{id},
+                                                       m_event_type{event_type},
+                                                       m_event_timestamp{event_timestamp},
+                                                       m_version{version},
+                                                       m_event_data{&event_data} {
+}
+
+std::string TwitchPP::TwitchModeratorEvent::to_json() {
     std::string json = "{\"id\":\"" + this->m_id
         + "\",\"event_type\":\"" + this->m_event_type
         + "\",\"event_timestamp\":\"" + this->m_event_timestamp
