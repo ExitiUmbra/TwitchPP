@@ -1030,4 +1030,29 @@ namespace TwitchPP {
                              std::vector<TwitchPredictionOutcome> outcomes);
             std::string to_json();
     };
+
+    class TwitchCreatorsGoal {
+        protected:
+            std::string m_id {""};
+            std::string m_broadcaster_id {""};
+            std::string m_broadcaster_name {""};
+            std::string m_broadcaster_login {""};
+            std::string m_type{""};
+            std::string m_description {""};
+            std::string m_created_at{""};
+            size_t m_current_amount {};
+            size_t m_target_amount {};
+        public:
+            TwitchCreatorsGoal(const std::string& json);
+            TwitchCreatorsGoal(const std::string& id,
+                              const std::string& broadcaster_id,
+                              const std::string& broadcaster_name,
+                              const std::string& broadcaster_login,
+                              const std::string& type,
+                              const std::string& description,
+                              const std::string& created_at,
+                              const size_t& current_amount,
+                              const size_t& target_amount);
+            std::string to_json();
+    };
 }

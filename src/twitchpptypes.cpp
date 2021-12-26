@@ -1621,3 +1621,49 @@ std::string TwitchPP::TwitchPrediction::to_json() {
     }
     return json + "]}";
 }
+
+TwitchPP::TwitchCreatorsGoal::TwitchCreatorsGoal(const std::string& json) {
+    this->m_id = TwitchPP::get_object_param("\"id\"", json);
+    this->m_broadcaster_id = TwitchPP::get_object_param("\"broadcaster_id\"", json);
+    this->m_broadcaster_name = TwitchPP::get_object_param("\"broadcaster_name\"", json);
+    this->m_broadcaster_login = TwitchPP::get_object_param("\"broadcaster_login\"", json);
+    this->m_type = TwitchPP::get_object_param("\"type\"", json);
+    this->m_description = TwitchPP::get_object_param("\"description\"", json);
+    this->m_created_at = TwitchPP::get_object_param("\"created_at\"", json);
+    this->m_current_amount = std::stoul(TwitchPP::get_object_param("\"current_amount\"", json, "0"));
+    this->m_target_amount = std::stoul(TwitchPP::get_object_param("\"target_amount\"", json, "0"));
+}
+
+TwitchPP::TwitchCreatorsGoal::TwitchCreatorsGoal(const std::string& id,
+                                                 const std::string& broadcaster_id,
+                                                 const std::string& broadcaster_name,
+                                                 const std::string& broadcaster_login,
+                                                 const std::string& type,
+                                                 const std::string& description,
+                                                 const std::string& created_at,
+                                                 const size_t& current_amount,
+                                                 const size_t& target_amount)
+                                                 : m_id{id},
+                                                   m_broadcaster_id{broadcaster_id},
+                                                   m_broadcaster_name{broadcaster_name},
+                                                   m_broadcaster_login{broadcaster_login},
+                                                   m_type{type},
+                                                   m_description{description},
+                                                   m_created_at{created_at},
+                                                   m_current_amount{current_amount},
+                                                   m_target_amount{target_amount} {
+}
+
+std::string TwitchPP::TwitchCreatorsGoal::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
+        + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
+        + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
+        + "\",\"type\":\"" + this->m_type
+        + "\",\"description\":\"" + this->m_description
+        + "\",\"created_at\":\"" + this->m_created_at
+        + "\",\"current_amount\":" + std::to_string(this->m_current_amount)
+        + ",\"target_amount\":" + std::to_string(this->m_target_amount)
+        + "}";
+    return json;
+}
