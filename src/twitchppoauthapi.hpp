@@ -53,5 +53,13 @@ namespace TwitchPP {
             VectorResponse<TwitchModeratorEvent> get_moderator_events(std::string_view broadcaster_id,
                                                                       std::optional<size_t> first = std::nullopt,
                                                                       std::optional<std::string> cursor = std::nullopt);
+            VectorResponse<TwitchPoll> get_polls(std::string_view broadcaster_id,
+                                                 std::vector<std::string> ids = {},
+                                                 std::optional<size_t> first = std::nullopt,
+                                                 std::optional<std::string> after = std::nullopt);
+            VectorResponse<TwitchPrediction> get_predictions(std::string_view broadcaster_id,
+                                                             std::vector<std::string> ids = {},
+                                                             std::optional<size_t> first = std::nullopt,
+                                                             std::optional<std::string> after = std::nullopt);
     };
 }

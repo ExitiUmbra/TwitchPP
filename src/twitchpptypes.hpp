@@ -916,4 +916,118 @@ namespace TwitchPP {
             std::string to_json();
             std::string to_request(const bool& is_overall = true);
     };
+
+    class TwitchPollChoice {
+        protected:
+            std::string m_id {""};
+            std::string m_title {""};
+            size_t m_votes {};
+            size_t m_channel_points_votes {};
+            size_t m_bits_votes {};
+        public:
+            TwitchPollChoice(const std::string& json);
+            TwitchPollChoice(const std::string& id,
+                             const std::string& title,
+                             const size_t& votes,
+                             const size_t& channel_points_votes,
+                             const size_t& bits_votes);
+            std::string to_json();
+    };
+
+    class TwitchPoll {
+        protected:
+            std::string m_id {""};
+            std::string m_broadcaster_id {""};
+            std::string m_broadcaster_name {""};
+            std::string m_broadcaster_login{""};
+            std::string m_title {""};
+            std::string m_status {""};
+            std::string m_started_at {""};
+            bool m_bits_voting_enabled {};
+            bool m_channel_points_voting_enabled {};
+            size_t m_bits_per_vote {};
+            size_t m_channel_points_per_vote {};
+            size_t m_duration {};
+            std::vector<TwitchPollChoice> m_choices {};
+        public:
+            TwitchPoll(const std::string& json);
+            TwitchPoll(const std::string& id,
+                       const std::string& broadcaster_id,
+                       const std::string& broadcaster_name,
+                       const std::string& broadcaster_login,
+                       const std::string& title,
+                       const std::string& status,
+                       const std::string& started_at,
+                       const bool& bits_voting_enabled,
+                       const bool& channel_points_voting_enabled,
+                       const size_t& bits_per_vote,
+                       const size_t& channel_points_per_vote,
+                       const size_t& duration,
+                       std::vector<TwitchPollChoice> choices);
+            std::string to_json();
+    };
+
+    class TwitchPredictor : public TwitchBasicUser {
+        protected:
+            size_t m_channel_points_used {};
+            size_t m_channel_points_won {};
+        public:
+            explicit TwitchPredictor(const std::string& json);
+            TwitchPredictor(const std::string& user_id,
+                            const std::string& user_name,
+                            const std::string& user_login,
+                            const size_t& channel_points_used,
+                            const size_t& channel_points_won);
+            std::string to_json();
+    };
+
+    class TwitchPredictionOutcome {
+        protected:
+            std::string m_id {""};
+            std::string m_title {""};
+            std::string m_color {""};
+            size_t m_users {};
+            size_t m_channel_points {};
+            std::vector<TwitchPredictor> m_top_predictors {};
+        public:
+            TwitchPredictionOutcome(const std::string& json);
+            TwitchPredictionOutcome(const std::string& id,
+                                    const std::string& title,
+                                    const std::string& color,
+                                    const size_t& users,
+                                    const size_t& channel_points,
+                                    std::vector<TwitchPredictor> top_predictors);
+            std::string to_json();
+    };
+
+    class TwitchPrediction {
+        protected:
+            std::string m_id {""};
+            std::string m_broadcaster_id {""};
+            std::string m_broadcaster_name {""};
+            std::string m_broadcaster_login {""};
+            std::string m_title {""};
+            std::string m_status {""};
+            std::string m_winning_outcome_id {""};
+            std::string m_created_at {""};
+            std::string m_ended_at {""};
+            std::string m_locked_at {""};
+            size_t m_prediction_window {};
+            std::vector<TwitchPredictionOutcome> m_outcomes {};
+        public:
+            TwitchPrediction(const std::string& json);
+            TwitchPrediction(const std::string& id,
+                             const std::string& broadcaster_id,
+                             const std::string& broadcaster_name,
+                             const std::string& broadcaster_login,
+                             const std::string& title,
+                             const std::string& status,
+                             const std::string& winning_outcome_id,
+                             const std::string& created_at,
+                             const std::string& ended_at,
+                             const std::string& locked_at,
+                             const size_t& prediction_window,
+                             std::vector<TwitchPredictionOutcome> outcomes);
+            std::string to_json();
+    };
 }

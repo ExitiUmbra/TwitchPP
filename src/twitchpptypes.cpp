@@ -1379,3 +1379,245 @@ std::string TwitchPP::TwitchAutoModSettings::to_request(const bool& is_overall) 
         + "}"));
     return json;
 }
+
+TwitchPP::TwitchPollChoice::TwitchPollChoice(const std::string& json) {
+    this->m_id = TwitchPP::get_object_param("\"id\"", json);
+    this->m_title = TwitchPP::get_object_param("\"title\"", json);
+    this->m_votes = std::stoul(TwitchPP::get_object_param("\"votes\"", json, "0"));
+    this->m_channel_points_votes = std::stoul(TwitchPP::get_object_param("\"channel_points_votes\"", json, "0"));
+    this->m_bits_votes = std::stoul(TwitchPP::get_object_param("\"bits_votes\"", json, "0"));
+}
+
+TwitchPP::TwitchPollChoice::TwitchPollChoice(const std::string& id,
+                                             const std::string& title,
+                                             const size_t& votes,
+                                             const size_t& channel_points_votes,
+                                             const size_t& bits_votes)
+                                             : m_id{id},
+                                               m_title{title},
+                                               m_votes{votes},
+                                               m_channel_points_votes{channel_points_votes},
+                                               m_bits_votes{bits_votes} {
+}
+
+std::string TwitchPP::TwitchPollChoice::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"title\":\"" + this->m_title
+        + "\",\"votes\":" + std::to_string(this->m_votes)
+        + ",\"channel_points_votes\":" + std::to_string(this->m_channel_points_votes)
+        + ",\"bits_votes\":" + std::to_string(this->m_bits_votes)
+        + "}";
+    return json;
+}
+
+TwitchPP::TwitchPoll::TwitchPoll(const std::string& json) {
+    this->m_id = TwitchPP::get_object_param("\"id\"", json);
+    this->m_broadcaster_id = TwitchPP::get_object_param("\"broadcaster_id\"", json);
+    this->m_broadcaster_name = TwitchPP::get_object_param("\"broadcaster_name\"", json);
+    this->m_broadcaster_login = TwitchPP::get_object_param("\"broadcaster_login\"", json);
+    this->m_title = TwitchPP::get_object_param("\"title\"", json);
+    this->m_status = TwitchPP::get_object_param("\"status\"", json);
+    this->m_started_at = TwitchPP::get_object_param("\"started_at\"", json);
+    this->m_bits_voting_enabled = TwitchPP::get_object_param("\"bits_voting_enabled\"", json) == "true";
+    this->m_channel_points_voting_enabled = TwitchPP::get_object_param("\"channel_points_voting_enabled\"", json) == "true";
+    this->m_bits_per_vote = std::stoul(TwitchPP::get_object_param("\"bits_per_vote\"", json, "0"));
+    this->m_channel_points_per_vote = std::stoul(TwitchPP::get_object_param("\"channel_points_per_vote\"", json, "0"));
+    this->m_duration = std::stoul(TwitchPP::get_object_param("\"duration\"", json, "0"));
+    std::string string_with_choices = TwitchPP::get_object_param("\"choices\"", json);
+    std::vector<std::string> str_choices = TwitchPP::json_to_vector(string_with_choices);
+    for (std::string choice : str_choices) {
+        this->m_choices.push_back(TwitchPP::TwitchPollChoice(choice));
+    }
+}
+
+TwitchPP::TwitchPoll::TwitchPoll(const std::string& id,
+                                 const std::string& broadcaster_id,
+                                 const std::string& broadcaster_name,
+                                 const std::string& broadcaster_login,
+                                 const std::string& title,
+                                 const std::string& status,
+                                 const std::string& started_at,
+                                 const bool& bits_voting_enabled,
+                                 const bool& channel_points_voting_enabled,
+                                 const size_t& bits_per_vote,
+                                 const size_t& channel_points_per_vote,
+                                 const size_t& duration,
+                                 std::vector<TwitchPollChoice> choices)
+                                 : m_id{id},
+                                   m_broadcaster_id{broadcaster_id},
+                                   m_broadcaster_name{broadcaster_name},
+                                   m_broadcaster_login{broadcaster_login},
+                                   m_title{title},
+                                   m_status{status},
+                                   m_started_at{started_at},
+                                   m_bits_voting_enabled{bits_voting_enabled},
+                                   m_channel_points_voting_enabled{channel_points_voting_enabled},
+                                   m_bits_per_vote{bits_per_vote},
+                                   m_channel_points_per_vote{channel_points_per_vote},
+                                   m_duration{duration},
+                                   m_choices{choices} {
+}
+
+std::string TwitchPP::TwitchPoll::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
+        + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
+        + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
+        + "\",\"title\":\"" + this->m_title
+        + "\",\"status\":\"" + this->m_status
+        + "\",\"started_at\":\"" + this->m_started_at
+        + "\",\"bits_voting_enabled\":" + (this->m_bits_voting_enabled ? "true" : "false")
+        + ",\"channel_points_voting_enabled\":" + (this->m_channel_points_voting_enabled ? "true" : "false")
+        + ",\"bits_per_vote\":" + std::to_string(this->m_bits_per_vote)
+        + ",\"channel_points_per_vote\":" + std::to_string(this->m_channel_points_per_vote)
+        + ",\"duration\":" + std::to_string(this->m_duration)
+        + ",\"choices\":[";
+    for (size_t i {0}; i < this->m_choices.size(); ++i) {
+        json += this->m_choices.at(i).to_json();
+        if (i + 1 < this->m_choices.size()) {
+            json += ',';
+        }
+    }
+    return json + "]}";
+}
+
+TwitchPP::TwitchPredictor::TwitchPredictor(const std::string& json) : TwitchPP::TwitchBasicUser{json} {
+    this->m_channel_points_used = std::stoul(get_object_param("\"channel_points_used\"", json, "0"));
+    this->m_channel_points_won = std::stoul(get_object_param("\"channel_points_won\"", json, "0"));
+}
+
+TwitchPP::TwitchPredictor::TwitchPredictor(const std::string& user_id,
+                                           const std::string& user_name,
+                                           const std::string& user_login,
+                                           const size_t& channel_points_used,
+                                           const size_t& channel_points_won)
+                                           : TwitchPP::TwitchBasicUser{user_id, user_name, user_login},
+                                             m_channel_points_used{channel_points_used},
+                                             m_channel_points_won{channel_points_won} {
+}
+
+std::string TwitchPP::TwitchPredictor::to_json() {
+    std::string json = "{\"user_id\":\"" + this->m_user_id
+        + "\",\"user_name\":\"" + this->m_user_name
+        + "\",\"user_login\":\"" + this->m_user_login
+        + "\",\"channel_points_used\":" + std::to_string(this->m_channel_points_used)
+        + ",\"channel_points_won\":" + std::to_string(this->m_channel_points_won)
+        + "}";
+    return json;
+}
+
+TwitchPP::TwitchPredictionOutcome::TwitchPredictionOutcome(const std::string& json) {
+    this->m_id = TwitchPP::get_object_param("\"id\"", json);
+    this->m_title = TwitchPP::get_object_param("\"title\"", json);
+    this->m_color = TwitchPP::get_object_param("\"color\"", json);
+    this->m_users = std::stoul(TwitchPP::get_object_param("\"users\"", json, "0"));
+    this->m_channel_points = std::stoul(TwitchPP::get_object_param("\"channel_points\"", json, "0"));
+    std::string string_with_predictors = TwitchPP::get_object_param("\"top_predictors\"", json);
+    std::vector<std::string> str_predictors = TwitchPP::json_to_vector(string_with_predictors);
+    for (std::string predictor : str_predictors) {
+        this->m_top_predictors.push_back(TwitchPP::TwitchPredictor(predictor));
+    }
+}
+
+TwitchPP::TwitchPredictionOutcome::TwitchPredictionOutcome(const std::string& id,
+                                                           const std::string& title,
+                                                           const std::string& color,
+                                                           const size_t& users,
+                                                           const size_t& channel_points,
+                                                           std::vector<TwitchPredictor> top_predictors)
+                                                           : m_id{id},
+                                                             m_title{title},
+                                                             m_color{color},
+                                                             m_users{users},
+                                                             m_channel_points{channel_points},
+                                                             m_top_predictors{top_predictors} {
+}
+
+std::string TwitchPP::TwitchPredictionOutcome::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"title\":\"" + this->m_title
+        + "\",\"color\":\"" + this->m_color
+        + ",\"users\":" + std::to_string(this->m_users)
+        + ",\"channel_points\":" + std::to_string(this->m_channel_points)
+        + ",\"top_predictors\":";
+    if (this->m_top_predictors.size()) {
+        json += "[";
+        for (size_t i {0}; i < this->m_top_predictors.size(); ++i) {
+            json += this->m_top_predictors.at(i).to_json();
+            if (i + 1 < this->m_top_predictors.size()) {
+                json += ',';
+            }
+        }
+        json += "]";
+    } else {
+        json += "null";
+    }
+    return json + "}";
+}
+
+TwitchPP::TwitchPrediction::TwitchPrediction(const std::string& json) {
+    this->m_id = TwitchPP::get_object_param("\"id\"", json);
+    this->m_broadcaster_id = TwitchPP::get_object_param("\"broadcaster_id\"", json);
+    this->m_broadcaster_name = TwitchPP::get_object_param("\"broadcaster_name\"", json);
+    this->m_broadcaster_login = TwitchPP::get_object_param("\"broadcaster_login\"", json);
+    this->m_title = TwitchPP::get_object_param("\"title\"", json);
+    this->m_status = TwitchPP::get_object_param("\"status\"", json);
+    this->m_winning_outcome_id = TwitchPP::get_object_param("\"winning_outcome_id\"", json);
+    this->m_created_at = TwitchPP::get_object_param("\"created_at\"", json);
+    this->m_ended_at = TwitchPP::get_object_param("\"ended_at\"", json);
+    this->m_locked_at = TwitchPP::get_object_param("\"locked_at\"", json);
+    this->m_prediction_window = std::stoul(TwitchPP::get_object_param("\"prediction_window\"", json, "0"));
+    std::string string_with_outcomes = TwitchPP::get_object_param("\"outcomes\"", json);
+    std::vector<std::string> str_outcomes = TwitchPP::json_to_vector(string_with_outcomes);
+    for (std::string outcomes : str_outcomes) {
+        this->m_outcomes.push_back(TwitchPP::TwitchPredictionOutcome(outcomes));
+    }
+}
+
+TwitchPP::TwitchPrediction::TwitchPrediction(const std::string& id,
+                             const std::string& broadcaster_id,
+                             const std::string& broadcaster_name,
+                             const std::string& broadcaster_login,
+                             const std::string& title,
+                             const std::string& status,
+                             const std::string& winning_outcome_id,
+                             const std::string& created_at,
+                             const std::string& ended_at,
+                             const std::string& locked_at,
+                             const size_t& prediction_window,
+                             std::vector<TwitchPredictionOutcome> outcomes)
+                                 : m_id{id},
+                                   m_broadcaster_id{broadcaster_id},
+                                   m_broadcaster_name{broadcaster_name},
+                                   m_broadcaster_login{broadcaster_login},
+                                   m_title{title},
+                                   m_status{status},
+                                   m_winning_outcome_id{winning_outcome_id},
+                                   m_created_at{created_at},
+                                   m_ended_at{ended_at},
+                                   m_locked_at{locked_at},
+                                   m_prediction_window{prediction_window},
+                                   m_outcomes{outcomes} {
+}
+
+std::string TwitchPP::TwitchPrediction::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
+        + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
+        + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
+        + "\",\"title\":\"" + this->m_title
+        + "\",\"status\":\"" + this->m_status
+        + "\",\"winning_outcome_id\":" + (this->m_winning_outcome_id == "null" ? "null" : ("\"" + this->m_winning_outcome_id + "\""))
+        + ",\"created_at\":\"" + this->m_created_at
+        + "\",\"ended_at\":" + (this->m_ended_at == "null" ? "null" : ("\"" + this->m_ended_at + "\""))
+        + ",\"locked_at\":" + (this->m_locked_at == "null" ? "null" : ("\"" + this->m_locked_at + "\""))
+        + ",\"prediction_window\":" + std::to_string(this->m_prediction_window)
+        + ",\"outcomes\":[";
+    for (size_t i {0}; i < this->m_outcomes.size(); ++i) {
+        json += this->m_outcomes.at(i).to_json();
+        if (i + 1 < this->m_outcomes.size()) {
+            json += ',';
+        }
+    }
+    return json + "]}";
+}
