@@ -124,6 +124,38 @@ std::string TwitchPP::TwitchChannelEditor::to_json() {
     return json;
 }
 
+TwitchPP::TwitchUserExtension::TwitchUserExtension(const std::string& json) {
+    this->m_id = TwitchPP::get_object_param("\"id\"", json);
+    this->m_version = TwitchPP::get_object_param("\"version\"", json);
+    this->m_name = TwitchPP::get_object_param("\"name\"", json);
+    this->m_can_activate = TwitchPP::get_object_param("\"can_activate\"", json) == "true";
+    this->m_type = TwitchPP::json_to_vector(TwitchPP::get_object_param("\"type\"", json));
+}
+
+TwitchPP::TwitchUserExtension::TwitchUserExtension(const std::string& id,
+                                                   const std::string& version,
+                                                   const std::string& name,
+                                                   const bool& can_activate,
+                                                   std::vector<std::string> type)
+                                                   : m_id{id},
+                                                     m_version{version},
+                                                     m_name{name},
+                                                     m_can_activate{can_activate},
+                                                     m_type{type} {
+}
+
+std::string TwitchPP::TwitchUserExtension::to_json() {
+    for (size_t i {0}; i < this->m_type.size(); ++i) {
+        std::cout << this->m_type.at(i) << std::endl;
+    }
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"version\":\"" + this->m_version
+        + "\",\"name\":\"" + this->m_name
+        + "\",\"can_activate\":" + (this->m_can_activate ? "true" : "false")
+        + ",\"type\":" + TwitchPP::vector_to_json(this->m_type) + "}";
+    return json;
+}
+
 TwitchPP::TwitchBasicUser::TwitchBasicUser(const std::string& json) {
     this->m_user_id = get_object_param("\"user_id\"", json);
     this->m_user_name = get_object_param("\"user_name\"", json);
