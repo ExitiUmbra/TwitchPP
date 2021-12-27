@@ -15,6 +15,14 @@ namespace TwitchPP {
         std::string message;
     };
 
+    template<typename T> struct ResponseLeftovers {
+        T data;
+        std::string cursor;
+        size_t code;
+        std::string message;
+        std::string leftovers;
+    };
+
     struct VideoSegment {
         size_t duration;
         size_t offset;

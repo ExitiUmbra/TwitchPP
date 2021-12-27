@@ -214,6 +214,62 @@ std::string TwitchPP::TwitchBannedUser::to_json() {
     return json;
 }
 
+TwitchPP::TwitchUserBits::TwitchUserBits(const std::string& json) : TwitchPP::TwitchBasicUser{json} {
+    this->m_rank = std::stoul(get_object_param("\"rank\"", json, "0"));
+    this->m_score = std::stoul(get_object_param("\"score\"", json, "0"));
+}
+
+TwitchPP::TwitchUserBits::TwitchUserBits(const std::string& user_id,
+                                         const std::string& user_name,
+                                         const std::string& user_login,
+                                         const size_t& rank,
+                                         const size_t& score)
+                                         : TwitchPP::TwitchBasicUser{user_id, user_name, user_login},
+                                           m_rank{rank},
+                                           m_score{score} {
+}
+
+std::string TwitchPP::TwitchUserBits::to_json() {
+    std::string json = "{\"user_id\":\"" + this->m_user_id
+        + "\",\"user_name\":\"" + this->m_user_name
+        + "\",\"user_login\":\"" + this->m_user_login
+        + "\",\"rank\":" + std::to_string(this->m_rank)
+        + ",\"score\":" + std::to_string(this->m_score)
+        + "}";
+    return json;
+}
+
+TwitchPP::TwitchBitsLeaderboard::TwitchBitsLeaderboard(const std::string& json, std::vector<TwitchUserBits> users) {
+    this->m_started_at = get_object_param("\"started_at\"", json);
+    this->m_ended_at = get_object_param("\"ended_at\"", json);
+    this->m_total = std::stoul(get_object_param("\"total\"", json, "0"));
+    this->m_users = users;
+}
+
+TwitchPP::TwitchBitsLeaderboard::TwitchBitsLeaderboard(const std::string& started_at,
+                                                       const std::string& ended_at,
+                                                       const size_t& total,
+                                                       std::vector<TwitchUserBits> users)
+                                                       : m_started_at{started_at},
+                                                         m_ended_at{ended_at},
+                                                         m_total{total},
+                                                         m_users{users} {
+}
+
+std::string TwitchPP::TwitchBitsLeaderboard::to_json() {
+    std::string json = "{\"started_at\":\"" + this->m_started_at
+        + "\",\"ended_at\":\"" + this->m_ended_at
+        + "\",\"total\":" + std::to_string(this->m_total)
+        + ",\"users\":[";
+    for (size_t i {0}; i < this->m_users.size(); ++i) {
+        json += this->m_users.at(i).to_json();
+        if (i + 1 < this->m_users.size()) {
+            json += ',';
+        }
+    }
+    return json + "]}";
+}
+
 TwitchPP::TwitchModeratorEventData::TwitchModeratorEventData(const std::string& json) : TwitchPP::TwitchBasicUser{json} {
     this->m_broadcaster_id = get_object_param("\"broadcaster_id\"", json);
     this->m_broadcaster_login = get_object_param("\"broadcaster_login\"", json);

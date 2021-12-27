@@ -372,4 +372,27 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchUserExtension>(response);
     }
+
+    VectorResponse<TwitchBitsLeaderboard> TwitchOauthAPI::get_bits_leaderboard(size_t count,
+                                                                               std::optional<std::string> period,
+                                                                               std::optional<std::string> started_at,
+                                                                               std::optional<std::string> user_id) {
+        std::string options {"?count=" + std::to_string(count)};
+        if (period) {
+            options += "&period=" + period.value();
+        }
+        if (started_at) {
+            options += "started_at=" + started_at.value();
+        }
+        if (user_id) {
+            options += "user_id=" + user_id.value();
+        }
+        std::string url {TWITCH_API_BASE + "bits/leaderboard" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        VectorResponseLeftovers<TwitchUserBits> users_response = this->process_response_leftovers<TwitchUserBits>(response);
+        return {{TwitchBitsLeaderboard(users_response.leftovers, users_response.data)}, users_response.cursor, users_response.code, users_response.message};
+    }
 }

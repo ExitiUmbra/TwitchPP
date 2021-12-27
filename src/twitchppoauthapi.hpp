@@ -64,5 +64,9 @@ namespace TwitchPP {
             VectorResponse<TwitchCreatorsGoal> get_creators_goals(std::string_view broadcaster_id);
             VectorResponse<TwitchChannelEditor> get_channel_editors(std::string_view broadcaster_id);
             VectorResponse<TwitchUserExtension> get_user_extensions();
+            VectorResponse<TwitchBitsLeaderboard> get_bits_leaderboard(size_t count = 10,
+                                                                       std::optional<std::string> period = std::nullopt,
+                                                                       std::optional<std::string> started_at = std::nullopt,
+                                                                       std::optional<std::string> user_id = std::nullopt);
     };
 }

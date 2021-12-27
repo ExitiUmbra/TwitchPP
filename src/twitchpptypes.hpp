@@ -61,6 +61,7 @@ namespace TwitchPP {
     constexpr std::string_view HTTP_PATCH { "PATCH" };
 
     template<typename T> using VectorResponse = TwitchPP::Response<std::vector<T>>;
+    template<typename T> using VectorResponseLeftovers = TwitchPP::ResponseLeftovers<std::vector<T>>;
 
     struct StreamsRequest {
         std::optional<size_t> first = std::nullopt;
@@ -221,6 +222,20 @@ namespace TwitchPP {
             std::string to_json();
     };
 
+    class TwitchUserBits : public TwitchBasicUser {
+        protected:
+            size_t m_rank {};
+            size_t m_score {};
+        public:
+            explicit TwitchUserBits(const std::string& json);
+            TwitchUserBits(const std::string& user_id,
+                           const std::string& user_name,
+                           const std::string& user_login,
+                           const size_t& rank,
+                           const size_t& score);
+            std::string to_json();
+    };
+
     class TwitchModeratorEventData : public TwitchBasicUser {
         protected:
             std::string m_broadcaster_id {""};
@@ -292,6 +307,21 @@ namespace TwitchPP {
                               const std::string& event_timestamp,
                               const std::string& version,
                               TwitchBannedUserEx& event_data);
+            std::string to_json();
+    };
+
+    class TwitchBitsLeaderboard {
+        protected:
+            std::string m_started_at {""};
+            std::string m_ended_at {""};
+            size_t m_total {};
+            std::vector<TwitchUserBits> m_users {};
+        public:
+            explicit TwitchBitsLeaderboard(const std::string& json, std::vector<TwitchUserBits> users);
+            TwitchBitsLeaderboard(const std::string& started_at,
+                                  const std::string& ended_at,
+                                  const size_t& total,
+                                  std::vector<TwitchUserBits> users);
             std::string to_json();
     };
 
