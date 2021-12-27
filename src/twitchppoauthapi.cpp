@@ -413,4 +413,12 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchBanResponse>(response);
     }
+
+    Response<std::string> TwitchOauthAPI::unban_user(std::string_view broadcaster_id,
+                                                           std::string_view user_id) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id) + "&moderator_id=" + this->m_moderator_id + "&user_id=" + std::string(user_id)};
+        std::string url {TWITCH_API_BASE + "moderation/bans" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
+        return response;
+    }
 }

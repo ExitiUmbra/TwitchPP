@@ -72,5 +72,7 @@ namespace TwitchPP {
                                                        std::string_view user_id,
                                                        std::string_view reason,
                                                        std::optional<size_t> duration = std::nullopt);
+            Response<std::string> unban_user(std::string_view broadcaster_id,
+                                             std::string_view user_id);
     };
 }
