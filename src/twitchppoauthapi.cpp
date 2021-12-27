@@ -395,4 +395,22 @@ namespace TwitchPP {
         VectorResponseLeftovers<TwitchUserBits> users_response = this->process_response_leftovers<TwitchUserBits>(response);
         return {{TwitchBitsLeaderboard(users_response.leftovers, users_response.data)}, users_response.cursor, users_response.code, users_response.message};
     }
+
+    VectorResponse<TwitchBanResponse> TwitchOauthAPI::ban_user(std::string_view broadcaster_id,
+                                                               std::string_view user_id,
+                                                               std::string_view reason,
+                                                               std::optional<size_t> duration) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id) + "&moderator_id=" + this->m_moderator_id};
+        std::string request {"{\"data\":{\"user_id\":\"" + std::string(user_id) + "\",\"reason\":\"" + std::string(reason) + "\""};
+        if (duration) {
+            request += ",\"duration\":" + std::to_string(duration.value());
+        }
+        request += "}}";
+        std::string url {TWITCH_API_BASE + "moderation/bans" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "POST", request);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchBanResponse>(response);
+    }
 }

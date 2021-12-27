@@ -68,5 +68,9 @@ namespace TwitchPP {
                                                                        std::optional<std::string> period = std::nullopt,
                                                                        std::optional<std::string> started_at = std::nullopt,
                                                                        std::optional<std::string> user_id = std::nullopt);
+            VectorResponse<TwitchBanResponse> ban_user(std::string_view broadcaster_id,
+                                                       std::string_view user_id,
+                                                       std::string_view reason,
+                                                       std::optional<size_t> duration = std::nullopt);
     };
 }

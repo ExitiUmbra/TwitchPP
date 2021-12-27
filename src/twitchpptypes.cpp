@@ -177,6 +177,32 @@ std::string TwitchPP::TwitchBasicUser::to_json() {
     return json;
 }
 
+TwitchPP::TwitchBanResponse::TwitchBanResponse(const std::string& json) {
+    this->m_broadcaster_id = get_object_param("\"broadcaster_id\"", json);
+    this->m_moderator_id = get_object_param("\"moderator_id\"", json);
+    this->m_user_id = get_object_param("\"user_id\"", json);
+    this->m_end_time = get_object_param("\"end_time\"", json);
+}
+
+TwitchPP::TwitchBanResponse::TwitchBanResponse(const std::string& broadcaster_id,
+                                               const std::string& moderator_id,
+                                               const std::string& user_id,
+                                               const std::string& end_time)
+                                               : m_broadcaster_id{broadcaster_id},
+                                                 m_moderator_id{moderator_id},
+                                                 m_user_id{user_id},
+                                                 m_end_time{end_time} {
+}
+
+std::string TwitchPP::TwitchBanResponse::to_json() {
+    std::string json = "{\"broadcaster_id\":\"" + this->m_broadcaster_id
+        + "\",\"moderator_id\":\"" + this->m_moderator_id
+        + "\",\"user_id\":\"" + this->m_user_id
+        + "\",\"end_time\":\"" + this->m_end_time
+        + "\"}";
+    return json;
+}
+
 TwitchPP::TwitchBannedUser::TwitchBannedUser(const std::string& json) : TwitchPP::TwitchBasicUser{json} {
     this->m_moderator_id = get_object_param("\"moderator_id\"", json);
     this->m_moderator_login = get_object_param("\"moderator_login\"", json);

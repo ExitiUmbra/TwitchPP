@@ -38,6 +38,7 @@ namespace TwitchPP {
     constexpr std::string_view USER_READ_EMAIL { "user:read:email" };
     constexpr std::string_view USER_READ_FOLLOWS { "user:read:follows" };
     constexpr std::string_view USER_READ_SUBSCRIPTIONS { "user:read:subscriptions" };
+    constexpr std::string_view MODERATOR_MANAGE_BANNED_USERS { "moderator:manage:banned_users" };
 
     /* Chat and PubSub */
     constexpr std::string_view CHANNEL_MODERATE { "channel:moderate" };
@@ -219,6 +220,21 @@ namespace TwitchPP {
             TwitchBasicUser(const std::string& user_id,
                             const std::string& user_name,
                             const std::string& user_login);
+            std::string to_json();
+    };
+
+    class TwitchBanResponse {
+        protected:
+            std::string m_broadcaster_id {""};
+            std::string m_moderator_id {""};
+            std::string m_user_id {""};
+            std::string m_end_time {""};
+        public:
+            TwitchBanResponse(const std::string& json);
+            TwitchBanResponse(const std::string& broadcaster_id,
+                              const std::string& moderator_id,
+                              const std::string& user_id,
+                              const std::string& end_time);
             std::string to_json();
     };
 
