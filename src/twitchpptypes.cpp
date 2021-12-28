@@ -177,6 +177,44 @@ std::string TwitchPP::TwitchBasicUser::to_json() {
     return json;
 }
 
+TwitchPP::TwitchAnalyticsResponse::TwitchAnalyticsResponse(const std::string& json) {
+    this->m_id = get_object_param("\"game_id\"", json);
+    if (this->m_id == "") {
+        this->m_id = get_object_param("\"extension_id\"", json);
+        this->m_id_var = "extension_id";
+    } else {
+        this->m_id_var = "game_id";
+    }
+    this->m_started_at = get_object_param("\"started_at\"", json);
+    this->m_ended_at = get_object_param("\"ended_at\"", json);
+    this->m_type = get_object_param("\"type\"", json);
+    this->m_url = get_object_param("\"url\"", json);
+}
+
+TwitchPP::TwitchAnalyticsResponse::TwitchAnalyticsResponse(const std::string& id,
+                                                           const std::string& id_var,
+                                                           const std::string& started_at,
+                                                           const std::string& ended_at,
+                                                           const std::string& type,
+                                                           const std::string& url)
+                                                           : m_id{id},
+                                                             m_id_var{id_var},
+                                                             m_started_at{started_at},
+                                                             m_ended_at{ended_at},
+                                                             m_type{type},
+                                                             m_url{url} {
+}
+
+std::string TwitchPP::TwitchAnalyticsResponse::to_json() {
+    std::string json = "{\"" + this->m_id_var + "\":\"" + this->m_id
+        + "\",\"date_range\":{\"started_at\":\"" + this->m_started_at
+        + "\",\"ended_at\":\"" + this->m_ended_at
+        + "\"},\"type\":\"" + this->m_type
+        + "\",\"url\":\"" + this->m_url
+        + "\"}";
+    return json;
+}
+
 TwitchPP::TwitchCommercialResponse::TwitchCommercialResponse(const std::string& json) {
     this->m_message = get_object_param("\"message\"", json);
     this->m_length = std::stoul(get_object_param("\"length\"", json, "0"));

@@ -76,5 +76,7 @@ namespace TwitchPP {
                                              std::string_view user_id);
             VectorResponse<TwitchCommercialResponse> start_commercial(std::string_view broadcaster_id,
                                                                       size_t length);
+            VectorResponse<TwitchAnalyticsResponse> get_extension_analytics(std::optional<AnalyticsRequest> request = std::nullopt);
+            VectorResponse<TwitchAnalyticsResponse> get_game_analytics(std::optional<AnalyticsRequest> request = std::nullopt);
     };
 }

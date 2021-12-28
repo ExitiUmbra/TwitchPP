@@ -74,6 +74,15 @@ namespace TwitchPP {
         std::vector<std::string> user_logins;
     };
 
+    struct AnalyticsRequest {
+        std::optional<std::string> id = std::nullopt;
+        std::optional<size_t> first = std::nullopt;
+        std::optional<std::string> started_at = std::nullopt;
+        std::optional<std::string> ended_at = std::nullopt;
+        std::optional<std::string> type = std::nullopt;
+        std::optional<std::string> after = std::nullopt;
+    };
+
     struct ClipsRequest {
         std::string broadcaster_id;
         std::string game_id;
@@ -220,6 +229,25 @@ namespace TwitchPP {
             TwitchBasicUser(const std::string& user_id,
                             const std::string& user_name,
                             const std::string& user_login);
+            std::string to_json();
+    };
+
+    class TwitchAnalyticsResponse {
+        protected:
+            std::string m_id {""};
+            std::string m_id_var {""};
+            std::string m_started_at {""};
+            std::string m_ended_at {""};
+            std::string m_type {""};
+            std::string m_url {""};
+        public:
+            TwitchAnalyticsResponse(const std::string& json);
+            TwitchAnalyticsResponse(const std::string& id,
+                                    const std::string& id_var,
+                                    const std::string& started_at,
+                                    const std::string& ended_at,
+                                    const std::string& type,
+                                    const std::string& url);
             std::string to_json();
     };
 
