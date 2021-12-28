@@ -421,4 +421,15 @@ namespace TwitchPP {
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
         return response;
     }
+
+    VectorResponse<TwitchCommercialResponse> TwitchOauthAPI::start_commercial(std::string_view broadcaster_id,
+                                                                              size_t length) {
+        std::string request {"{\"broadcaster_id\":\"" + std::string(broadcaster_id) + "\",\"length\":" + std::to_string(length) + "}"};
+        std::string url {TWITCH_API_BASE + "channels/commercial"};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "POST", request);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchCommercialResponse>(response);
+    }
 }

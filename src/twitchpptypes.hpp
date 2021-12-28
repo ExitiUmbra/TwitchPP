@@ -223,6 +223,19 @@ namespace TwitchPP {
             std::string to_json();
     };
 
+    class TwitchCommercialResponse {
+        protected:
+            std::string m_message {""};
+            size_t m_length {};
+            size_t m_retry_after {};
+        public:
+            TwitchCommercialResponse(const std::string& json);
+            TwitchCommercialResponse(const std::string& message,
+                                     const size_t& length,
+                                     const size_t& retry_after);
+            std::string to_json();
+    };
+
     class TwitchBanResponse {
         protected:
             std::string m_broadcaster_id {""};

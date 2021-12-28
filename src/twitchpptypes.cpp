@@ -177,6 +177,24 @@ std::string TwitchPP::TwitchBasicUser::to_json() {
     return json;
 }
 
+TwitchPP::TwitchCommercialResponse::TwitchCommercialResponse(const std::string& json) {
+    this->m_message = get_object_param("\"message\"", json);
+    this->m_length = std::stoul(get_object_param("\"length\"", json, "0"));
+    this->m_retry_after = std::stoul(get_object_param("\"retry_after\"", json, "0"));
+}
+
+TwitchPP::TwitchCommercialResponse::TwitchCommercialResponse(const std::string& message, const size_t& length, const size_t& retry_after)
+    : m_message{message}, m_length{length}, m_retry_after{retry_after} {
+}
+
+std::string TwitchPP::TwitchCommercialResponse::to_json() {
+    std::string json = "{\"message\":\"" + this->m_message
+        + "\",\"length\":\"" + std::to_string(this->m_length)
+        + "\",\"retry_after\":\"" + std::to_string(this->m_retry_after)
+        + "\"}";
+    return json;
+}
+
 TwitchPP::TwitchBanResponse::TwitchBanResponse(const std::string& json) {
     this->m_broadcaster_id = get_object_param("\"broadcaster_id\"", json);
     this->m_moderator_id = get_object_param("\"moderator_id\"", json);

@@ -74,5 +74,7 @@ namespace TwitchPP {
                                                        std::optional<size_t> duration = std::nullopt);
             Response<std::string> unban_user(std::string_view broadcaster_id,
                                              std::string_view user_id);
+            VectorResponse<TwitchCommercialResponse> start_commercial(std::string_view broadcaster_id,
+                                                                      size_t length);
     };
 }
