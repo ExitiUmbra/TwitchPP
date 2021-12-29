@@ -88,5 +88,12 @@ namespace TwitchPP {
             VectorResponse<TwitchPoll> end_poll(std::string_view broadcaster_id,
                                                 std::string_view id,
                                                 std::string_view status);
+            VectorResponse<TwitchPrediction> create_prediction(std::string_view broadcaster_id,
+                                                               std::string_view title,
+                                                               std::vector<std::string_view> outcomes,
+                                                               const size_t& prediction_window);
+            VectorResponse<TwitchPrediction> end_prediction(std::string_view broadcaster_id,
+                                                            std::string_view id,
+                                                            std::string_view status);
     };
 }

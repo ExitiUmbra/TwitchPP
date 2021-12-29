@@ -571,4 +571,44 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchPoll>(response);
     }
+
+    VectorResponse<TwitchPrediction> TwitchOauthAPI::create_prediction(std::string_view broadcaster_id,
+                                                                       std::string_view title,
+                                                                       std::vector<std::string_view> outcomes,
+                                                                       const size_t& prediction_window) {
+        std::string request {"{"};
+        request += "\"broadcaster_id\":\"" + std::string(broadcaster_id)
+            + "\",\"title\":\"" + std::string(title)
+            + "\",\"prediction_window\":" + std::to_string(prediction_window)
+            + ",\"outcomes\":[";
+        for (size_t i {0}; i < outcomes.size(); ++i) {
+            request += "{\"title\":\"" + std::string(outcomes.at(i)) + "\"}";
+            if ((i + 1) != outcomes.size()) {
+                request += ",";
+            }
+        }
+        request += "]}";
+        std::string url {TWITCH_API_BASE + "predictions"};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "POST", request);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchPrediction>(response);
+    }
+
+    VectorResponse<TwitchPrediction> TwitchOauthAPI::end_prediction(std::string_view broadcaster_id,
+                                                                    std::string_view id,
+                                                                    std::string_view status) {
+        std::string request {"{"};
+        request += "\"broadcaster_id\":\"" + std::string(broadcaster_id)
+            + "\",\"id\":\"" + std::string(id)
+            + "\",\"status\":\"" + std::string(status);
+        request += "\"}";
+        std::string url {TWITCH_API_BASE + "predictions"};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PATCH", request);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchPrediction>(response);
+    }
 }

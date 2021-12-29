@@ -1705,9 +1705,11 @@ TwitchPP::TwitchPredictionOutcome::TwitchPredictionOutcome(const std::string& js
     this->m_users = std::stoul(TwitchPP::get_object_param("\"users\"", json, "0"));
     this->m_channel_points = std::stoul(TwitchPP::get_object_param("\"channel_points\"", json, "0"));
     std::string string_with_predictors = TwitchPP::get_object_param("\"top_predictors\"", json);
-    std::vector<std::string> str_predictors = TwitchPP::json_to_vector(string_with_predictors);
-    for (std::string predictor : str_predictors) {
-        this->m_top_predictors.push_back(TwitchPP::TwitchPredictor(predictor));
+    if (string_with_predictors != "null" && string_with_predictors != "") {
+        std::vector<std::string> str_predictors = TwitchPP::json_to_vector(string_with_predictors);
+        for (std::string predictor : str_predictors) {
+            this->m_top_predictors.push_back(TwitchPP::TwitchPredictor(predictor));
+        }
     }
 }
 
@@ -1790,6 +1792,10 @@ TwitchPP::TwitchPrediction::TwitchPrediction(const std::string& id,
                                    m_locked_at{locked_at},
                                    m_prediction_window{prediction_window},
                                    m_outcomes{outcomes} {
+}
+
+std::string TwitchPP::TwitchPrediction::get_id() {
+    return this->m_id;
 }
 
 std::string TwitchPP::TwitchPrediction::to_json() {

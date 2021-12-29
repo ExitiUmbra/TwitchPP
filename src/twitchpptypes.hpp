@@ -1153,6 +1153,7 @@ namespace TwitchPP {
                              const std::string& locked_at,
                              const size_t& prediction_window,
                              std::vector<TwitchPredictionOutcome> outcomes);
+            std::string get_id();
             std::string to_json();
     };
 
