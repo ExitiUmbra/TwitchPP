@@ -522,4 +522,37 @@ namespace TwitchPP {
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PATCH", request);
         return response;
     }
+
+    VectorResponse<TwitchPoll> TwitchOauthAPI::create_poll(std::string_view broadcaster_id,
+                                                           std::string_view title,
+                                                           std::vector<std::string_view> choices,
+                                                           const size_t& duration,
+                                                           const size_t& bits,
+                                                           const size_t& channel_points) {
+        std::string request {"{"};
+        request += "\"broadcaster_id\":\"" + std::string(broadcaster_id)
+            + "\",\"title\":\"" + std::string(title)
+            + "\",\"duration\":" + std::to_string(duration)
+            + ",\"choices\":[";
+        for (size_t i {0}; i < choices.size(); ++i) {
+            request += "{\"title\":\"" + std::string(choices.at(i)) + "\"}";
+            if ((i + 1) != choices.size()) {
+                request += ",";
+            }
+        }
+        request += "]";
+        if (bits > 0) {
+            request += ",\"bits_voting_enabled\":true,\"bits_per_vote\":" + std::to_string(bits);
+        }
+        if (channel_points > 0) {
+            request += ",\"channel_points_voting_enabled\":true,\"channel_points_per_vote\":" + std::to_string(channel_points);
+        }
+        request += "}";
+        std::string url {TWITCH_API_BASE + "polls"};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "POST", request);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchPoll>(response);
+    }
 }

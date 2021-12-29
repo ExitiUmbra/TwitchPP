@@ -79,5 +79,11 @@ namespace TwitchPP {
             VectorResponse<TwitchAnalyticsResponse> get_extension_analytics(std::optional<AnalyticsRequest> request = std::nullopt);
             VectorResponse<TwitchAnalyticsResponse> get_game_analytics(std::optional<AnalyticsRequest> request = std::nullopt);
             Response<std::string> modify_channel_information(std::string_view broadcaster_id, ChannelInformation& info);
+            VectorResponse<TwitchPoll> create_poll(std::string_view broadcaster_id,
+                                                   std::string_view title,
+                                                   std::vector<std::string_view> choices,
+                                                   const size_t& duration,
+                                                   const size_t& bits = 0,
+                                                   const size_t& channel_points = 0);
     };
 }
