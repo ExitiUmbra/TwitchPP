@@ -95,5 +95,10 @@ namespace TwitchPP {
             VectorResponse<TwitchPrediction> end_prediction(std::string_view broadcaster_id,
                                                             std::string_view id,
                                                             std::string_view status);
+            Response<std::string> update_channel_stream_schedule(std::string_view broadcaster_id,
+                                                                 std::optional<bool> is_vacation_enabled = std::nullopt,
+                                                                 std::optional<std::string_view> vacation_start_time = std::nullopt,
+                                                                 std::optional<std::string_view> vacation_end_time = std::nullopt,
+                                                                 std::optional<std::string_view> timezone = std::nullopt);
     };
 }

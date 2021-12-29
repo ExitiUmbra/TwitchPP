@@ -611,4 +611,23 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchPrediction>(response);
     }
+
+    Response<std::string> TwitchOauthAPI::update_channel_stream_schedule(std::string_view broadcaster_id,
+                                                                         std::optional<bool> is_vacation_enabled,
+                                                                         std::optional<std::string_view> vacation_start_time,
+                                                                         std::optional<std::string_view> vacation_end_time,
+                                                                         std::optional<std::string_view> timezone) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        if (is_vacation_enabled) {
+            options += "&is_vacation_enabled=" + std::string(is_vacation_enabled.value() ? "true" : "false");
+            if (is_vacation_enabled.value()) {
+                options += "&vacation_start_time=" + std::string(vacation_start_time.value())
+                    + "&vacation_end_time=" + std::string(vacation_end_time.value())
+                    + "&timezone=" + std::string(timezone.value());
+            }
+        }
+        std::string url {TWITCH_API_BASE + "schedule/settings" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PATCH");
+        return response;
+    }
 }
