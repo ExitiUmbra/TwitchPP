@@ -83,6 +83,13 @@ namespace TwitchPP {
         std::optional<std::string> after = std::nullopt;
     };
 
+    struct ChannelInformation {
+        std::optional<std::string> title = std::nullopt;
+        std::optional<std::string> game_id = std::nullopt;
+        std::optional<std::string> broadcaster_language = std::nullopt;
+        std::optional<size_t> delay = std::nullopt;
+    };
+
     struct ClipsRequest {
         std::string broadcaster_id;
         std::string game_id;

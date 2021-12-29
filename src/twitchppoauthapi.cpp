@@ -492,4 +492,34 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchAnalyticsResponse>(response);
     }
+
+    Response<std::string> TwitchOauthAPI::modify_channel_information(std::string_view broadcaster_id, ChannelInformation& info) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        std::string request {"{"};
+        if (info.game_id) {
+            request += "\"game_id\":\"" + std::string(info.game_id.value()) + "\"";
+        }
+        if (info.broadcaster_language) {
+            if (request != "{") {
+                request += ",";
+            }
+            request += "\"broadcaster_language\":\"" + std::string(info.broadcaster_language.value()) + "\"";
+        }
+        if (info.title) {
+            if (request != "{") {
+                request += ",";
+            }
+            request += "\"title\":\"" + std::string(info.title.value()) + "\"";
+        }
+        if (info.delay) {
+            if (request != "{") {
+                request += ",";
+            }
+            request += "\"delay\":" + std::to_string(info.delay.value());
+        }
+        request += "}";
+        std::string url {TWITCH_API_BASE + "channels" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PATCH", request);
+        return response;
+    }
 }
