@@ -555,4 +555,20 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchPoll>(response);
     }
+
+    VectorResponse<TwitchPoll> TwitchOauthAPI::end_poll(std::string_view broadcaster_id,
+                                                        std::string_view id,
+                                                        std::string_view status) {
+        std::string request {"{"};
+        request += "\"broadcaster_id\":\"" + std::string(broadcaster_id)
+            + "\",\"id\":\"" + std::string(id)
+            + "\",\"status\":\"" + std::string(status);
+        request += "\"}";
+        std::string url {TWITCH_API_BASE + "polls"};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PATCH", request);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchPoll>(response);
+    }
 }

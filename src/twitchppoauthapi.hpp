@@ -85,5 +85,8 @@ namespace TwitchPP {
                                                    const size_t& duration,
                                                    const size_t& bits = 0,
                                                    const size_t& channel_points = 0);
+            VectorResponse<TwitchPoll> end_poll(std::string_view broadcaster_id,
+                                                std::string_view id,
+                                                std::string_view status);
     };
 }

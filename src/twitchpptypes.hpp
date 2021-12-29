@@ -1088,6 +1088,7 @@ namespace TwitchPP {
                        const size_t& channel_points_per_vote,
                        const size_t& duration,
                        std::vector<TwitchPollChoice> choices);
+            std::string get_id();
             std::string to_json();
     };
 

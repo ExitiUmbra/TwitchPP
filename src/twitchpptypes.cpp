@@ -1646,6 +1646,10 @@ TwitchPP::TwitchPoll::TwitchPoll(const std::string& id,
                                    m_choices{choices} {
 }
 
+std::string TwitchPP::TwitchPoll::get_id() {
+    return this->m_id;
+}
+
 std::string TwitchPP::TwitchPoll::to_json() {
     std::string json = "{\"id\":\"" + this->m_id
         + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
