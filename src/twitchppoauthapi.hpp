@@ -100,5 +100,12 @@ namespace TwitchPP {
                                                                  std::optional<std::string_view> vacation_start_time = std::nullopt,
                                                                  std::optional<std::string_view> vacation_end_time = std::nullopt,
                                                                  std::optional<std::string_view> timezone = std::nullopt);
+            VectorResponse<TwitchChannelStreamSchedule> create_channel_stream_schedule_segment(std::string_view broadcaster_id,
+                                                                                               std::string_view start_time,
+                                                                                               std::string_view timezone,
+                                                                                               const bool& is_recurring,
+                                                                                               std::optional<std::string_view> duration = std::nullopt,
+                                                                                               std::optional<std::string_view> title = std::nullopt,
+                                                                                               std::optional<std::string_view> category_id = std::nullopt);
     };
 }

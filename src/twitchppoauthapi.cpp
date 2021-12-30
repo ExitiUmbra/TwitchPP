@@ -630,4 +630,34 @@ namespace TwitchPP {
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PATCH");
         return response;
     }
+
+    VectorResponse<TwitchChannelStreamSchedule> TwitchOauthAPI::create_channel_stream_schedule_segment(std::string_view broadcaster_id,
+                                                                                                       std::string_view start_time,
+                                                                                                       std::string_view timezone,
+                                                                                                       const bool& is_recurring,
+                                                                                                       std::optional<std::string_view> duration,
+                                                                                                       std::optional<std::string_view> title,
+                                                                                                       std::optional<std::string_view> category_id) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        std::string request {"{"};
+        request += "\"start_time\":\"" + std::string(start_time)
+            + "\",\"timezone\":\"" + std::string(timezone)
+            + "\",\"is_recurring\":" + std::string(is_recurring ? "true" : "false");
+        if (duration) {
+            request += ",\"duration\":\"" + std::string(duration.value()) + "\"";
+        }
+        if (title) {
+            request += ",\"title\":\"" + std::string(title.value()) + "\"";
+        }
+        if (category_id) {
+            request += ",\"category_id\":\"" + std::string(category_id.value()) + "\"";
+        }
+        request += "}";
+        std::string url {TWITCH_API_BASE + "schedule/segment" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "POST", request);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_single_response<TwitchChannelStreamSchedule>(response);
+    }
 }

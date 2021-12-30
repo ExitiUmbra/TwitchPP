@@ -162,7 +162,7 @@ std::vector<std::string> TwitchPP::json_to_vector(std::string_view elements) {
         closing_char = TwitchPP::closing_chars.at(opening_char);
     }
     catch(const std::out_of_range& e) {}
-    for (size_t start_pos {0}; start_pos < std::string::npos; start_pos = elements.find(std::string(",") + opening_char, start_pos)) {
+    for (size_t start_pos {0}; start_pos < elements.size(); start_pos = elements.find(std::string(",") + opening_char, start_pos)) {
         if (start_pos > 0 && start_pos < std::string::npos) {
             start_pos += 1;
         }

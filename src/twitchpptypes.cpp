@@ -145,9 +145,6 @@ TwitchPP::TwitchUserExtension::TwitchUserExtension(const std::string& id,
 }
 
 std::string TwitchPP::TwitchUserExtension::to_json() {
-    for (size_t i {0}; i < this->m_type.size(); ++i) {
-        std::cout << this->m_type.at(i) << std::endl;
-    }
     std::string json = "{\"id\":\"" + this->m_id
         + "\",\"version\":\"" + this->m_version
         + "\",\"name\":\"" + this->m_name
@@ -1113,7 +1110,12 @@ TwitchPP::TwitchScheduleSegment::TwitchScheduleSegment(const std::string& json) 
     this->m_end_time = TwitchPP::get_object_param("\"end_time\"", json);
     this->m_title = TwitchPP::get_object_param("\"title\"", json);
     this->m_canceled_until = TwitchPP::get_object_param("\"canceled_until\"", json);
-    this->m_category = std::make_shared<TwitchPP::TwitchCategory>(TwitchPP::get_object_param("\"category\"", json));
+    std::string category_str = TwitchPP::get_object_param("\"category\"", json);
+    if (category_str == "null") {
+        this->m_category = nullptr;
+    } else {
+        this->m_category = std::make_shared<TwitchPP::TwitchCategory>(category_str);
+    }
     this->m_is_recurring = TwitchPP::get_object_param("\"is_recurring\"", json) == "true";
 }
 
@@ -1138,9 +1140,9 @@ std::string TwitchPP::TwitchScheduleSegment::to_json() {
         + "\",\"start_time\":\"" + this->m_start_time
         + "\",\"end_time\":\"" + this->m_end_time
         + "\",\"title\":\"" + this->m_title
-        + "\",\"canceled_until\":\"" + this->m_canceled_until
-        + "\",\"category\":" + (this->m_category == nullptr ? "null" : this->m_category->to_json())
-        + "\",\"is_recurring\":" + (this->m_is_recurring ? "true" : "false")
+        + "\",\"canceled_until\":" + (this->m_canceled_until == "null" ? this->m_canceled_until : ("\"" + this->m_canceled_until + "\""))
+        + ",\"category\":" + (this->m_category == nullptr ? "null" : this->m_category->to_json())
+        + ",\"is_recurring\":" + (this->m_is_recurring ? "true" : "false")
         + "}";
     return json;
 }
