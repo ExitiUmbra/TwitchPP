@@ -668,4 +668,56 @@ namespace TwitchPP {
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
         return response;
     }
+
+    VectorResponse<TwitchChannelStreamSchedule> TwitchOauthAPI::update_channel_stream_schedule_segment(std::string_view broadcaster_id,
+                                                                                                       std::string_view id,
+                                                                                                       std::optional<std::string_view> start_time,
+                                                                                                       std::optional<std::string_view> timezone,
+                                                                                                       std::optional<bool> is_canceled,
+                                                                                                       std::optional<std::string_view> duration,
+                                                                                                       std::optional<std::string_view> title,
+                                                                                                       std::optional<std::string_view> category_id) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id) + "&id=" + std::string(id)};
+        std::string request {"{"};
+        if (start_time) {
+            request += "\"start_time\":\"" + std::string(start_time.value()) + "\"";
+        }
+        if (timezone) {
+            if (request != "{") {
+                request += ",";
+            }
+            request += "\"timezone\":\"" + std::string(timezone.value()) + "\"";
+        }
+        if (is_canceled) {
+            if (request != "{") {
+                request += ",";
+            }
+            request += "\"is_canceled\":" + std::string(is_canceled.value() ? "true" : "false");
+        }
+        if (duration) {
+            if (request != "{") {
+                request += ",";
+            }
+            request += "\"duration\":\"" + std::string(duration.value()) + "\"";
+        }
+        if (title) {
+            if (request != "{") {
+                request += ",";
+            }
+            request += "\"title\":\"" + std::string(title.value()) + "\"";
+        }
+        if (category_id) {
+            if (request != "{") {
+                request += ",";
+            }
+            request += "\"category_id\":\"" + std::string(category_id.value()) + "\"";
+        }
+        request += "}";
+        std::string url {TWITCH_API_BASE + "schedule/segment" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PATCH", request);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_single_response<TwitchChannelStreamSchedule>(response);
+    }
 }
