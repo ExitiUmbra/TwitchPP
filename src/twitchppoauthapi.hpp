@@ -107,5 +107,7 @@ namespace TwitchPP {
                                                                                                std::optional<std::string_view> duration = std::nullopt,
                                                                                                std::optional<std::string_view> title = std::nullopt,
                                                                                                std::optional<std::string_view> category_id = std::nullopt);
+            Response<std::string> delete_channel_stream_schedule_segment(std::string_view broadcaster_id,
+                                                                         std::string_view id);
     };
 }

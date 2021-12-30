@@ -660,4 +660,12 @@ namespace TwitchPP {
         }
         return this->process_single_response<TwitchChannelStreamSchedule>(response);
     }
+
+    Response<std::string> TwitchOauthAPI::delete_channel_stream_schedule_segment(std::string_view broadcaster_id,
+                                                                                 std::string_view id) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id) + "&id=" + std::string(id)};
+        std::string url {TWITCH_API_BASE + "schedule/segment" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
+        return response;
+    }
 }
