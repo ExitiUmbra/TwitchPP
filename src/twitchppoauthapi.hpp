@@ -117,5 +117,6 @@ namespace TwitchPP {
                                                                                                std::optional<std::string_view> duration = std::nullopt,
                                                                                                std::optional<std::string_view> title = std::nullopt,
                                                                                                std::optional<std::string_view> category_id = std::nullopt);
+            VectorResponse<TwitchUser> update_user(std::string_view description);
     };
 }

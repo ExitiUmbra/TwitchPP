@@ -720,4 +720,21 @@ namespace TwitchPP {
         }
         return this->process_single_response<TwitchChannelStreamSchedule>(response);
     }
+
+    VectorResponse<TwitchUser> TwitchOauthAPI::update_user(std::string_view description) {
+        CURL *curl = curl_easy_init();
+        if (!curl) {
+            return {{}, "", 400, "Client API error"};
+        }
+        char *description_output = curl_easy_escape(curl, description.data(), description.size());
+        std::string options {"?description=" + std::string(description_output)};
+        curl_free(description_output);
+        curl_easy_cleanup(curl);
+        std::string url {TWITCH_API_BASE + "users" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PUT");
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchUser>(response);
+    }
 }

@@ -6,7 +6,7 @@ TwitchPP::Response<std::string> TwitchPP::call_api(std::string_view url,
                                                    std::optional<std::string_view> request_type,
                                                    std::optional<std::string> request_body) {
     std::string result {""};
-    size_t response_code;
+    size_t response_code {500};
     CURL *curl;
     CURLcode res;
     curl_global_init(CURL_GLOBAL_ALL);
@@ -32,15 +32,14 @@ TwitchPP::Response<std::string> TwitchPP::call_api(std::string_view url,
         res = curl_easy_perform(curl);
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
 
-        if (res != CURLE_OK) {
-            std::cout << "Error: " << curl_easy_strerror(res) << std::endl;
-            return {"", "", response_code, ""};
-        }
-
         curl_slist_free_all(chunk);
         curl_easy_cleanup(curl);
     }
     curl_global_cleanup();
+    if (res != CURLE_OK) {
+        std::cout << "Error: " << curl_easy_strerror(res) << std::endl;
+        return {"", "", response_code, curl_easy_strerror(res)};
+    }
     return {result, "", response_code, ""};
 }
 
