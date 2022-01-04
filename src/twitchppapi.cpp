@@ -310,10 +310,15 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchVideos> TwitchAPI::get_videos(VideosRequest& videos_request) {
-        std::string options {"?user_id="};
-        options += videos_request.user_id + "&game_id=" + videos_request.game_id;
+        std::string options {"?"};
         for (std::string clip_id : videos_request.ids) {
-            options += "&id=" + clip_id;
+            options += (options == "?" ? "id=" : "&id=") + clip_id;
+        }
+        if (videos_request.user_id) {
+            options += (options == "?" ? "user_id=" : "&user_id=") + videos_request.user_id.value();
+        }
+        if (videos_request.game_id) {
+            options += (options == "?" ? "game_id=" : "&game_id=") + videos_request.game_id.value();
         }
         if (videos_request.first) {
             options += "&first=" + std::to_string(videos_request.first.value());
@@ -338,6 +343,7 @@ namespace TwitchPP {
         if (response.data == "") {
             return {{}, "", response.code, "Bad request"};
         }
+        std::cout << response.data << std::endl;
         return this->process_response<TwitchVideos>(response);
     }
 

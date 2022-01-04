@@ -103,8 +103,8 @@ namespace TwitchPP {
 
     struct VideosRequest {
         std::vector<std::string> ids;
-        std::string user_id;
-        std::string game_id;
+        std::optional<std::string> user_id = std::nullopt;
+        std::optional<std::string> game_id = std::nullopt;
         std::optional<size_t> first = std::nullopt;
         std::optional<std::string> cursor = std::nullopt;
         bool is_after = true;

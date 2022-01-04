@@ -737,4 +737,17 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchUser>(response);
     }
+
+    VectorResponse<std::string> TwitchOauthAPI::delete_videos(std::vector<std::string> ids) {
+        std::string options {"?"};
+        for (std::string clip_id : ids) {
+            options += (options == "?" ? "id=" : "&id=") + clip_id;
+        }
+        std::string url {TWITCH_API_BASE + "videos" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<std::string>(response);
+    }
 }
