@@ -750,4 +750,30 @@ namespace TwitchPP {
         }
         return this->process_response<std::string>(response);
     }
+
+    VectorResponse<TwitchCreatedClip> TwitchOauthAPI::create_clip(std::string_view broadcaster_id,
+                                                                  std::optional<bool> has_delay) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        if (has_delay) {
+            options += "&has_delay=" + std::string(has_delay ? "true" : "false");
+        }
+        std::string url {TWITCH_API_BASE + "clips" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "POST");
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        size_t limit {};
+        size_t remaining {};
+        auto [data_string, _] = get_first_value(response.data.substr(1, response.data.size() - 1));
+        for (std::string header : response.headers) {
+            if (header.starts_with("ratelimit-limit:")) {
+                limit = std::stoul(header.substr(17, header.size()));
+            }
+            if (header.starts_with("ratelimit-remaining:")) {
+                remaining = std::stoul(header.substr(21, header.size()));
+            }
+        }
+        VectorResponse<TwitchCreatedClip> response_with_clip {{TwitchCreatedClip(data_string, limit, remaining)}, response.cursor, response.code, response.message};
+        return response_with_clip;
+    }
 }

@@ -1867,3 +1867,30 @@ std::string TwitchPP::TwitchCreatorsGoal::to_json() {
         + "}";
     return json;
 }
+
+TwitchPP::TwitchCreatedClip::TwitchCreatedClip(const std::string& json,
+                                               const size_t& limit,
+                                               const size_t& remaining)
+        : m_limit{limit}, m_remaining{remaining} {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_edit_url = get_object_param("\"edit_url\"", json);
+}
+
+TwitchPP::TwitchCreatedClip::TwitchCreatedClip(const std::string& id,
+                                               const std::string& edit_url,
+                                               const size_t& limit,
+                                               const size_t& remaining)
+                                               : m_id{id},
+                                                 m_edit_url{edit_url},
+                                                 m_limit{limit},
+                                                 m_remaining{remaining} {
+}
+
+std::string TwitchPP::TwitchCreatedClip::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"edit_url\":\"" + this->m_edit_url
+        + "\",\"limit\":" + std::to_string(this->m_limit)
+        + ",\"remaining\":" + std::to_string(this->m_remaining)
+        + "}";
+    return json;
+}

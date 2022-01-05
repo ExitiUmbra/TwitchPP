@@ -705,6 +705,23 @@ namespace TwitchPP {
             std::string to_json();
     };
 
+    class TwitchCreatedClip {
+        protected:
+            std::string m_id {""};
+            std::string m_edit_url {""};
+            size_t m_limit {};
+            size_t m_remaining {};
+        public:
+            explicit TwitchCreatedClip(const std::string& json,
+                                       const size_t& limit,
+                                       const size_t& remaining);
+            TwitchCreatedClip(const std::string& id,
+                              const std::string& edit_url,
+                              const size_t& limit,
+                              const size_t& remaining);
+            std::string to_json();
+    };
+
     class TwitchVideos {
         protected:
             std::string m_id {""};
