@@ -6,6 +6,7 @@ TwitchPP::Response<std::string> TwitchPP::call_api(std::string_view url,
                                                    std::optional<std::string_view> request_type,
                                                    std::optional<std::string> request_body) {
     std::string result {""};
+    std::vector<std::string> headers {""};
     size_t response_code {500};
     CURL *curl;
     CURLcode res;
@@ -24,8 +25,10 @@ TwitchPP::Response<std::string> TwitchPP::call_api(std::string_view url,
         }
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, chunk);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, TwitchPP::resp_size_cb);
+        curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, TwitchPP::resp_header_cb);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+        curl_easy_setopt(curl, CURLOPT_HEADERDATA, &headers);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &result);
         curl_easy_setopt(curl, CURLOPT_URL, url.data());
 
@@ -38,14 +41,19 @@ TwitchPP::Response<std::string> TwitchPP::call_api(std::string_view url,
     curl_global_cleanup();
     if (res != CURLE_OK) {
         std::cout << "Error: " << curl_easy_strerror(res) << std::endl;
-        return {"", "", response_code, curl_easy_strerror(res)};
+        return {"", "", response_code, curl_easy_strerror(res), headers};
     }
-    return {result, "", response_code, ""};
+    return {result, "", response_code, "", headers};
 }
 
 size_t TwitchPP::resp_size_cb(char *ptr, size_t size, size_t nmemb, void *stream) {
     static_cast<std::string*>(stream)->append(static_cast<char*>(ptr));
     return size * nmemb;
+}
+
+size_t TwitchPP::resp_header_cb(char *buffer, size_t size, size_t nitems, void *userdata) {
+    static_cast<std::vector<std::string>*>(userdata)->push_back(std::string(buffer));
+    return size * nitems;
 }
 
 std::string TwitchPP::generate_oauth_url(std::string_view client_id, std::string_view redirect_url, std::vector<std::string_view> scope) {

@@ -343,7 +343,6 @@ namespace TwitchPP {
         if (response.data == "") {
             return {{}, "", response.code, "Bad request"};
         }
-        std::cout << response.data << std::endl;
         return this->process_response<TwitchVideos>(response);
     }
 

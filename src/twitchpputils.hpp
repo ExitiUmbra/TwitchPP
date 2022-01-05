@@ -13,6 +13,7 @@ namespace TwitchPP {
         std::string cursor;
         size_t code;
         std::string message;
+        std::vector<std::string> headers = {};
     };
 
     template<typename T> struct ResponseLeftovers {
@@ -31,6 +32,7 @@ namespace TwitchPP {
     static std::map<char, char> closing_chars { {'\"', '\"'}, {'{', '}'}, {'[', ']'} };
 
     size_t resp_size_cb(char *ptr, size_t size, size_t nmemb, void *stream);
+    size_t resp_header_cb(char *buffer, size_t size, size_t nitems, void *userdata);
     Response<std::string> call_api(std::string_view url,
                                    std::string_view bearer,
                                    std::string_view client_id,
