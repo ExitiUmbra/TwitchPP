@@ -459,6 +459,50 @@ namespace TwitchPP {
             std::string to_json();
     };
 
+    class TwitchBroadcasterSubscription {
+        private:
+            std::string m_broadcaster_id {""};
+            std::string m_broadcaster_login {""};
+            std::string m_broadcaster_name {""};
+            std::string m_gifter_id {""};
+            std::string m_gifter_login {""};
+            std::string m_gifter_name {""};
+            std::string m_tier {""};
+            std::string m_plan_name {""};
+            std::string m_user_id {""};
+            std::string m_user_name {""};
+            std::string m_user_login {""};
+            bool m_is_gift {};
+        public:
+            TwitchBroadcasterSubscription(const std::string& json);
+            TwitchBroadcasterSubscription(const std::string& broadcaster_id,
+                                          const std::string& broadcaster_login,
+                                          const std::string& broadcaster_name,
+                                          const std::string& gifter_id,
+                                          const std::string& gifter_login,
+                                          const std::string& gifter_name,
+                                          const std::string& tier,
+                                          const std::string& plan_name,
+                                          const std::string& user_id,
+                                          const std::string& user_name,
+                                          const std::string& user_login,
+                                          const bool& is_gift);
+            std::string to_json();
+    };
+
+    class TwitchBroadcasterSubscriptions {
+        protected:
+            size_t m_total {};
+            size_t m_points {};
+            std::vector<TwitchBroadcasterSubscription> m_broadcaster_subscriptions {};
+        public:
+            TwitchBroadcasterSubscriptions(const size_t& total,
+                                           const size_t& points,
+                                           std::vector<TwitchBroadcasterSubscription> broadcaster_subscriptions);
+            std::string to_json();
+    };
+
+
     class TwitchEmote {
         protected:
             std::string m_id {""};

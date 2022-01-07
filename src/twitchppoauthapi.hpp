@@ -121,5 +121,9 @@ namespace TwitchPP {
             VectorResponse<std::string> delete_videos(std::vector<std::string> ids);
             VectorResponse<TwitchCreatedClip> create_clip(std::string_view broadcaster_id,
                                                           std::optional<bool> has_delay = std::nullopt);
+            VectorResponse<TwitchBroadcasterSubscriptions> get_broadcaster_subscriptions(std::string_view broadcaster_id,
+                                                                                         std::vector<std::string> user_ids = {},
+                                                                                         std::optional<size_t> first = std::nullopt,
+                                                                                         std::optional<std::string> after = std::nullopt);
     };
 }

@@ -1894,3 +1894,83 @@ std::string TwitchPP::TwitchCreatedClip::to_json() {
         + "}";
     return json;
 }
+
+TwitchPP::TwitchBroadcasterSubscription::TwitchBroadcasterSubscription(const std::string& json) {
+    this->m_broadcaster_id = TwitchPP::get_object_param("\"broadcaster_id\"", json);
+    this->m_broadcaster_name = TwitchPP::get_object_param("\"broadcaster_name\"", json);
+    this->m_broadcaster_login = TwitchPP::get_object_param("\"broadcaster_login\"", json);
+    this->m_gifter_id = TwitchPP::get_object_param("\"gifter_id\"", json);
+    this->m_gifter_login = TwitchPP::get_object_param("\"gifter_login\"", json);
+    this->m_gifter_name = TwitchPP::get_object_param("\"gifter_name\"", json);
+    this->m_tier = TwitchPP::get_object_param("\"tier\"", json);
+    this->m_plan_name = TwitchPP::get_object_param("\"plan_name\"", json);
+    this->m_user_id = TwitchPP::get_object_param("\"user_id\"", json);
+    this->m_user_name = TwitchPP::get_object_param("\"user_name\"", json);
+    this->m_user_login = TwitchPP::get_object_param("\"user_login\"", json);
+    this->m_is_gift = TwitchPP::get_object_param("\"is_gift\"", json) == "true";
+}
+
+TwitchPP::TwitchBroadcasterSubscription::TwitchBroadcasterSubscription(const std::string& broadcaster_id,
+                                                                       const std::string& broadcaster_login,
+                                                                       const std::string& broadcaster_name,
+                                                                       const std::string& gifter_id,
+                                                                       const std::string& gifter_login,
+                                                                       const std::string& gifter_name,
+                                                                       const std::string& tier,
+                                                                       const std::string& plan_name,
+                                                                       const std::string& user_id,
+                                                                       const std::string& user_name,
+                                                                       const std::string& user_login,
+                                                                       const bool& is_gift)
+                                                                       : m_broadcaster_id{broadcaster_id},
+                                                                         m_broadcaster_login{broadcaster_login},
+                                                                         m_broadcaster_name{broadcaster_name},
+                                                                         m_gifter_id{gifter_id},
+                                                                         m_gifter_login{gifter_login},
+                                                                         m_gifter_name{gifter_name},
+                                                                         m_tier{tier},
+                                                                         m_plan_name{plan_name},
+                                                                         m_user_id{user_id},
+                                                                         m_user_name{user_name},
+                                                                         m_user_login{user_login},
+                                                                         m_is_gift{is_gift} {
+}
+
+std::string TwitchPP::TwitchBroadcasterSubscription::to_json() {
+    std::string json = "{\"broadcaster_id\":\"" + this->m_broadcaster_id
+        + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
+        + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
+        + "\",\"gifter_id\":\"" + this->m_gifter_id
+        + "\",\"gifter_login\":\"" + this->m_gifter_login
+        + "\",\"gifter_name\":\"" + this->m_gifter_name
+        + "\",\"tier\":\"" + this->m_tier
+        + "\",\"plan_name\":\"" + this->m_plan_name
+        + "\",\"user_id\":\"" + this->m_user_id
+        + "\",\"user_name\":\"" + this->m_user_name
+        + "\",\"user_login\":\"" + this->m_user_login
+        + "\",\"is_gift\":" + std::string(this->m_is_gift ? "true" : "false")
+        + "}";
+    return json;
+}
+
+TwitchPP::TwitchBroadcasterSubscriptions::TwitchBroadcasterSubscriptions(const size_t& total,
+                                                                         const size_t& points,
+                                                                         std::vector<TwitchBroadcasterSubscription> broadcaster_subscriptions)
+                                                                         : m_total{total},
+                                                                           m_points{points},
+                                                                           m_broadcaster_subscriptions{broadcaster_subscriptions} {
+}
+
+std::string TwitchPP::TwitchBroadcasterSubscriptions::to_json() {
+    std::string json = "{\"total\":" + std::to_string(this->m_total)
+        + ",\"points\":" + std::to_string(this->m_points)
+        + ",\"broadcaster_subscriptions\":[";
+    for (size_t i {0}; i < this->m_broadcaster_subscriptions.size(); ++i) {
+        if (i) {
+            json += ",";
+        }
+        json += this->m_broadcaster_subscriptions.at(i).to_json();
+    }
+    json += "]}";
+    return json;
+}
