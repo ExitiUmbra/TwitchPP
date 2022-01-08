@@ -1378,4 +1378,25 @@ namespace TwitchPP {
                                          const size_t& reward_cost);
             std::string to_json();
     };
+
+    class TwitchUserSubscription {
+        protected:
+            std::string m_broadcaster_id {""};
+            std::string m_broadcaster_login {""};
+            std::string m_broadcaster_name {""};
+            std::string m_gifter_login {""};
+            std::string m_gifter_name {""};
+            std::string m_tier {""};
+            bool m_is_gift {};
+        public:
+            TwitchUserSubscription(const std::string& json);
+            TwitchUserSubscription(const std::string& broadcaster_id,
+                                   const std::string& broadcaster_login,
+                                   const std::string& broadcaster_name,
+                                   const std::string& gifter_login,
+                                   const std::string& gifter_name,
+                                   const std::string& tier,
+                                   const bool& is_gift);
+            std::string to_json();
+    };
 }

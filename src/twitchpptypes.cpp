@@ -2171,3 +2171,41 @@ std::string TwitchPP::TwitchCustomRewardRedemption::to_json() {
         + "}}";
     return json;
 }
+
+TwitchPP::TwitchUserSubscription::TwitchUserSubscription(const std::string& json) {
+    this->m_broadcaster_id = TwitchPP::get_object_param("\"broadcaster_id\"", json);
+    this->m_broadcaster_name = TwitchPP::get_object_param("\"broadcaster_name\"", json);
+    this->m_broadcaster_login = TwitchPP::get_object_param("\"broadcaster_login\"", json);
+    this->m_gifter_login = TwitchPP::get_object_param("\"gifter_login\"", json);
+    this->m_gifter_name = TwitchPP::get_object_param("\"gifter_name\"", json);
+    this->m_tier = TwitchPP::get_object_param("\"tier\"", json);
+    this->m_is_gift = TwitchPP::get_object_param("\"is_gift\"", json) == "true";
+}
+
+TwitchPP::TwitchUserSubscription::TwitchUserSubscription(const std::string& broadcaster_id,
+                                                         const std::string& broadcaster_login,
+                                                         const std::string& broadcaster_name,
+                                                         const std::string& gifter_login,
+                                                         const std::string& gifter_name,
+                                                         const std::string& tier,
+                                                         const bool& is_gift)
+                                                         : m_broadcaster_id{broadcaster_id},
+                                                           m_broadcaster_login{broadcaster_login},
+                                                           m_broadcaster_name{broadcaster_name},
+                                                           m_gifter_login{gifter_login},
+                                                           m_gifter_name{gifter_name},
+                                                           m_tier{tier},
+                                                           m_is_gift{is_gift} {
+}
+
+std::string TwitchPP::TwitchUserSubscription::to_json() {
+    std::string json = "{\"broadcaster_id\":\"" + this->m_broadcaster_id
+        + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
+        + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
+        + "\",\"gifter_login\":\"" + this->m_gifter_login
+        + "\",\"gifter_name\":\"" + this->m_gifter_name
+        + "\",\"tier\":\"" + this->m_tier
+        + "\",\"is_gift\":" + std::string(this->m_is_gift ? "true" : "false")
+        + "}";
+    return json;
+}

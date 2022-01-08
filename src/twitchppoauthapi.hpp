@@ -146,5 +146,7 @@ namespace TwitchPP {
                                                                                   std::string_view reward_id,
                                                                                   std::string_view redemption_id,
                                                                                   std::string_view status);
+            VectorResponse<TwitchUserSubscription> check_user_subscription(std::string_view broadcaster_id,
+                                                                           std::string_view user_id);
     };
 }
