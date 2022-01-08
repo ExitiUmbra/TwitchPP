@@ -866,6 +866,61 @@ namespace TwitchPP {
         return this->process_response<TwitchCustomReward>(response);
     }
 
+    VectorResponse<TwitchCustomReward> TwitchOauthAPI::update_custom_reward(std::string_view broadcaster_id,
+                                                                            std::string_view reward_id,
+                                                                            UpdateRewardRequest& request) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id) + "&id=" + std::string(reward_id)};
+        std::string new_reward {""};
+        if (request.title) {
+            new_reward += ",\"title\":\"" + request.title.value() + "\"";
+        }
+        if (request.cost) {
+            new_reward += ",\"cost\":" + std::to_string(request.cost.value());
+        }
+        if (request.prompt) {
+            new_reward += ",\"prompt\":\"" + request.prompt.value() + "\"";
+        }
+        if (request.background_color) {
+            new_reward += ",\"background_color\":\"" + request.background_color.value() + "\"";
+        }
+        if (request.is_enabled) {
+            new_reward += ",\"is_enabled\":" + std::string(request.is_enabled.value() ? "true" : "false");
+        }
+        if (request.is_user_input_required) {
+            new_reward += ",\"is_user_input_required\":" + std::string(request.is_user_input_required.value() ? "true" : "false");
+        }
+        if (request.is_paused) {
+            new_reward += ",\"is_paused\":" + std::string(request.is_paused.value() ? "true" : "false");
+        }
+        if (request.should_redemptions_skip_request_queue) {
+            new_reward += ",\"should_redemptions_skip_request_queue\":" + std::string(request.should_redemptions_skip_request_queue.value() ? "true" : "false");
+        }
+        if (request.is_max_per_stream_enabled) {
+            new_reward += ",\"is_max_per_stream_enabled\":" + std::string(request.is_max_per_stream_enabled.value() ? "true" : "false");
+        }
+        if (request.max_per_stream) {
+            new_reward += ",\"max_per_stream\":" + std::to_string(request.max_per_stream.value());
+        }
+        if (request.is_max_per_user_per_stream_enabled) {
+            new_reward += ",\"is_max_per_user_per_stream_enabled\":" + std::string(request.is_max_per_user_per_stream_enabled.value() ? "true" : "false");
+        }
+        if (request.max_per_user_per_stream) {
+            new_reward += ",\"max_per_user_per_stream\":" + std::to_string(request.max_per_user_per_stream.value());
+        }
+        if (request.is_global_cooldown_enabled) {
+            new_reward += ",\"is_global_cooldown_enabled\":" + std::string(request.is_global_cooldown_enabled.value() ? "true" : "false");
+        }
+        if (request.global_cooldown_seconds) {
+            new_reward += ",\"global_cooldown_seconds\":" + std::to_string(request.global_cooldown_seconds.value());
+        }
+        std::string url {TWITCH_API_BASE + "channel_points/custom_rewards" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PATCH", (new_reward.size() ? ("{" + new_reward.substr(1, new_reward.size()) + "}") : "{}"));
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchCustomReward>(response);
+    }
+
     Response<std::string> TwitchOauthAPI::delete_custom_reward(std::string_view broadcaster_id,
                                                                                  std::string_view id) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id) + "&id=" + std::string(id)};
