@@ -224,9 +224,9 @@ TwitchPP::TwitchCommercialResponse::TwitchCommercialResponse(const std::string& 
 
 std::string TwitchPP::TwitchCommercialResponse::to_json() {
     std::string json = "{\"message\":\"" + this->m_message
-        + "\",\"length\":\"" + std::to_string(this->m_length)
-        + "\",\"retry_after\":\"" + std::to_string(this->m_retry_after)
-        + "\"}";
+        + "\",\"length\":" + std::to_string(this->m_length)
+        + ",\"retry_after\":" + std::to_string(this->m_retry_after)
+        + "}";
     return json;
 }
 
@@ -1973,4 +1973,134 @@ std::string TwitchPP::TwitchBroadcasterSubscriptions::to_json() {
     }
     json += "]}";
     return json;
+}
+
+TwitchPP::TwitchCustomReward::TwitchCustomReward(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_broadcaster_id = TwitchPP::get_object_param("\"broadcaster_id\"", json);
+    this->m_broadcaster_name = TwitchPP::get_object_param("\"broadcaster_name\"", json);
+    this->m_broadcaster_login = TwitchPP::get_object_param("\"broadcaster_login\"", json);
+    this->m_title = TwitchPP::get_object_param("\"title\"", json);
+    this->m_prompt = TwitchPP::get_object_param("\"prompt\"", json);
+    this->m_background_color = TwitchPP::get_object_param("\"background_color\"", json);
+    this->m_cooldown_expires_at = TwitchPP::get_object_param("\"cooldown_expires_at\"", json);
+    this->m_cost = std::stoul(TwitchPP::get_object_param("\"cost\"", json, "0"));
+    this->m_is_enabled = TwitchPP::get_object_param("\"is_enabled\"", json) == "true";
+    this->m_is_user_input_required = TwitchPP::get_object_param("\"is_user_input_required\"", json) == "true";
+    this->m_is_paused = TwitchPP::get_object_param("\"is_paused\"", json) == "true";
+    this->m_is_in_stock = TwitchPP::get_object_param("\"is_in_stock\"", json) == "true";
+    this->m_should_redemptions_skip_request_queue = TwitchPP::get_object_param("\"should_redemptions_skip_request_queue\"", json) == "true";
+    std::string redemptions = TwitchPP::get_object_param("\"m_redemptions_redeemed_current_stream\"", json, "-1");
+    this->m_redemptions_redeemed_current_stream = redemptions == "null" ? -1 : std::stoi(redemptions);
+    std::string max_per_stream_setting = TwitchPP::get_object_param("\"max_per_stream_setting\"", json);
+    this->m_max_per_stream_setting_enabled = TwitchPP::get_object_param("\"is_enabled\"", max_per_stream_setting) == "true";
+    this->m_max_per_stream = std::stoul(TwitchPP::get_object_param("\"max_per_stream\"", max_per_stream_setting, "0"));
+    std::string max_per_user_per_stream_setting = TwitchPP::get_object_param("\"max_per_user_per_stream_setting\"", json);
+    this->m_max_per_user_per_stream_setting_enabled = TwitchPP::get_object_param("\"is_enabled\"", max_per_user_per_stream_setting) == "true";
+    this->m_max_per_user_per_stream = std::stoul(TwitchPP::get_object_param("\"max_per_user_per_stream\"", max_per_user_per_stream_setting, "0"));
+    std::string global_cooldown_setting = TwitchPP::get_object_param("\"global_cooldown_setting\"", json);
+    this->m_global_cooldown_setting_enabled = TwitchPP::get_object_param("\"is_enabled\"", global_cooldown_setting) == "true";
+    this->m_global_cooldown_seconds = std::stoul(TwitchPP::get_object_param("\"global_cooldown_seconds\"", global_cooldown_setting, "0"));
+    std::string image = TwitchPP::get_object_param("\"image\"", json);
+    if (image != "null") {
+        this->m_url_1x = TwitchPP::get_object_param("\"url_1x\"", image);
+        this->m_url_2x = TwitchPP::get_object_param("\"url_2x\"", image);
+        this->m_url_4x = TwitchPP::get_object_param("\"url_4x\"", image);
+    }
+    std::string default_image = TwitchPP::get_object_param("\"default_image\"", json);
+    this->m_default_url_1x = TwitchPP::get_object_param("\"url_1x\"", default_image);
+    this->m_default_url_2x = TwitchPP::get_object_param("\"url_2x\"", default_image);
+    this->m_default_url_4x = TwitchPP::get_object_param("\"url_4x\"", default_image);
+}
+
+TwitchPP::TwitchCustomReward::TwitchCustomReward(const std::string& id,
+                                                 const std::string& broadcaster_id,
+                                                 const std::string& broadcaster_name,
+                                                 const std::string& broadcaster_login,
+                                                 const std::string& title,
+                                                 const std::string& prompt,
+                                                 const std::string& background_color,
+                                                 const std::string& cooldown_expires_at,
+                                                 const size_t& cost,
+                                                 const bool& is_enabled,
+                                                 const bool& is_user_input_required,
+                                                 const bool& is_paused,
+                                                 const bool& is_in_stock,
+                                                 const bool& should_redemptions_skip_request_queue,
+                                                 const int& redemptions_redeemed_current_stream,
+                                                 const bool& max_per_stream_setting_enabled,
+                                                 const size_t& max_per_stream,
+                                                 const bool& max_per_user_per_stream_setting_enabled,
+                                                 const size_t& max_per_user_per_stream,
+                                                 const bool& global_cooldown_setting_enabled,
+                                                 const size_t& global_cooldown_seconds,
+                                                 const std::string& url_1x,
+                                                 const std::string& url_2x,
+                                                 const std::string& url_4x,
+                                                 const std::string& default_url_1x,
+                                                 const std::string& default_url_2x,
+                                                 const std::string& default_url_4x)
+                                                 : m_id{id},
+                                                   m_broadcaster_id{broadcaster_id},
+                                                   m_broadcaster_name{broadcaster_name},
+                                                   m_broadcaster_login{broadcaster_login},
+                                                   m_title{title},
+                                                   m_prompt{prompt},
+                                                   m_background_color{background_color},
+                                                   m_cooldown_expires_at{cooldown_expires_at},
+                                                   m_cost{cost},
+                                                   m_is_enabled{is_enabled},
+                                                   m_is_user_input_required{is_user_input_required},
+                                                   m_is_paused{is_paused},
+                                                   m_is_in_stock{is_in_stock},
+                                                   m_should_redemptions_skip_request_queue{should_redemptions_skip_request_queue},
+                                                   m_redemptions_redeemed_current_stream{redemptions_redeemed_current_stream},
+                                                   m_max_per_stream_setting_enabled{max_per_stream_setting_enabled},
+                                                   m_max_per_stream{max_per_stream},
+                                                   m_max_per_user_per_stream_setting_enabled{max_per_user_per_stream_setting_enabled},
+                                                   m_max_per_user_per_stream{max_per_user_per_stream},
+                                                   m_global_cooldown_setting_enabled{global_cooldown_setting_enabled},
+                                                   m_global_cooldown_seconds{global_cooldown_seconds},
+                                                   m_url_1x{url_1x},
+                                                   m_url_2x{url_2x},
+                                                   m_url_4x{url_4x},
+                                                   m_default_url_1x{default_url_1x},
+                                                   m_default_url_2x{default_url_2x},
+                                                   m_default_url_4x{default_url_4x} {
+}
+
+std::string TwitchPP::TwitchCustomReward::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
+        + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
+        + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
+        + "\",\"title\":\"" + this->m_title
+        + "\",\"prompt\":\"" + this->m_prompt
+        + "\",\"background_color\":\"" + this->m_background_color
+        + "\",\"cooldown_expires_at\":" + (this->m_cooldown_expires_at == "null" ? "null" : ("\"" + this->m_cooldown_expires_at + "\""))
+        + ",\"cost\":" + std::to_string(this->m_cost)
+        + ",\"is_enabled\":" + std::string(this->m_is_enabled ? "true" : "false")
+        + ",\"is_user_input_required\":" + std::string(this->m_is_user_input_required ? "true" : "false")
+        + ",\"is_paused\":" + std::string(this->m_is_paused ? "true" : "false")
+        + ",\"is_in_stock\":" + std::string(this->m_is_in_stock ? "true" : "false")
+        + ",\"should_redemptions_skip_request_queue\":" + std::string(this->m_should_redemptions_skip_request_queue ? "true" : "false")
+        + ",\"redemptions_redeemed_current_stream\":" + (this->m_redemptions_redeemed_current_stream == -1 ? std::string("null") : std::to_string(this->m_redemptions_redeemed_current_stream))
+        + ",\"max_per_stream_setting\":{\"is_enabled\":" + std::string(this->m_max_per_stream_setting_enabled ? "true" : "false")
+        + ",\"max_per_stream\":" + std::to_string(this->m_max_per_stream)
+        + "},\"max_per_user_per_stream_setting\":{\"is_enabled\":" + std::string(this->m_max_per_user_per_stream_setting_enabled ? "true" : "false")
+        + ",\"max_per_user_per_stream\":" + std::to_string(this->m_max_per_user_per_stream)
+        + "},\"global_cooldown_setting\":{\"is_enabled\":" + std::string(this->m_global_cooldown_setting_enabled ? "true" : "false")
+        + ",\"global_cooldown_seconds\":" + std::to_string(this->m_global_cooldown_seconds)
+        + "},\"default_image\":{\"url_1x\":\"" + this->m_default_url_1x
+        + "\",\"url_2x\":\"" + this->m_default_url_2x
+        + "\",\"url_4x\":\"" + this->m_default_url_4x
+        + "\"},\"image\":";
+    if (!this->m_url_1x.size()) {
+        json += "null";
+    } else {
+        json += "{\"url_1x\":\"" + this->m_url_1x
+            + "\",\"url_2x\":\"" + this->m_url_2x
+            + "\",\"url_4x\":\"" + this->m_url_4x + "\"}";
+    }
+    return json + "}";
 }

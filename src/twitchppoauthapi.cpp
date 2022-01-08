@@ -801,4 +801,22 @@ namespace TwitchPP {
         size_t points = std::stoul(get_object_param("\"points\"", subs_response.leftovers, "0"));
         return {{TwitchBroadcasterSubscriptions(total, points, subs_response.data)}, subs_response.cursor, subs_response.code, subs_response.message};
     }
+
+    VectorResponse<TwitchCustomReward> TwitchOauthAPI::get_custom_reward(std::string_view broadcaster_id,
+                                                                         std::vector<std::string> ids,
+                                                                         std::optional<bool> only_manageable_rewards) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        for (std::string reward_id : ids) {
+            options += "&id=" + reward_id;
+        }
+        if (only_manageable_rewards) {
+            options += "&only_manageable_rewards=" + std::string(only_manageable_rewards.value() ? "true" : "false");
+        }
+        std::string url {TWITCH_API_BASE + "channel_points/custom_rewards" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchCustomReward>(response);
+    }
 }

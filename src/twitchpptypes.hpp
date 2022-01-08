@@ -1232,14 +1232,75 @@ namespace TwitchPP {
         public:
             TwitchCreatorsGoal(const std::string& json);
             TwitchCreatorsGoal(const std::string& id,
-                              const std::string& broadcaster_id,
-                              const std::string& broadcaster_name,
-                              const std::string& broadcaster_login,
-                              const std::string& type,
-                              const std::string& description,
-                              const std::string& created_at,
-                              const size_t& current_amount,
-                              const size_t& target_amount);
+                               const std::string& broadcaster_id,
+                               const std::string& broadcaster_name,
+                               const std::string& broadcaster_login,
+                               const std::string& type,
+                               const std::string& description,
+                               const std::string& created_at,
+                               const size_t& current_amount,
+                               const size_t& target_amount);
+            std::string to_json();
+    };
+
+    class TwitchCustomReward {
+        public:
+            std::string m_id {""};
+            std::string m_broadcaster_id {""};
+            std::string m_broadcaster_name {""};
+            std::string m_broadcaster_login {""};
+            std::string m_title {""};
+            std::string m_prompt {""};
+            std::string m_background_color {""};
+            std::string m_cooldown_expires_at {""};
+            size_t m_cost {};
+            bool m_is_enabled {};
+            bool m_is_user_input_required {};
+            bool m_is_paused {};
+            bool m_is_in_stock {};
+            bool m_should_redemptions_skip_request_queue {};
+            int m_redemptions_redeemed_current_stream {-1};
+            bool m_max_per_stream_setting_enabled {};
+            size_t m_max_per_stream {};
+            bool m_max_per_user_per_stream_setting_enabled {};
+            size_t m_max_per_user_per_stream {};
+            bool m_global_cooldown_setting_enabled {};
+            size_t m_global_cooldown_seconds {};
+            std::string m_url_1x {""};
+            std::string m_url_2x {""};
+            std::string m_url_4x {""};
+            std::string m_default_url_1x {""};
+            std::string m_default_url_2x {""};
+            std::string m_default_url_4x {""};
+
+            TwitchCustomReward(const std::string& json);
+            TwitchCustomReward(const std::string& id,
+                               const std::string& broadcaster_id,
+                               const std::string& broadcaster_name,
+                               const std::string& broadcaster_login,
+                               const std::string& title,
+                               const std::string& prompt,
+                               const std::string& background_color,
+                               const std::string& cooldown_expires_at,
+                               const size_t& cost,
+                               const bool& is_enabled,
+                               const bool& is_user_input_required,
+                               const bool& is_paused,
+                               const bool& is_in_stock,
+                               const bool& should_redemptions_skip_request_queue,
+                               const int& redemptions_redeemed_current_stream,
+                               const bool& max_per_stream_setting_enabled,
+                               const size_t& max_per_stream,
+                               const bool& max_per_user_per_stream_setting_enabled,
+                               const size_t& max_per_user_per_stream,
+                               const bool& global_cooldown_setting_enabled,
+                               const size_t& global_cooldown_seconds,
+                               const std::string& url_1x,
+                               const std::string& url_2x,
+                               const std::string& url_4x,
+                               const std::string& default_url_1x,
+                               const std::string& default_url_2x,
+                               const std::string& default_url_4x);
             std::string to_json();
     };
 }

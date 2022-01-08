@@ -37,6 +37,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "search/categories" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        // TODO: change '== ""' to '!{var}.size()'
         if (response.data == "") {
             return {{}, "", response.code, "Bad request"};
         }
