@@ -954,9 +954,26 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "channel_points/custom_rewards/redemptions" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
-    return this->process_response<TwitchCustomRewardRedemption>(response);
+        return this->process_response<TwitchCustomRewardRedemption>(response);
+    }
+
+    VectorResponse<TwitchCustomRewardRedemption> TwitchOauthAPI::update_redemption_status(std::string_view broadcaster_id,
+                                                                                          std::string_view reward_id,
+                                                                                          std::string_view redemption_id,
+                                                                                          std::string_view status) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)
+            + "&reward_id=" + std::string(reward_id)
+            + "&id=" + std::string(redemption_id)};
+        std::string request_body {"{\"status\":\"" + std::string(status) + "\"}"};
+        std::string url {TWITCH_API_BASE + "channel_points/custom_rewards/redemptions" + options};
+        // TODO: Change everywhere request types to constants
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PATCH, request_body);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchCustomRewardRedemption>(response);
     }
 }

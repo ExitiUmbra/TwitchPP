@@ -1,7 +1,7 @@
 #include "twitchpputils.hpp"
 
 namespace TwitchPP {
-    /* Twitch API */
+    /* Twitch API permissions */
     constexpr std::string_view ANALYTICS_READ_EXTENSIONS { "analytics:read:extensions" };
     constexpr std::string_view ANALYTICS_READ_GAMES { "analytics:read:games" };
     constexpr std::string_view BITS_READ { "bits:read" };
@@ -66,6 +66,7 @@ namespace TwitchPP {
     constexpr std::string_view HTTP_POST { "POST" };
     constexpr std::string_view HTTP_PATCH { "PATCH" };
     constexpr std::string_view HTTP_DELETE { "DELETE" };
+    constexpr std::string_view HTTP_PUT { "PUT" };
 
     template<typename T> using VectorResponse = TwitchPP::Response<std::vector<T>>;
     template<typename T> using VectorResponseLeftovers = TwitchPP::ResponseLeftovers<std::vector<T>>;

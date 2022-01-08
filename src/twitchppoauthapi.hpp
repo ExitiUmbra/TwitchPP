@@ -142,5 +142,9 @@ namespace TwitchPP {
                                                                                       std::optional<std::string> sort = std::nullopt,
                                                                                       std::optional<size_t> first = std::nullopt,
                                                                                       std::optional<std::string> after = std::nullopt);
+            VectorResponse<TwitchCustomRewardRedemption> update_redemption_status(std::string_view broadcaster_id,
+                                                                                  std::string_view reward_id,
+                                                                                  std::string_view redemption_id,
+                                                                                  std::string_view status);
     };
 }
