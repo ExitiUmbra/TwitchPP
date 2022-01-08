@@ -83,6 +83,22 @@ namespace TwitchPP {
         std::optional<std::string> after = std::nullopt;
     };
 
+    struct CreateRewardRequest {
+        std::string title;
+        size_t cost;
+        std::optional<std::string> prompt = std::nullopt;
+        std::optional<std::string> background_color = std::nullopt;
+        std::optional<bool> is_enabled = std::nullopt;
+        std::optional<bool> is_user_input_required = std::nullopt;
+        std::optional<bool> should_redemptions_skip_request_queue = std::nullopt;
+        std::optional<bool> is_max_per_stream_enabled = std::nullopt;
+        std::optional<size_t> max_per_stream = std::nullopt;
+        std::optional<bool> is_max_per_user_per_stream_enabled = std::nullopt;
+        std::optional<size_t> max_per_user_per_stream = std::nullopt;
+        std::optional<bool> is_global_cooldown_enabled = std::nullopt;
+        std::optional<size_t> global_cooldown_seconds = std::nullopt;
+    };
+
     struct ChannelInformation {
         std::optional<std::string> title = std::nullopt;
         std::optional<std::string> game_id = std::nullopt;

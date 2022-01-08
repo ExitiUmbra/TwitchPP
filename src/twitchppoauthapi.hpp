@@ -128,6 +128,8 @@ namespace TwitchPP {
             VectorResponse<TwitchCustomReward> get_custom_reward(std::string_view broadcaster_id,
                                                                  std::vector<std::string> ids = {},
                                                                  std::optional<bool> only_manageable_rewards = std::nullopt);
+            VectorResponse<TwitchCustomReward> create_custom_rewards(std::string_view broadcaster_id,
+                                                                     CreateRewardRequest& request);
             Response<std::string> delete_custom_reward(std::string_view broadcaster_id,
                                                        std::string_view id);
     };
