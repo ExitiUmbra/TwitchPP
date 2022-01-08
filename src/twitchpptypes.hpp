@@ -1399,4 +1399,21 @@ namespace TwitchPP {
                                    const bool& is_gift);
             std::string to_json();
     };
+
+    class TwitchStreamMarker {
+        public:
+            std::string m_id {""};
+            std::string m_description {""};
+            std::string m_created_at {""};
+            std::string m_url {""};
+            size_t m_position_seconds {};
+
+            TwitchStreamMarker(const std::string& json);
+            TwitchStreamMarker(const std::string& id,
+                               const std::string& description,
+                               const std::string& created_at,
+                               const std::string& url,
+                               const size_t& position_seconds);
+            std::string to_json();
+    };
 }

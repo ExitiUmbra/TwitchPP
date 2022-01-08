@@ -2209,3 +2209,33 @@ std::string TwitchPP::TwitchUserSubscription::to_json() {
         + "}";
     return json;
 }
+
+TwitchPP::TwitchStreamMarker::TwitchStreamMarker(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_description = TwitchPP::get_object_param("\"description\"", json);
+    this->m_created_at = TwitchPP::get_object_param("\"created_at\"", json);
+    this->m_url = TwitchPP::get_object_param("\"url\"", json);
+    this->m_position_seconds = std::stoul(TwitchPP::get_object_param("\"position_seconds\"", json, "0"));
+}
+
+TwitchPP::TwitchStreamMarker::TwitchStreamMarker(const std::string& id,
+                                                 const std::string& description,
+                                                 const std::string& created_at,
+                                                 const std::string& url,
+                                                 const size_t& position_seconds)
+                                                 : m_id{id},
+                                                   m_description{description},
+                                                   m_created_at{created_at},
+                                                   m_url{url},
+                                                   m_position_seconds{position_seconds} {
+}
+
+std::string TwitchPP::TwitchStreamMarker::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"description\":\"" + this->m_description
+        + "\",\"created_at\":\"" + this->m_created_at
+        + (this->m_url.size() ? "\",\"url\":\"" + this->m_url : this->m_url)
+        + "\",\"position_seconds\":" + std::to_string(this->m_position_seconds)
+        + "}";
+    return json;
+}

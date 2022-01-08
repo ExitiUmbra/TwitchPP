@@ -987,4 +987,19 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchUserSubscription>(response);
     }
+
+    VectorResponse<TwitchStreamMarker> TwitchOauthAPI::create_stream_marker(std::string_view user_id,
+                                                                            std::optional<std::string_view> description) {
+        std::string request_body {"{\"user_id\":\"" + std::string(user_id)};
+        if (description) {
+            request_body += "\",\"description\":\"" + std::string(description.value());
+        }
+        request_body += "\"}";
+        std::string url {TWITCH_API_BASE + "streams/markers"};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_POST, request_body);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchStreamMarker>(response);
+    }
 }

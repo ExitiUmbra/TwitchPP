@@ -148,5 +148,7 @@ namespace TwitchPP {
                                                                                   std::string_view status);
             VectorResponse<TwitchUserSubscription> check_user_subscription(std::string_view broadcaster_id,
                                                                            std::string_view user_id);
+            VectorResponse<TwitchStreamMarker> create_stream_marker(std::string_view user_id,
+                                                                    std::optional<std::string_view> description = std::nullopt);
     };
 }
