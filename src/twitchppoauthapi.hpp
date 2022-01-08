@@ -135,5 +135,12 @@ namespace TwitchPP {
                                                                     UpdateRewardRequest& request);
             Response<std::string> delete_custom_reward(std::string_view broadcaster_id,
                                                        std::string_view id);
+            VectorResponse<TwitchCustomRewardRedemption> get_custom_reward_redemption(std::string_view broadcaster_id,
+                                                                                      std::string_view reward_id,
+                                                                                      std::vector<std::string> ids = {},
+                                                                                      std::optional<std::string> status = std::nullopt,
+                                                                                      std::optional<std::string> sort = std::nullopt,
+                                                                                      std::optional<size_t> first = std::nullopt,
+                                                                                      std::optional<std::string> after = std::nullopt);
     };
 }

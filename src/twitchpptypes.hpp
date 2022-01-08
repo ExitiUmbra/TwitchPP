@@ -56,10 +56,16 @@ namespace TwitchPP {
     const std::string TWITCH_GLOBAL_MOD { "global_mod" };
     const std::string TWITCH_STAFF { "staff" };
 
+    /* Redemption statuses */
+    const std::string REDEMPTION_UNFULFILLED { "UNFULFILLED" };
+    const std::string REDEMPTION_FULFILLED { "FULFILLED" };
+    const std::string REDEMPTION_CANCELED { "CANCELED" };
+
     /* HTTP request types */
     constexpr std::string_view HTTP_GET { "GET" };
     constexpr std::string_view HTTP_POST { "POST" };
     constexpr std::string_view HTTP_PATCH { "PATCH" };
+    constexpr std::string_view HTTP_DELETE { "DELETE" };
 
     template<typename T> using VectorResponse = TwitchPP::Response<std::vector<T>>;
     template<typename T> using VectorResponseLeftovers = TwitchPP::ResponseLeftovers<std::vector<T>>;
@@ -1334,6 +1340,41 @@ namespace TwitchPP {
                                const std::string& default_url_1x,
                                const std::string& default_url_2x,
                                const std::string& default_url_4x);
+            std::string to_json();
+    };
+
+    class TwitchCustomRewardRedemption {
+        public:
+            std::string m_id {""};
+            std::string m_broadcaster_id {""};
+            std::string m_broadcaster_name {""};
+            std::string m_broadcaster_login {""};
+            std::string m_user_id {""};
+            std::string m_user_name {""};
+            std::string m_user_login {""};
+            std::string m_user_input {""};
+            std::string m_status{""};
+            std::string m_redeemed_at {""};
+            std::string m_reward_id {""};
+            std::string m_reward_title {""};
+            std::string m_reward_prompt {""};
+            size_t m_reward_cost {};
+
+            TwitchCustomRewardRedemption(const std::string& json);
+            TwitchCustomRewardRedemption(const std::string& id,
+                                         const std::string& broadcaster_id,
+                                         const std::string& broadcaster_name,
+                                         const std::string& broadcaster_login,
+                                         const std::string& user_id,
+                                         const std::string& user_name,
+                                         const std::string& user_login,
+                                         const std::string& user_input,
+                                         const std::string& status,
+                                         const std::string& redeemed_at,
+                                         const std::string& reward_id,
+                                         const std::string& reward_title,
+                                         const std::string& reward_prompt,
+                                         const size_t& reward_cost);
             std::string to_json();
     };
 }

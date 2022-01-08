@@ -928,4 +928,35 @@ namespace TwitchPP {
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
         return response;
     }
+
+    VectorResponse<TwitchCustomRewardRedemption> TwitchOauthAPI::get_custom_reward_redemption(std::string_view broadcaster_id,
+                                                                                              std::string_view reward_id,
+                                                                                              std::vector<std::string> ids,
+                                                                                              std::optional<std::string> status,
+                                                                                              std::optional<std::string> sort,
+                                                                                              std::optional<size_t> first,
+                                                                                              std::optional<std::string> after) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id) + "&reward_id=" + std::string(reward_id)};
+        for (std::string redemption_id : ids) {
+            options += "&id=" + redemption_id;
+        }
+        if (status) {
+            options += "&status=" + status.value();
+        }
+        if (sort) {
+            options += "&sort=" + sort.value();
+        }
+        if (first) {
+            options += "&first=" + std::to_string(first.value());
+        }
+        if (after) {
+            options += "&after=" + after.value();
+        }
+        std::string url {TWITCH_API_BASE + "channel_points/custom_rewards/redemptions" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+    return this->process_response<TwitchCustomRewardRedemption>(response);
+    }
 }

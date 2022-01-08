@@ -2104,3 +2104,70 @@ std::string TwitchPP::TwitchCustomReward::to_json() {
     }
     return json + "}";
 }
+
+TwitchPP::TwitchCustomRewardRedemption::TwitchCustomRewardRedemption(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_broadcaster_id = TwitchPP::get_object_param("\"broadcaster_id\"", json);
+    this->m_broadcaster_name = TwitchPP::get_object_param("\"broadcaster_name\"", json);
+    this->m_broadcaster_login = TwitchPP::get_object_param("\"broadcaster_login\"", json);
+    this->m_user_id = TwitchPP::get_object_param("\"user_id\"", json);
+    this->m_user_name = TwitchPP::get_object_param("\"user_name\"", json);
+    this->m_user_login = TwitchPP::get_object_param("\"user_login\"", json);
+    this->m_user_input = TwitchPP::get_object_param("\"user_input\"", json);
+    this->m_status = TwitchPP::get_object_param("\"status\"", json);
+    this->m_redeemed_at = TwitchPP::get_object_param("\"redeemed_at\"", json);
+    std::string reward = TwitchPP::get_object_param("\"reward\"", json);
+    this->m_reward_id = TwitchPP::get_object_param("\"id\"", reward);
+    this->m_reward_title = TwitchPP::get_object_param("\"title\"", reward);
+    this->m_reward_prompt = TwitchPP::get_object_param("\"prompt\"", reward);
+    this->m_reward_cost = std::stoul(TwitchPP::get_object_param("\"cost\"", reward, "0"));
+}
+
+TwitchPP::TwitchCustomRewardRedemption::TwitchCustomRewardRedemption(const std::string& id,
+                                                                     const std::string& broadcaster_id,
+                                                                     const std::string& broadcaster_name,
+                                                                     const std::string& broadcaster_login,
+                                                                     const std::string& user_id,
+                                                                     const std::string& user_name,
+                                                                     const std::string& user_login,
+                                                                     const std::string& user_input,
+                                                                     const std::string& status,
+                                                                     const std::string& redeemed_at,
+                                                                     const std::string& reward_id,
+                                                                     const std::string& reward_title,
+                                                                     const std::string& reward_prompt,
+                                                                     const size_t& reward_cost)
+                                                                     : m_id{id},
+                                                                       m_broadcaster_id{broadcaster_id},
+                                                                       m_broadcaster_name{broadcaster_name},
+                                                                       m_broadcaster_login{broadcaster_login},
+                                                                       m_user_id{user_id},
+                                                                       m_user_name{user_name},
+                                                                       m_user_login{user_login},
+                                                                       m_user_input{user_input},
+                                                                       m_status{status},
+                                                                       m_redeemed_at{redeemed_at},
+                                                                       m_reward_id{reward_id},
+                                                                       m_reward_title{reward_title},
+                                                                       m_reward_prompt{reward_prompt},
+                                                                       m_reward_cost{reward_cost} {
+}
+
+std::string TwitchPP::TwitchCustomRewardRedemption::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
+        + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
+        + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
+        + "\",\"user_id\":\"" + this->m_user_id
+        + "\",\"user_name\":\"" + this->m_user_name
+        + "\",\"user_login\":\"" + this->m_user_login
+        + "\",\"user_input\":\"" + this->m_user_input
+        + "\",\"status\":\"" + this->m_status
+        + "\",\"redeemed_at\":\"" + this->m_redeemed_at
+        + "\",\"reward\":{\"id\":\"" + this->m_reward_id
+        + "\",\"title\":\"" + this->m_reward_title
+        + "\",\"prompt\":\"" + this->m_reward_prompt
+        + "\",\"cost\":" + std::to_string(this->m_reward_cost)
+        + "}}";
+    return json;
+}
