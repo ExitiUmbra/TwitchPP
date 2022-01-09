@@ -442,4 +442,12 @@ namespace TwitchPP {
         return this->process_response<TwitchCheermote>(response);
     }
 
+    VectorResponse<TwitchBasicPlaylist> TwitchAPI::get_soundtrack_playlists() {
+        std::string url {TWITCH_API_BASE + "soundtrack/playlists"};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchBasicPlaylist>(response);
+    }
 }

@@ -1551,4 +1551,19 @@ namespace TwitchPP {
                                  TwitchHypeTrainData& event_data);
             std::string to_json();
     };
+
+    class TwitchBasicPlaylist {
+        protected:
+            std::string m_id {""};
+            std::string m_title {""};
+            std::string m_description {""};
+            std::string m_image_url {""};
+        public:
+            TwitchBasicPlaylist(const std::string& json);
+            TwitchBasicPlaylist(const std::string& id,
+                                const std::string& title,
+                                const std::string& description,
+                                const std::string& image_url);
+            std::string to_json();
+    };
 }

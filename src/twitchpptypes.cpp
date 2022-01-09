@@ -2506,3 +2506,29 @@ std::string TwitchPP::TwitchHypeTrainEvent::to_json() {
         + "}";
     return json;
 }
+
+TwitchPP::TwitchBasicPlaylist::TwitchBasicPlaylist(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_title = get_object_param("\"title\"", json);
+    this->m_description = get_object_param("\"description\"", json);
+    this->m_image_url = get_object_param("\"image_url\"", json);
+}
+
+TwitchPP::TwitchBasicPlaylist::TwitchBasicPlaylist(const std::string& id,
+                                                   const std::string& title,
+                                                   const std::string& description,
+                                                   const std::string& image_url)
+                                                   : m_id{id},
+                                                     m_title{title},
+                                                     m_description{description},
+                                                     m_image_url{image_url} {
+}
+
+std::string TwitchPP::TwitchBasicPlaylist::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"title\":\"" + this->m_title
+        + "\",\"description\":\"" + this->m_description
+        + "\",\"image_url\":\"" + this->m_image_url
+        + "\"}";
+    return json;
+}
