@@ -1079,4 +1079,10 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchAutoModMessageStatus>(response);
     }
+
+    Response<std::string> TwitchOauthAPI::manage_held_automod_messages(TwitchAutoModMessageManaging message) {
+        std::string url {TWITCH_API_BASE + "moderation/automod/message"};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_POST, message.to_json());
+        return response;
+    }
 }

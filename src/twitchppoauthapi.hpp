@@ -164,5 +164,6 @@ namespace TwitchPP {
                                                       std::vector<std::string> tag_ids = {});
             VectorResponse<TwitchAutoModMessageStatus> check_automod_status(std::string_view broadcaster_id,
                                                                             std::vector<TwitchAutoModMessage> messages = {});
+            Response<std::string> manage_held_automod_messages(TwitchAutoModMessageManaging message);
     };
 }
