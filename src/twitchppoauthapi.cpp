@@ -1023,4 +1023,25 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchVideosWithMarkers>(response);
     }
+
+    VectorResponse<TwitchStreamTag> TwitchOauthAPI::get_all_stream_tags(std::vector<std::string> tag_ids,
+                                                                        std::optional<size_t> first,
+                                                                        std::optional<std::string> after) {
+        std::string options {""};
+        for (std::string tag_id : tag_ids) {
+            options += "&tag_id=" + tag_id;
+        }
+        if (first) {
+            options += "&first=" + std::to_string(first.value());
+        }
+        if (after) {
+            options += "&after=" + after.value();
+        }
+        std::string url {TWITCH_API_BASE + "tags/streams" + (options.size() ? ("?" + options.substr(1, options.size())) : options)};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchStreamTag>(response);
+    }
 }

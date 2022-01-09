@@ -197,3 +197,28 @@ std::vector<TwitchPP::VideoSegment> TwitchPP::json_to_segment_vector(std::string
     }
     return result;
 }
+
+TwitchPP::StringMap TwitchPP::string_to_string_map(std::string_view elements) {
+    std::vector<std::string> entries = TwitchPP::json_to_vector(elements);
+    StringMap result {};
+    for (size_t start_pos {0}, end_pos {0}; start_pos < elements.size() - 1; start_pos = end_pos + 1) {
+        end_pos = elements.find("\":\"", start_pos + 1);
+        std::string str_key {elements.substr(start_pos + 1, end_pos - start_pos - 1)};
+        start_pos = end_pos + 3;
+        end_pos = elements.find(",\"", start_pos);
+        if (end_pos == std::string::npos) {
+            end_pos = elements.size();
+        }
+        std::string str_val {elements.substr(start_pos, end_pos - start_pos - 1)};
+        result[str_key] = str_val;
+    }
+    return result;
+}
+
+std::string TwitchPP::string_map_to_string(TwitchPP::StringMap elements) {
+    std::string result {""};
+    for (const auto& x : elements) {
+        result +=  "\"" + x.first + "\":\"" + x.second + "\",";
+    }
+    return result.size() ? result.substr(0, result.size() - 1) : "";
+}

@@ -2301,3 +2301,30 @@ std::string TwitchPP::TwitchVideosWithMarkers::to_json() {
     }
     return json + "]}";
 }
+
+TwitchPP::TwitchStreamTag::TwitchStreamTag(const std::string& json) {
+    this->m_tag_id = get_object_param("\"tag_id\"", json);
+    this->m_is_auto = get_object_param("\"is_auto\"", json) == "true";
+    std::string localization_names = get_object_param("\"localization_names\"", json);
+    this->m_localization_names = string_to_string_map(localization_names);
+    std::string localization_descriptions = get_object_param("\"localization_descriptions\"", json);
+    this->m_localization_descriptions = string_to_string_map(localization_descriptions);
+}
+
+TwitchPP::TwitchStreamTag::TwitchStreamTag(const std::string& tag_id,
+                                           const bool& is_auto,
+                                           StringMap localization_names,
+                                           StringMap localization_descriptions)
+                                           : m_tag_id{tag_id},
+                                             m_is_auto{is_auto},
+                                             m_localization_names{localization_names},
+                                             m_localization_descriptions{localization_descriptions} {
+}
+
+std::string TwitchPP::TwitchStreamTag::to_json() {
+    std::string json = "{\"tag_id\":\"" + this->m_tag_id
+        + "\",\"is_auto\":" + std::string(this->m_is_auto ? "true" : "false")
+        + ",\"localization_names\":{" + string_map_to_string(this->m_localization_names)
+        + "},\"localization_descriptions\":{" + string_map_to_string(this->m_localization_descriptions);
+    return json + "}}";
+}

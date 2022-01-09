@@ -1442,4 +1442,19 @@ namespace TwitchPP {
                                     std::vector<TwitchVideoWithMarkers> videos);
             std::string to_json();
     };
+
+    class TwitchStreamTag {
+        public:
+            std::string m_tag_id {""};
+            bool m_is_auto {};
+            StringMap m_localization_names {};
+            StringMap m_localization_descriptions {};
+
+            TwitchStreamTag(const std::string& json);
+            TwitchStreamTag(const std::string& tag_id,
+                            const bool& is_auto,
+                            StringMap localization_names,
+                            StringMap localization_descriptions);
+            std::string to_json();
+    };
 }

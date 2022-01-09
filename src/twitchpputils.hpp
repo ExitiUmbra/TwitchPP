@@ -29,6 +29,8 @@ namespace TwitchPP {
         size_t offset;
     };
 
+    using StringMap = std::map<std::string, std::string>;
+
     static std::map<char, char> closing_chars { {'\"', '\"'}, {'{', '}'}, {'[', ']'} };
 
     size_t resp_size_cb(char *ptr, size_t size, size_t nmemb, void *stream);
@@ -45,4 +47,6 @@ namespace TwitchPP {
     std::string vector_to_json(std::vector<std::string>& elements);
     std::vector<std::string> json_to_vector(std::string_view elements);
     std::vector<VideoSegment> json_to_segment_vector(std::string_view elements);
+    StringMap string_to_string_map(std::string_view elements);
+    std::string string_map_to_string(StringMap elements);
 }

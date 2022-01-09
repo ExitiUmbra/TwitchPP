@@ -156,5 +156,8 @@ namespace TwitchPP {
                                                                        std::optional<size_t> first = std::nullopt,
                                                                        std::optional<std::string> cursor = std::nullopt,
                                                                        const bool& is_before = false);
+            VectorResponse<TwitchStreamTag> get_all_stream_tags(std::vector<std::string> tag_ids = {},
+                                                                std::optional<size_t> first = std::nullopt,
+                                                                std::optional<std::string> after = std::nullopt);
     };
 }
