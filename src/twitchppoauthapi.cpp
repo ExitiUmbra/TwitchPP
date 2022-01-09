@@ -1085,4 +1085,26 @@ namespace TwitchPP {
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_POST, message.to_json());
         return response;
     }
+
+    VectorResponse<TwitchHypeTrainEvent> TwitchOauthAPI::get_hype_train_events(std::string_view broadcaster_id,
+                                                                               std::optional<std::string_view> hype_train_id,
+                                                                               std::optional<size_t> first,
+                                                                               std::optional<std::string> cursor) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        if (hype_train_id) {
+            options += "&id=" + std::string(hype_train_id.value());
+        }
+        if (first) {
+            options += "&first=" + std::to_string(first.value());
+        }
+        if (cursor) {
+            options += "&cursor=" + cursor.value();
+        }
+        std::string url {TWITCH_API_BASE + "hypetrain/events" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchHypeTrainEvent>(response);
+    }
 }

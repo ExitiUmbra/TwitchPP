@@ -165,5 +165,9 @@ namespace TwitchPP {
             VectorResponse<TwitchAutoModMessageStatus> check_automod_status(std::string_view broadcaster_id,
                                                                             std::vector<TwitchAutoModMessage> messages = {});
             Response<std::string> manage_held_automod_messages(TwitchAutoModMessageManaging message);
+            VectorResponse<TwitchHypeTrainEvent> get_hype_train_events(std::string_view broadcaster_id,
+                                                                       std::optional<std::string_view> hype_train_id = std::nullopt,
+                                                                       std::optional<size_t> first = std::nullopt,
+                                                                       std::optional<std::string> cursor = std::nullopt);
     };
 }

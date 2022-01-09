@@ -2390,3 +2390,119 @@ std::string TwitchPP::TwitchAutoModMessageManaging::to_json() {
         + "\"}";
     return json;
 }
+
+TwitchPP::TwitchHypeTrainContribution::TwitchHypeTrainContribution(const std::string& json) {
+    this->m_user = get_object_param("\"user\"", json);
+    this->m_type = get_object_param("\"type\"", json);
+    this->m_total = std::stoul(get_object_param("\"total\"", json, "0"));
+}
+
+TwitchPP::TwitchHypeTrainContribution::TwitchHypeTrainContribution(const std::string& user,
+                                                                   const std::string& type,
+                                                                   const size_t& total)
+                                                                   : m_user{user},
+                                                                     m_type{type},
+                                                                     m_total{total} {
+}
+
+std::string TwitchPP::TwitchHypeTrainContribution::to_json() {
+    std::string json = "{\"user\":\"" + this->m_user
+        + "\",\"type\":\"" + this->m_type
+        + "\",\"total\":" + std::to_string(this->m_total)
+        + "}";
+    return json;
+}
+
+TwitchPP::TwitchHypeTrainData::TwitchHypeTrainData(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_broadcaster_id = get_object_param("\"broadcaster_id\"", json);
+    this->m_cooldown_end_time = get_object_param("\"cooldown_end_time\"", json);
+    this->m_started_at = get_object_param("\"started_at\"", json);
+    this->m_expires_at = get_object_param("\"expires_at\"", json);
+    this->m_level = std::stoul(get_object_param("\"level\"", json, "0"));
+    this->m_total = std::stoul(get_object_param("\"total\"", json, "0"));
+    this->m_goal = std::stoul(get_object_param("\"goal\"", json, "0"));
+    std::string last_contribution = get_object_param("\"last_contribution\"", json);
+    if (last_contribution == "null") {
+        this->m_last_contribution = nullptr;
+    } else {
+        this->m_last_contribution = std::make_shared<TwitchPP::TwitchHypeTrainContribution>(last_contribution);
+    }
+    std::string top_contributions = get_object_param("\"top_contributions\"", json);
+    std::vector<std::string> str_contributions = TwitchPP::json_to_vector(top_contributions);
+    for (std::string contribution : str_contributions) {
+        this->m_top_contributions.push_back(TwitchPP::TwitchHypeTrainContribution(contribution));
+    }
+}
+
+TwitchPP::TwitchHypeTrainData::TwitchHypeTrainData(const std::string& id,
+                                                   const std::string& broadcaster_id,
+                                                   const std::string& cooldown_end_time,
+                                                   const std::string& started_at,
+                                                   const std::string& expires_at,
+                                                   const size_t& level,
+                                                   const size_t& total,
+                                                   const size_t& goal,
+                                                   std::shared_ptr<TwitchHypeTrainContribution> last_contribution,
+                                                   std::vector<TwitchHypeTrainContribution> top_contributions)
+                                                   : m_id{id},
+                                                     m_broadcaster_id{broadcaster_id},
+                                                     m_cooldown_end_time{cooldown_end_time},
+                                                     m_started_at{started_at},
+                                                     m_expires_at{expires_at},
+                                                     m_level{level},
+                                                     m_total{total},
+                                                     m_goal{goal},
+                                                     m_last_contribution{last_contribution},
+                                                     m_top_contributions{top_contributions} {
+}
+
+std::string TwitchPP::TwitchHypeTrainData::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
+        + "\",\"cooldown_end_time\":\"" + this->m_cooldown_end_time
+        + "\",\"started_at\":\"" + this->m_started_at
+        + "\",\"expires_at\":\"" + this->m_expires_at
+        + "\",\"level\":" + std::to_string(this->m_level)
+        + ",\"total\":" + std::to_string(this->m_total)
+        + ",\"goal\":" + std::to_string(this->m_goal)
+        + ",\"last_contribution\":" + (this->m_last_contribution == nullptr ? "null" : this->m_last_contribution->to_json())
+        + ",\"top_contributions\":[";
+    for (size_t i {0}; i < this->m_top_contributions.size(); ++i) {
+        json += this->m_top_contributions.at(i).to_json();
+        if (i + 1 < this->m_top_contributions.size()) {
+            json += ',';
+        }
+    }
+    return json + "]}";
+}
+
+TwitchPP::TwitchHypeTrainEvent::TwitchHypeTrainEvent(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_event_type = get_object_param("\"event_type\"", json);
+    this->m_event_timestamp = get_object_param("\"event_timestamp\"", json);
+    this->m_version = get_object_param("\"version\"", json);
+    this->m_event_data = std::make_shared<TwitchHypeTrainData>(get_object_param("\"event_data\"", json));
+}
+
+TwitchPP::TwitchHypeTrainEvent::TwitchHypeTrainEvent(const std::string& id,
+                                                     const std::string& event_type,
+                                                     const std::string& event_timestamp,
+                                                     const std::string& version,
+                                                     TwitchHypeTrainData& event_data)
+                                                     : m_id{id},
+                                                       m_event_type{event_type},
+                                                       m_event_timestamp{event_timestamp},
+                                                       m_version{version},
+                                                       m_event_data{&event_data} {
+}
+
+std::string TwitchPP::TwitchHypeTrainEvent::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"event_type\":\"" + this->m_event_type
+        + "\",\"event_timestamp\":\"" + this->m_event_timestamp
+        + "\",\"version\":\"" + this->m_version
+        + "\",\"event_data\":" + this->m_event_data->to_json()
+        + "}";
+    return json;
+}

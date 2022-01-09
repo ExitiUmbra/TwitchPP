@@ -1494,4 +1494,61 @@ namespace TwitchPP {
                                          const std::string& action);
             std::string to_json();
     };
+
+    class TwitchHypeTrainContribution {
+        protected:
+            std::string m_user {""};
+            std::string m_type {""};
+            size_t m_total {};
+        public:
+            explicit TwitchHypeTrainContribution(const std::string& json);
+            TwitchHypeTrainContribution(const std::string& user,
+                                        const std::string& type,
+                                        const size_t& total);
+            std::string to_json();
+    };
+
+    class TwitchHypeTrainData {
+        protected:
+            std::string m_id {""};
+            std::string m_broadcaster_id {""};
+            std::string m_cooldown_end_time {""};
+            std::string m_started_at {""};
+            std::string m_expires_at {""};
+            size_t m_level {};
+            size_t m_total {};
+            size_t m_goal {};
+            std::shared_ptr<TwitchHypeTrainContribution> m_last_contribution = nullptr;
+            std::vector<TwitchHypeTrainContribution> m_top_contributions {};
+        public:
+            explicit TwitchHypeTrainData(const std::string& json);
+            TwitchHypeTrainData(const std::string& id,
+                                const std::string& broadcaster_id,
+                                const std::string& cooldown_end_time,
+                                const std::string& started_at,
+                                const std::string& expires_at,
+                                const size_t& level,
+                                const size_t& total,
+                                const size_t& goal,
+                                std::shared_ptr<TwitchHypeTrainContribution> last_contribution = nullptr,
+                                std::vector<TwitchHypeTrainContribution> top_contributions = {});
+            std::string to_json();
+    };
+
+    class TwitchHypeTrainEvent {
+        protected:
+            std::string m_id {""};
+            std::string m_event_type {""};
+            std::string m_event_timestamp {""};
+            std::string m_version {""};
+            std::shared_ptr<TwitchHypeTrainData> m_event_data = nullptr;
+        public:
+            explicit TwitchHypeTrainEvent(const std::string& json);
+            TwitchHypeTrainEvent(const std::string& id,
+                                 const std::string& event_type,
+                                 const std::string& event_timestamp,
+                                 const std::string& version,
+                                 TwitchHypeTrainData& event_data);
+            std::string to_json();
+    };
 }
