@@ -2214,7 +2214,7 @@ TwitchPP::TwitchStreamMarker::TwitchStreamMarker(const std::string& json) {
     this->m_id = get_object_param("\"id\"", json);
     this->m_description = TwitchPP::get_object_param("\"description\"", json);
     this->m_created_at = TwitchPP::get_object_param("\"created_at\"", json);
-    this->m_url = TwitchPP::get_object_param("\"url\"", json);
+    this->m_url = TwitchPP::get_object_param("\"URL\"", json);
     this->m_position_seconds = std::stoul(TwitchPP::get_object_param("\"position_seconds\"", json, "0"));
 }
 
@@ -2234,8 +2234,70 @@ std::string TwitchPP::TwitchStreamMarker::to_json() {
     std::string json = "{\"id\":\"" + this->m_id
         + "\",\"description\":\"" + this->m_description
         + "\",\"created_at\":\"" + this->m_created_at
-        + (this->m_url.size() ? "\",\"url\":\"" + this->m_url : this->m_url)
+        + (this->m_url.size() ? "\",\"URL\":\"" + this->m_url : this->m_url)
         + "\",\"position_seconds\":" + std::to_string(this->m_position_seconds)
         + "}";
     return json;
+}
+
+TwitchPP::TwitchVideoWithMarkers::TwitchVideoWithMarkers(const std::string& json) {
+    this->m_video_id = get_object_param("\"video_id\"", json);
+    std::string string_with_markers = TwitchPP::get_object_param("\"markers\"", json);
+    std::vector<std::string> str_markers = TwitchPP::json_to_vector(string_with_markers);
+    for (std::string marker : str_markers) {
+        this->m_markers.push_back(TwitchPP::TwitchStreamMarker(marker));
+    }
+}
+
+TwitchPP::TwitchVideoWithMarkers::TwitchVideoWithMarkers(const std::string& video_id,
+                                                         std::vector<TwitchStreamMarker> markers)
+                                                         : m_video_id{video_id},
+                                                           m_markers{markers} {
+}
+
+std::string TwitchPP::TwitchVideoWithMarkers::to_json() {
+    std::string json = "{\"video_id\":\"" + this->m_video_id
+        + "\",\"markers\":[";
+    for (size_t i {0}; i < this->m_markers.size(); ++i) {
+        json += this->m_markers.at(i).to_json();
+        if (i + 1 < this->m_markers.size()) {
+            json += ',';
+        }
+    }
+    return json + "]}";
+}
+
+TwitchPP::TwitchVideosWithMarkers::TwitchVideosWithMarkers(const std::string& json) {
+    this->m_user_id = get_object_param("\"user_id\"", json);
+    this->m_user_name = get_object_param("\"user_name\"", json);
+    this->m_user_login = get_object_param("\"user_login\"", json);
+    std::string string_with_videos = TwitchPP::get_object_param("\"videos\"", json);
+    std::vector<std::string> str_videos = TwitchPP::json_to_vector(string_with_videos);
+    for (std::string video : str_videos) {
+        this->m_videos.push_back(TwitchPP::TwitchVideoWithMarkers(video));
+    }
+}
+
+TwitchPP::TwitchVideosWithMarkers::TwitchVideosWithMarkers(const std::string& user_id,
+                                                           const std::string& user_name,
+                                                           const std::string& user_login,
+                                                           std::vector<TwitchVideoWithMarkers> videos)
+                                                           : m_user_id{user_id},
+                                                             m_user_name{user_name},
+                                                             m_user_login{user_login},
+                                                             m_videos{videos} {
+}
+
+std::string TwitchPP::TwitchVideosWithMarkers::to_json() {
+    std::string json = "{\"user_id\":\"" + this->m_user_id
+        + "\",\"user_name\":\"" + this->m_user_name
+        + "\",\"user_login\":\"" + this->m_user_login
+        + "\",\"videos\":[";
+    for (size_t i {0}; i < this->m_videos.size(); ++i) {
+        json += this->m_videos.at(i).to_json();
+        if (i + 1 < this->m_videos.size()) {
+            json += ',';
+        }
+    }
+    return json + "]}";
 }

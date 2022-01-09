@@ -1416,4 +1416,30 @@ namespace TwitchPP {
                                const size_t& position_seconds);
             std::string to_json();
     };
+
+    class TwitchVideoWithMarkers {
+        public:
+            std::string m_video_id {""};
+            std::vector<TwitchStreamMarker> m_markers {};
+
+            TwitchVideoWithMarkers(const std::string& json);
+            TwitchVideoWithMarkers(const std::string& video_id,
+                                   std::vector<TwitchStreamMarker> markers);
+            std::string to_json();
+    };
+
+    class TwitchVideosWithMarkers {
+        public:
+            std::string m_user_id {""};
+            std::string m_user_name {""};
+            std::string m_user_login {""};
+            std::vector<TwitchVideoWithMarkers> m_videos {};
+
+            TwitchVideosWithMarkers(const std::string& json);
+            TwitchVideosWithMarkers(const std::string& user_id,
+                                    const std::string& user_name,
+                                    const std::string& user_login,
+                                    std::vector<TwitchVideoWithMarkers> videos);
+            std::string to_json();
+    };
 }
