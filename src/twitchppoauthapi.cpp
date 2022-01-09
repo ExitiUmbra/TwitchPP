@@ -1054,4 +1054,13 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchStreamTag>(response);
     }
+
+    Response<std::string> TwitchOauthAPI::replace_stream_tags(std::string_view broadcaster_id,
+                                                              std::vector<std::string> tag_ids) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        std::string request_body {"{\"tag_ids\":" + vector_to_json(tag_ids) + "}"};
+        std::string url {TWITCH_API_BASE + "streams/tags" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PUT, request_body);
+        return response;
+    }
 }
