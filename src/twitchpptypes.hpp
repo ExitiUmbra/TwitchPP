@@ -1457,4 +1457,41 @@ namespace TwitchPP {
                             StringMap localization_descriptions);
             std::string to_json();
     };
+
+    class TwitchAutoModMessage {
+        public:
+            std::string m_msg_id {""};
+            std::string m_msg_text {""};
+            std::string m_user_id {""};
+
+            TwitchAutoModMessage(const std::string& json);
+            TwitchAutoModMessage(const std::string& msg_id,
+                                 const std::string& msg_text,
+                                 const std::string& user_id);
+            std::string to_json();
+    };
+
+    class TwitchAutoModMessageStatus {
+        public:
+            std::string m_msg_id {""};
+            bool m_is_permitted {};
+
+            TwitchAutoModMessageStatus(const std::string& json);
+            TwitchAutoModMessageStatus(const std::string& msg_id,
+                                       const bool& is_permitted);
+            std::string to_json();
+    };
+
+    class TwitchAutoModMessageManaging {
+        public:
+            std::string m_msg_id {""};
+            std::string m_user_id {""};
+            std::string m_action {""};
+
+            TwitchAutoModMessageManaging(const std::string& json);
+            TwitchAutoModMessageManaging(const std::string& msg_id,
+                                         const std::string& user_id,
+                                         const std::string& action);
+            std::string to_json();
+    };
 }

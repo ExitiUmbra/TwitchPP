@@ -1063,4 +1063,20 @@ namespace TwitchPP {
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PUT, request_body);
         return response;
     }
+
+    VectorResponse<TwitchAutoModMessageStatus> TwitchOauthAPI::check_automod_status(std::string_view broadcaster_id,
+                                                                                    std::vector<TwitchAutoModMessage> messages) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        std::string request_body {"{\"data\":["};
+        for (size_t i {0}; i < messages.size(); ++i) {
+            request_body += (i ? "," : "") + messages.at(i).to_json();
+        }
+        request_body += "]}";
+        std::string url {TWITCH_API_BASE + "moderation/enforcements/status" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_POST, request_body);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchAutoModMessageStatus>(response);
+    }
 }

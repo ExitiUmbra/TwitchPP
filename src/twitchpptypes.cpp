@@ -2328,3 +2328,65 @@ std::string TwitchPP::TwitchStreamTag::to_json() {
         + "},\"localization_descriptions\":{" + string_map_to_string(this->m_localization_descriptions);
     return json + "}}";
 }
+
+TwitchPP::TwitchAutoModMessage::TwitchAutoModMessage(const std::string& json) {
+    this->m_msg_id = get_object_param("\"msg_id\"", json);
+    this->m_msg_text = get_object_param("\"msg_text\"", json);
+    this->m_user_id = get_object_param("\"user_id\"", json);
+}
+
+TwitchPP::TwitchAutoModMessage::TwitchAutoModMessage(const std::string& msg_id,
+                                                     const std::string& msg_text,
+                                                     const std::string& user_id)
+                                                     : m_msg_id{msg_id},
+                                                       m_msg_text{msg_text},
+                                                       m_user_id{user_id} {
+}
+
+std::string TwitchPP::TwitchAutoModMessage::to_json() {
+    std::string json = "{\"msg_id\":\"" + this->m_msg_id
+        + "\",\"msg_text\":\"" + this->m_msg_text
+        + "\",\"user_id\":\"" + this->m_user_id
+        + "\"}";
+    return json;
+}
+
+TwitchPP::TwitchAutoModMessageStatus::TwitchAutoModMessageStatus(const std::string& json) {
+    this->m_msg_id = get_object_param("\"msg_id\"", json);
+    this->m_is_permitted = get_object_param("\"is_permitted\"", json) == "true";
+}
+
+TwitchPP::TwitchAutoModMessageStatus::TwitchAutoModMessageStatus(const std::string& msg_id,
+                                                                 const bool& is_permitted)
+                                                                 : m_msg_id{msg_id},
+                                                                   m_is_permitted{is_permitted} {
+}
+
+std::string TwitchPP::TwitchAutoModMessageStatus::to_json() {
+    std::string json = "{\"msg_id\":\"" + this->m_msg_id
+        + "\",\"is_permitted\":" + std::string(this->m_is_permitted ? "true" : "false")
+        + "}";
+    return json;
+}
+
+TwitchPP::TwitchAutoModMessageManaging::TwitchAutoModMessageManaging(const std::string& json) {
+    this->m_msg_id = get_object_param("\"msg_id\"", json);
+    this->m_user_id = get_object_param("\"user_id\"", json);
+    this->m_action = get_object_param("\"action\"", json);
+}
+
+TwitchPP::TwitchAutoModMessageManaging::TwitchAutoModMessageManaging(const std::string& msg_id,
+                                                                     const std::string& user_id,
+                                                                     const std::string& action)
+                                                                     : m_msg_id{msg_id},
+                                                                       m_user_id{user_id},
+                                                                       m_action{action} {
+}
+
+std::string TwitchPP::TwitchAutoModMessageManaging::to_json() {
+    std::string json = "{\"msg_id\":\"" + this->m_msg_id
+        + "\",\"user_id\":\"" + this->m_user_id
+        + "\",\"action\":\"" + this->m_action
+        + "\"}";
+    return json;
+}
