@@ -451,6 +451,16 @@ namespace TwitchPP {
         return this->process_response<TwitchBasicPlaylist>(response);
     }
 
+    VectorResponse<TwitchPlaylist> TwitchAPI::get_soundtrack_playlist(std::string_view playlist_id) {
+        std::string options {"?id=" + std::string(playlist_id)};
+        std::string url {TWITCH_API_BASE + "soundtrack/playlist" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchPlaylist>(response);
+    }
+
     VectorResponse<TwitchCurrentTrack> TwitchAPI::get_soundtrack_current_track(std::string_view broadcaster_id) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
         std::string url {TWITCH_API_BASE + "soundtrack/current_track" + options};

@@ -98,6 +98,7 @@ namespace TwitchPP {
             Response<std::string> get_channel_icalendar(std::string_view broadcaster_id);
             VectorResponse<TwitchCheermote> get_cheermotes(std::optional<std::string_view> broadcaster_id = std::nullopt);
             VectorResponse<TwitchBasicPlaylist> get_soundtrack_playlists();
+            VectorResponse<TwitchPlaylist> get_soundtrack_playlist(std::string_view playlist_id);
             VectorResponse<TwitchCurrentTrack> get_soundtrack_current_track(std::string_view broadcaster_id);
     };
 }

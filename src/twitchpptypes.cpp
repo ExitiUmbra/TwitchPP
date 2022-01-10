@@ -2682,3 +2682,34 @@ std::string TwitchPP::TwitchBasicPlaylist::to_json() {
         + "\"}";
     return json;
 }
+
+
+TwitchPP::TwitchPlaylist::TwitchPlaylist(const std::string& json)
+                                         : TwitchBasicPlaylist{json} {
+    std::string tracks = get_object_param("\"tracks\"", json);
+    std::vector<std::string> str_tracks = TwitchPP::json_to_vector(tracks);
+    for (std::string track : str_tracks) {
+        this->m_tracks.push_back(TwitchPP::TwitchTrack(track));
+    }
+}
+
+TwitchPP::TwitchPlaylist::TwitchPlaylist(const std::string& id,
+                                         const std::string& title,
+                                         const std::string& description,
+                                         const std::string& image_url,
+                                         std::vector<TwitchTrack> tracks)
+                                         : TwitchBasicPlaylist{id, title, description, image_url},
+                                           m_tracks{tracks} {
+}
+
+std::string TwitchPP::TwitchPlaylist::to_json() {
+    std::string basic_json {TwitchBasicPlaylist::to_json()};
+    std::string json = basic_json.substr(0, basic_json.size() - 1) + ",\"catalog_tracks\":[";
+    for (size_t i {0}; i < this->m_tracks.size(); ++i) {
+        json += this->m_tracks.at(i).to_json();
+        if (i + 1 < this->m_tracks.size()) {
+            json += ',';
+        }
+    }
+    return json + "]}";
+}

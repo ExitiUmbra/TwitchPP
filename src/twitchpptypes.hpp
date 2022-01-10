@@ -1639,4 +1639,17 @@ namespace TwitchPP {
                                 const std::string& image_url);
             std::string to_json();
     };
+
+    class TwitchPlaylist : public TwitchBasicPlaylist {
+        protected:
+            std::vector<TwitchTrack> m_tracks {};
+        public:
+            TwitchPlaylist(const std::string& json);
+            TwitchPlaylist(const std::string& id,
+                           const std::string& title,
+                           const std::string& description,
+                           const std::string& image_url,
+                           std::vector<TwitchTrack> tracks = {});
+            std::string to_json();
+    };
 }
