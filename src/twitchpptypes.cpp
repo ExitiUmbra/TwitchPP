@@ -2507,6 +2507,156 @@ std::string TwitchPP::TwitchHypeTrainEvent::to_json() {
     return json;
 }
 
+TwitchPP::TwitchMusicArtist::TwitchMusicArtist(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_name = get_object_param("\"name\"", json);
+    this->m_creator_channel_id = get_object_param("\"creator_channel_id\"", json);
+}
+
+TwitchPP::TwitchMusicArtist::TwitchMusicArtist(const std::string& id,
+                                               const std::string& name,
+                                               const std::string& creator_channel_id)
+                                               : m_id{id},
+                                                 m_name{name},
+                                                 m_creator_channel_id{creator_channel_id} {
+}
+// TODO: Check if == "null" everywhere is fine
+std::string TwitchPP::TwitchMusicArtist::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"name\":\"" + this->m_name
+        + "\",\"creator_channel_id\":" + (this->m_creator_channel_id == "null" ? this->m_creator_channel_id : std::string("\"" + this->m_creator_channel_id + "\""))
+        + "}";
+    return json;
+}
+
+TwitchPP::TwitchMusicAlbum::TwitchMusicAlbum(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_name = get_object_param("\"name\"", json);
+    this->m_image_url = get_object_param("\"image_url\"", json);
+}
+
+TwitchPP::TwitchMusicAlbum::TwitchMusicAlbum(const std::string& id,
+                                             const std::string& name,
+                                             const std::string& image_url)
+                                             : m_id{id},
+                                               m_name{name},
+                                               m_image_url{image_url} {
+}
+
+std::string TwitchPP::TwitchMusicAlbum::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"name\":\"" + this->m_name
+        + "\",\"image_url\":\"" + this->m_image_url
+        + "\"}";
+    return json;
+}
+
+TwitchPP::TwitchMusicSource::TwitchMusicSource(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_title = get_object_param("\"title\"", json);
+    this->m_content_type = get_object_param("\"content_type\"", json);
+    this->m_soundtrack_url = get_object_param("\"SoundtrackURL\"", json);
+    this->m_spotify_url = get_object_param("\"spotify_url\"", json);
+    this->m_image_url = get_object_param("\"image_url\"", json);
+}
+
+TwitchPP::TwitchMusicSource::TwitchMusicSource(const std::string& id,
+                                               const std::string& title,
+                                               const std::string& content_type,
+                                               const std::string& soundtrack_url,
+                                               const std::string& spotify_url,
+                                               const std::string& image_url)
+                                               : m_id{id},
+                                                 m_title{title},
+                                                 m_content_type{content_type},
+                                                 m_soundtrack_url{soundtrack_url},
+                                                 m_spotify_url{spotify_url},
+                                                 m_image_url{image_url} {
+}
+
+std::string TwitchPP::TwitchMusicSource::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"title\":\"" + this->m_title
+        + "\",\"content_type\":\"" + this->m_content_type
+        + "\",\"SoundtrackURL\":\"" + this->m_soundtrack_url
+        + "\",\"spotify_url\":\"" + this->m_spotify_url
+        + "\",\"image_url\":\"" + this->m_image_url
+        + "\"}";
+    return json;
+}
+
+TwitchPP::TwitchTrack::TwitchTrack(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_title = get_object_param("\"title\"", json);
+    this->m_duration = std::stoul(get_object_param("\"duration\"", json, "0"));
+    std::string album = get_object_param("\"album\"", json);
+    if (album == "null") {
+        this->m_album = nullptr;
+    } else {
+        this->m_album = std::make_shared<TwitchPP::TwitchMusicAlbum>(album);
+    }
+    std::string artists = get_object_param("\"artists\"", json);
+    std::vector<std::string> str_artists = TwitchPP::json_to_vector(artists);
+    for (std::string artist : str_artists) {
+        this->m_artists.push_back(TwitchPP::TwitchMusicArtist(artist));
+    }
+}
+
+TwitchPP::TwitchTrack::TwitchTrack(const std::string& id,
+                                   const std::string& title,
+                                   const size_t& duration,
+                                   std::shared_ptr<TwitchMusicAlbum> album,
+                                   std::vector<TwitchMusicArtist> artists)
+                                   : m_id{id},
+                                     m_title{title},
+                                     m_duration{duration},
+                                     m_album{album},
+                                     m_artists{artists} {
+}
+
+std::string TwitchPP::TwitchTrack::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"title\":\"" + this->m_title
+        + "\",\"duration\":" + std::to_string(this->m_duration)
+        + ",\"album\":" + (this->m_album == nullptr ? "null" : this->m_album->to_json())
+        + ",\"artists\":[";
+    for (size_t i {0}; i < this->m_artists.size(); ++i) {
+        json += this->m_artists.at(i).to_json();
+        if (i + 1 < this->m_artists.size()) {
+            json += ',';
+        }
+    }
+    return json + "]}";
+}
+
+TwitchPP::TwitchCurrentTrack::TwitchCurrentTrack(const std::string& json) {
+    std::string track = get_object_param("\"track\"", json);
+    if (track == "null") {
+        this->m_track = nullptr;
+    } else {
+        this->m_track = std::make_shared<TwitchPP::TwitchTrack>(track);
+    }
+    std::string source = get_object_param("\"source\"", json);
+    if (source == "null") {
+        this->m_source = nullptr;
+    } else {
+        this->m_source = std::make_shared<TwitchPP::TwitchMusicSource>(source);
+    }
+}
+
+TwitchPP::TwitchCurrentTrack::TwitchCurrentTrack(std::shared_ptr<TwitchTrack> track,
+                                                 std::shared_ptr<TwitchMusicSource> source)
+                                                 : m_track{track},
+                                                   m_source{source} {
+}
+
+std::string TwitchPP::TwitchCurrentTrack::to_json() {
+    std::string json = "{\"track\":" + (this->m_track == nullptr ? "null" : this->m_track->to_json())
+        + ",\"source\":" + (this->m_source == nullptr ? "null" : this->m_source->to_json());
+    return json + "}";
+}
+
+
 TwitchPP::TwitchBasicPlaylist::TwitchBasicPlaylist(const std::string& json) {
     this->m_id = get_object_param("\"id\"", json);
     this->m_title = get_object_param("\"title\"", json);

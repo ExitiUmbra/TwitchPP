@@ -1552,6 +1552,79 @@ namespace TwitchPP {
             std::string to_json();
     };
 
+    class TwitchMusicArtist {
+        protected:
+            std::string m_id {""};
+            std::string m_name {""};
+            std::string m_creator_channel_id {""};
+        public:
+            TwitchMusicArtist(const std::string& json);
+            TwitchMusicArtist(const std::string& id,
+                              const std::string& name,
+                              const std::string& creator_channel_id);
+            std::string to_json();
+    };
+
+    class TwitchMusicAlbum {
+        protected:
+            std::string m_id {""};
+            std::string m_name {""};
+            std::string m_image_url {""};
+        public:
+            TwitchMusicAlbum(const std::string& json);
+            TwitchMusicAlbum(const std::string& id,
+                             const std::string& name,
+                             const std::string& image_url);
+            std::string to_json();
+    };
+
+    class TwitchMusicSource {
+        protected:
+            std::string m_id {""};
+            std::string m_title {""};
+            std::string m_content_type {""};
+            std::string m_soundtrack_url {""};
+            std::string m_spotify_url {""};
+            std::string m_image_url {""};
+        public:
+            TwitchMusicSource(const std::string& json);
+            TwitchMusicSource(const std::string& id,
+                              const std::string& title,
+                              const std::string& content_type,
+                              const std::string& soundtrack_url,
+                              const std::string& spotify_url,
+                              const std::string& image_url);
+            std::string to_json();
+    };
+
+    class TwitchTrack {
+        protected:
+            std::string m_id {""};
+            std::string m_title {""};
+            size_t m_duration {};
+            std::shared_ptr<TwitchMusicAlbum> m_album = nullptr;
+            std::vector<TwitchMusicArtist> m_artists {};
+        public:
+            explicit TwitchTrack(const std::string& json);
+            TwitchTrack(const std::string& id,
+                        const std::string& title,
+                        const size_t& duration,
+                        std::shared_ptr<TwitchMusicAlbum> album = nullptr,
+                        std::vector<TwitchMusicArtist> artists = {});
+            std::string to_json();
+    };
+
+    class TwitchCurrentTrack {
+        protected:
+            std::shared_ptr<TwitchTrack> m_track = nullptr;
+            std::shared_ptr<TwitchMusicSource> m_source = nullptr;
+        public:
+            explicit TwitchCurrentTrack(const std::string& json);
+            TwitchCurrentTrack(std::shared_ptr<TwitchTrack> track = nullptr,
+                               std::shared_ptr<TwitchMusicSource> source = nullptr);
+            std::string to_json();
+    };
+
     class TwitchBasicPlaylist {
         protected:
             std::string m_id {""};
