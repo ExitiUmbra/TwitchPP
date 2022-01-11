@@ -14,9 +14,12 @@ namespace TwitchPP {
                                                                                      std::string_view version,
                                                                                      TwitchCondition condition,
                                                                                      TwitchTransport transport);
+
             VectorResponse<TwitchEventSubSubscriptions> create_eventsub_subscription(std::string_view type,
                                                                                      std::string_view version,
                                                                                      std::string_view condition,
                                                                                      std::string_view transport);
+
+            Response<std::string> delete_eventsub_subscription(std::string_view subscription_id);
     };
 }
