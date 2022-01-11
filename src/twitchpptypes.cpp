@@ -2713,3 +2713,191 @@ std::string TwitchPP::TwitchPlaylist::to_json() {
     }
     return json + "]}";
 }
+
+TwitchPP::TwitchTransport::TwitchTransport(const std::string& json) {
+    this->m_method = get_object_param("\"method\"", json);
+    this->m_callback = get_object_param("\"callback\"", json);
+    this->m_secret = get_object_param("\"secret\"", json);
+}
+
+TwitchPP::TwitchTransport::TwitchTransport(const std::string& method,
+                                           const std::string& callback,
+                                           const std::string& secret)
+                                           : m_method{method},
+                                             m_callback{callback},
+                                             m_secret{secret} {
+}
+
+std::string TwitchPP::TwitchTransport::to_json() {
+    std::string json = "{\"method\":\"" + this->m_method
+        + "\",\"callback\":\"" + this->m_callback
+        + "\"}";
+    return json;
+}
+
+TwitchPP::TwitchCondition::TwitchCondition(const std::string& json) {
+    this->m_broadcaster_user_id = get_object_param("\"broadcaster_user_id\"", json);
+    this->m_from_broadcaster_user_id = get_object_param("\"from_broadcaster_user_id\"", json);
+    this->m_to_broadcaster_user_id = get_object_param("\"to_broadcaster_user_id\"", json);
+    this->m_reward_id = get_object_param("\"reward_id\"", json);
+    this->m_organization_id = get_object_param("\"organization_id\"", json);
+    this->m_category_id = get_object_param("\"category_id\"", json);
+    this->m_campaign_id = get_object_param("\"campaign_id\"", json);
+    this->m_extension_client_id = get_object_param("\"extension_client_id\"", json);
+    this->m_client_id = get_object_param("\"client_id\"", json);
+    this->m_user_id = get_object_param("\"user_id\"", json);
+}
+
+TwitchPP::TwitchCondition::TwitchCondition(const std::string& id,
+                                           std::string_view id_type) {
+    if (id_type == CONDITION_BROADCASTER) {
+        this->m_broadcaster_user_id = id;
+    } else if (id_type == CONDITION_USER) {
+        this->m_user_id = id;
+    } else if (id_type == CONDITION_CLIENT) {
+        this->m_client_id = id;
+    } else if (id_type == CONDITION_EXTENSION_CLIENT) {
+        this->m_extension_client_id = id;
+    }
+}
+
+TwitchPP::TwitchCondition::TwitchCondition(const std::string& broadcaster_user_id,
+                                           const std::string& seconcary_parameter,
+                                           const bool& is_reward) {
+    if (is_reward) {
+        this->m_broadcaster_user_id = broadcaster_user_id;
+        this->m_reward_id = seconcary_parameter;
+    } else {
+        this->m_from_broadcaster_user_id = broadcaster_user_id;
+        this->m_to_broadcaster_user_id = seconcary_parameter;
+    }
+}
+
+TwitchPP::TwitchCondition::TwitchCondition(const std::string& organization_id,
+                                           const std::string& category_id,
+                                           const std::string& campaign_id)
+                                           : m_organization_id{organization_id},
+                                             m_category_id{category_id},
+                                             m_campaign_id{campaign_id} {
+}
+
+std::string TwitchPP::TwitchCondition::to_json() {
+    std::string json = "{";
+    if (this->m_broadcaster_user_id.size()) {
+        json += "\"broadcaster_user_id\":\"" + this->m_broadcaster_user_id + "\"";
+    }
+    if (this->m_reward_id.size()) {
+        json += ",\"reward_id\":\"" + this->m_reward_id + "\"";
+    }
+    if (this->m_from_broadcaster_user_id.size()) {
+        json += "\"from_broadcaster_user_id\":\""
+            + this->m_from_broadcaster_user_id
+            + (this->m_to_broadcaster_user_id.size() ? "\"," : "\"");
+    }
+    if (this->m_to_broadcaster_user_id.size()) {
+        json += "\"to_broadcaster_user_id\":\""
+            + this->m_to_broadcaster_user_id + "\"";
+    }
+    if (this->m_organization_id.size()) {
+        json += "\"organization_id\":\"" + this->m_organization_id + "\"";
+    }
+    if (this->m_category_id.size()) {
+        json += ",\"category_id\":\"" + this->m_category_id + "\"";
+    }
+    if (this->m_campaign_id.size()) {
+        json += ",\"campaign_id\":\"" + this->m_campaign_id + "\"";
+    }
+    if (this->m_extension_client_id.size()) {
+        json += "\"extension_client_id\":\"" + this->m_extension_client_id + "\"";
+    }
+    if (this->m_client_id.size()) {
+        json += "\"client_id\":\"" + this->m_client_id + "\"";
+    }
+    if (this->m_user_id.size()) {
+        json += "\"user_id\":\"" + this->m_user_id + "\"";
+    }
+    return json += "}";
+}
+
+TwitchPP::TwitchEventSubSubscription::TwitchEventSubSubscription(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_status = get_object_param("\"status\"", json);
+    this->m_type = get_object_param("\"type\"", json);
+    this->m_version = get_object_param("\"version\"", json);
+    this->m_created_at = get_object_param("\"created_at\"", json);
+    this->m_cost = std::stoul(get_object_param("\"cost\"", json, "0"));
+    std::string transport = get_object_param("\"transport\"", json);
+    if (transport == "null") {
+        this->m_transport = nullptr;
+    } else {
+        this->m_transport = std::make_shared<TwitchPP::TwitchTransport>(transport);
+    }
+    std::string condition = get_object_param("\"condition\"", json);
+    if (condition == "null") {
+        this->m_condition = nullptr;
+    } else {
+        this->m_condition = std::make_shared<TwitchPP::TwitchCondition>(condition);
+    }
+}
+
+TwitchPP::TwitchEventSubSubscription::TwitchEventSubSubscription(const std::string& id,
+                                                                 const std::string& status,
+                                                                 const std::string& type,
+                                                                 const std::string& version,
+                                                                 const std::string& created_at,
+                                                                 const size_t& cost,
+                                                                 std::shared_ptr<TwitchTransport> transport,
+                                                                 std::shared_ptr<TwitchCondition> condition)
+                                                                 : m_id{id},
+                                                                   m_status{status},
+                                                                   m_type{type},
+                                                                   m_version{version},
+                                                                   m_created_at{created_at},
+                                                                   m_cost{cost},
+                                                                   m_transport{transport},
+                                                                   m_condition{condition} {
+}
+
+std::string TwitchPP::TwitchEventSubSubscription::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"status\":\"" + this->m_status
+        + "\",\"type\":\"" + this->m_type
+        + "\",\"version\":\"" + this->m_version
+        + "\",\"created_at\":\"" + this->m_created_at
+        + "\",\"cost\":" + std::to_string(this->m_cost)
+        + ",\"transport\":" + (this->m_transport == nullptr ? "null" : this->m_transport->to_json())
+        + ",\"condition\":" + (this->m_condition == nullptr ? "null" : this->m_condition->to_json());
+    return json + "}";
+}
+
+TwitchPP::TwitchEventSubSubscriptions::TwitchEventSubSubscriptions(const std::string& json,
+                                                                   std::vector<TwitchEventSubSubscription> subscriptions)
+                                                                   : m_subscriptions{subscriptions} {
+    this->m_total = std::stoul(get_object_param("\"total\"", json, "0"));
+    this->m_total_cost = std::stoul(get_object_param("\"total_cost\"", json, "0"));
+    this->m_max_total_cost = std::stoul(get_object_param("\"max_total_cost\"", json, "0"));
+}
+
+TwitchPP::TwitchEventSubSubscriptions::TwitchEventSubSubscriptions(const size_t& total,
+                                                                   const size_t& total_cost,
+                                                                   const size_t& max_total_cost,
+                                                                   std::vector<TwitchEventSubSubscription> subscriptions)
+                                                                   : m_total{total},
+                                                                     m_total_cost{total_cost},
+                                                                     m_max_total_cost{max_total_cost},
+                                                                     m_subscriptions{subscriptions} {
+}
+
+std::string TwitchPP::TwitchEventSubSubscriptions::to_json() {
+    std::string json = "{\"total\":" + std::to_string(this->m_total)
+        + ",\"total_cost\":" + std::to_string(this->m_total_cost)
+        + ",\"max_total_cost\":" + std::to_string(this->m_max_total_cost)
+        + ",\"subscriptions\":[";
+    for (size_t i {0}; i < this->m_subscriptions.size(); ++i) {
+        json += this->m_subscriptions.at(i).to_json();
+        if (i + 1 < this->m_subscriptions.size()) {
+            json += ',';
+        }
+    }
+    return json + "]}";
+}

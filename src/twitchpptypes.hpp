@@ -68,6 +68,12 @@ namespace TwitchPP {
     constexpr std::string_view HTTP_DELETE { "DELETE" };
     constexpr std::string_view HTTP_PUT { "PUT" };
 
+    /* Condition ID types */
+    constexpr std::string_view CONDITION_BROADCASTER { "BROADCASTER" };
+    constexpr std::string_view CONDITION_USER { "USER" };
+    constexpr std::string_view CONDITION_CLIENT { "CLIENT" };
+    constexpr std::string_view CONDITION_EXTENSION_CLIENT { "EXTENSION_CLIENT" };
+
     template<typename T> using VectorResponse = TwitchPP::Response<std::vector<T>>;
     template<typename T> using VectorResponseLeftovers = TwitchPP::ResponseLeftovers<std::vector<T>>;
 
@@ -1650,6 +1656,84 @@ namespace TwitchPP {
                            const std::string& description,
                            const std::string& image_url,
                            std::vector<TwitchTrack> tracks = {});
+            std::string to_json();
+    };
+
+    class TwitchCondition {
+        protected:
+            std::string m_broadcaster_user_id {""};
+            std::string m_from_broadcaster_user_id {""};
+            std::string m_to_broadcaster_user_id {""};
+            std::string m_reward_id {""};
+            std::string m_organization_id {""};
+            std::string m_category_id {""};
+            std::string m_campaign_id {""};
+            std::string m_extension_client_id {""};
+            std::string m_client_id {""};
+            std::string m_user_id {""};
+        public:
+            TwitchCondition(const std::string& json);
+            // TODO: Describe possible id_types in doc and is_reward
+            TwitchCondition(const std::string& id,
+                            std::string_view id_type);
+            TwitchCondition(const std::string& broadcaster_user_id,
+                            const std::string& seconcary_parameter,
+                            const bool& is_reward);
+            TwitchCondition(const std::string& organization_id,
+                            const std::string& category_id,
+                            const std::string& campaign_id);
+            std::string to_json();
+    };
+
+    class TwitchTransport {
+        protected:
+            std::string m_method {""};
+            std::string m_callback {""};
+            std::string m_secret {""};
+        public:
+            TwitchTransport(const std::string& json);
+            TwitchTransport(const std::string& method,
+                            const std::string& callback,
+                            const std::string& secret);
+            std::string to_json();
+    };
+
+    class TwitchEventSubSubscription {
+        protected:
+            std::string m_id {""};
+            std::string m_status {""};
+            std::string m_type {""};
+            std::string m_version {""};
+            std::string m_created_at {""};
+            size_t m_cost {};
+            std::shared_ptr<TwitchTransport> m_transport = nullptr;
+            std::shared_ptr<TwitchCondition> m_condition = nullptr;
+        public:
+            TwitchEventSubSubscription(const std::string& json);
+            TwitchEventSubSubscription(const std::string& id,
+                                       const std::string& status,
+                                       const std::string& type,
+                                       const std::string& version,
+                                       const std::string& created_at,
+                                       const size_t& cost,
+                                       std::shared_ptr<TwitchTransport> transport = nullptr,
+                                       std::shared_ptr<TwitchCondition> condition = nullptr);
+            std::string to_json();
+    };
+
+    class TwitchEventSubSubscriptions {
+        protected:
+            size_t m_total {};
+            size_t m_total_cost {};
+            size_t m_max_total_cost {};
+            std::vector<TwitchEventSubSubscription> m_subscriptions {};
+        public:
+            TwitchEventSubSubscriptions(const std::string& json,
+                                        std::vector<TwitchEventSubSubscription> subscriptions = {});
+            TwitchEventSubSubscriptions(const size_t& total,
+                                        const size_t& total_cost,
+                                        const size_t& max_total_cost,
+                                        std::vector<TwitchEventSubSubscription> subscriptions = {});
             std::string to_json();
     };
 }

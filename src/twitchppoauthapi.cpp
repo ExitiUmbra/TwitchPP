@@ -92,7 +92,9 @@ namespace TwitchPP {
         return this->process_response<TwitchAutoModSettings>(response);
     }
 
-    VectorResponse<TwitchAutoModSettings> TwitchOauthAPI::update_automod_settings(std::string_view broadcaster_id, TwitchAutoModSettings& settings, const bool& is_overall) {
+    VectorResponse<TwitchAutoModSettings> TwitchOauthAPI::update_automod_settings(std::string_view broadcaster_id,
+                                                                                  TwitchAutoModSettings& settings,
+                                                                                  const bool& is_overall) {
         std::string options {"?moderator_id=" + this->m_moderator_id + "&broadcaster_id=" + std::string(broadcaster_id)};
         std::string url {TWITCH_API_BASE + "moderation/automod/settings" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PUT", settings.to_request(is_overall));
@@ -1106,5 +1108,27 @@ namespace TwitchPP {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchHypeTrainEvent>(response);
+    }
+
+    VectorResponse<TwitchEventSubSubscriptions> TwitchOauthAPI::get_eventsub_subscriptions(std::optional<std::string_view> filter,
+                                                                                           bool is_type,
+                                                                                           std::optional<std::string> after) {
+        std::string options {"?"};
+        if (filter) {
+            options += (is_type ? "type=" : "status=") + std::string(filter.value());
+        }
+        if (after) {
+            options += (options == "?" ? "after=" : "&after=") + after.value();
+        }
+        std::string url {TWITCH_API_BASE + "eventsub/subscriptions" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        VectorResponseLeftovers<TwitchEventSubSubscription> subs_response = this->process_response_leftovers<TwitchEventSubSubscription>(response);
+        size_t total = std::stoul(get_object_param("\"total\"", response.data, "0"));
+        size_t total_cost = std::stoul(get_object_param("\"total_cost\"", subs_response.leftovers, "0"));
+        size_t max_total_cost = std::stoul(get_object_param("\"max_total_cost\"", subs_response.leftovers, "0"));
+        return {{TwitchEventSubSubscriptions(total, total_cost, max_total_cost, subs_response.data)}, response.cursor, response.code, response.message};
     }
 }

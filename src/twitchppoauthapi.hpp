@@ -169,5 +169,9 @@ namespace TwitchPP {
                                                                        std::optional<std::string_view> hype_train_id = std::nullopt,
                                                                        std::optional<size_t> first = std::nullopt,
                                                                        std::optional<std::string> cursor = std::nullopt);
+            // TODO: Mention in documentation is_type parameter and similar to it
+            VectorResponse<TwitchEventSubSubscriptions> get_eventsub_subscriptions(std::optional<std::string_view> filter = std::nullopt,
+                                                                                   bool is_type = false,
+                                                                                   std::optional<std::string> after = std::nullopt);
     };
 }
