@@ -170,5 +170,6 @@ namespace TwitchPP {
                                                                        std::optional<size_t> first = std::nullopt,
                                                                        std::optional<std::string> cursor = std::nullopt);
             Response<TwitchUserActiveExtensions> get_user_active_extensions(std::string_view user_id);
+            Response<TwitchUserActiveExtensions> update_user_extensions(std::optional<TwitchUserActiveExtensions> extensions = std::nullopt);
     };
 }

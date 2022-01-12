@@ -32,6 +32,7 @@ namespace TwitchPP {
     constexpr std::string_view MODERATOR_MANAGE_BLOCKED_TERMS { "moderator:manage:blocked_terms" };
     constexpr std::string_view USER_EDIT { "user:edit" };
     constexpr std::string_view USER_EDIT_FOLLOWS { "user:edit:follows" };
+    constexpr std::string_view USER_EDIT_BROADCAST { "user:edit:broadcast" };
     constexpr std::string_view USER_MANAGE_BLOCKED_USERS { "user:manage:blocked_users" };
     constexpr std::string_view USER_READ_BLOCKED_USERS { "user:read:blocked_users" };
     constexpr std::string_view USER_READ_BROADCAST { "user:read:broadcast" };

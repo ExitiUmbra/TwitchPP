@@ -1124,4 +1124,26 @@ namespace TwitchPP {
 
         return {{panels, overlays, components}, response.cursor, response.code, response.message};
     }
+
+    Response<TwitchUserActiveExtensions> TwitchOauthAPI::update_user_extensions(std::optional<TwitchUserActiveExtensions> extensions) {
+        std::string request_body {"{\"data\":"};
+        if (extensions) {
+            request_body += extensions.value().to_json();
+        } else {
+            request_body += "{}";
+        }
+        request_body += "}";
+        std::string url {TWITCH_API_BASE + "users/extensions"};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PUT, request_body);
+
+        std::string message = get_object_param("\"message\"", response.data);
+        std::string panel = get_object_param("\"panel\"", response.data);
+        std::vector<TwitchUserActiveExtension> panels = this->string_to_vector_objects<TwitchUserActiveExtension>(panel);
+        std::string overlay = get_object_param("\"overlay\"", response.data);
+        std::vector<TwitchUserActiveExtension> overlays = this->string_to_vector_objects<TwitchUserActiveExtension>(overlay);
+        std::string component = get_object_param("\"component\"", response.data);
+        std::vector<TwitchUserActiveExtension> components = this->string_to_vector_objects<TwitchUserActiveExtension>(component);
+
+        return {{panels, overlays, components}, response.cursor, response.code, message};
+    }
 }
