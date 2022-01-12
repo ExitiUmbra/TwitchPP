@@ -169,5 +169,6 @@ namespace TwitchPP {
                                                                        std::optional<std::string_view> hype_train_id = std::nullopt,
                                                                        std::optional<size_t> first = std::nullopt,
                                                                        std::optional<std::string> cursor = std::nullopt);
+            Response<TwitchUserActiveExtensions> get_user_active_extensions(std::string_view user_id);
     };
 }

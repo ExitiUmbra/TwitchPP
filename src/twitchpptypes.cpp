@@ -2656,7 +2656,6 @@ std::string TwitchPP::TwitchCurrentTrack::to_json() {
     return json + "}";
 }
 
-
 TwitchPP::TwitchBasicPlaylist::TwitchBasicPlaylist(const std::string& json) {
     this->m_id = get_object_param("\"id\"", json);
     this->m_title = get_object_param("\"title\"", json);
@@ -2682,7 +2681,6 @@ std::string TwitchPP::TwitchBasicPlaylist::to_json() {
         + "\"}";
     return json;
 }
-
 
 TwitchPP::TwitchPlaylist::TwitchPlaylist(const std::string& json)
                                          : TwitchBasicPlaylist{json} {
@@ -2900,4 +2898,76 @@ std::string TwitchPP::TwitchEventSubSubscriptions::to_json() {
         }
     }
     return json + "]}";
+}
+
+TwitchPP::TwitchUserActiveExtension::TwitchUserActiveExtension(const std::string& json) {
+    this->m_active = get_object_param("\"active\"", json) == "true";
+    if (this->m_active) {
+        this->m_id = get_object_param("\"id\"", json);
+        this->m_name = get_object_param("\"name\"", json);
+        this->m_version = get_object_param("\"version\"", json);
+        this->m_x_pos = std::stoi(get_object_param("\"x_pos\"", json, "-1"));
+        this->m_y_pos = std::stoi(get_object_param("\"y_pos\"", json, "-1"));
+    }
+}
+
+TwitchPP::TwitchUserActiveExtension::TwitchUserActiveExtension(const bool& active,
+                                                               const std::string& id,
+                                                               const std::string& name,
+                                                               const std::string& version,
+                                                               const int& x_pos,
+                                                               const int& y_pos)
+                                                               : m_active{active},
+                                                                 m_id{id},
+                                                                 m_name{name},
+                                                                 m_version{version},
+                                                                 m_x_pos{x_pos},
+                                                                 m_y_pos{y_pos} {
+}
+
+std::string TwitchPP::TwitchUserActiveExtension::to_json() {
+    std::string json {"{\"active\":" + std::string(this->m_active ? "true" : "false")};
+    if (this->m_active) {
+        json += ",\"id\":\"" + this->m_id
+            + "\",\"name\":\"" + this->m_name
+            + "\",\"version\":\"" + this->m_version + "\"";
+        if (this->m_x_pos > -1 && this->m_y_pos > -1) {
+            json += ",\"x\":" + std::to_string(this->m_x_pos)
+                + ",\"y\":" + std::to_string(this->m_y_pos);
+        }
+    }
+    return json + "}";
+}
+
+TwitchPP::TwitchUserActiveExtensions::TwitchUserActiveExtensions(std::vector<TwitchUserActiveExtension> panel,
+                                                                 std::vector<TwitchUserActiveExtension> overlay,
+                                                                 std::vector<TwitchUserActiveExtension> component)
+                                                                 : m_panel{panel},
+                                                                   m_overlay{overlay},
+                                                                   m_component{component} {
+}
+
+std::string TwitchPP::TwitchUserActiveExtensions::to_json() {
+    std::string json {"{\"panel\":{"};
+    for (size_t i {0}; i < this->m_panel.size(); ++i) {
+        json += "\"" + std::to_string(i + 1) + "\":" + this->m_panel.at(i).to_json();
+        if (i + 1 < this->m_panel.size()) {
+            json += ',';
+        }
+    }
+    json += "},\"overlay\":{";
+    for (size_t i {0}; i < this->m_overlay.size(); ++i) {
+        json += "\"" + std::to_string(i + 1) + "\":" + this->m_overlay.at(i).to_json();
+        if (i + 1 < this->m_overlay.size()) {
+            json += ',';
+        }
+    }
+    json += "},\"component\":{";
+    for (size_t i {0}; i < this->m_component.size(); ++i) {
+        json += "\"" + std::to_string(i + 1) + "\":" + this->m_component.at(i).to_json();
+        if (i + 1 < this->m_component.size()) {
+            json += ',';
+        }
+    }
+    return json + "}}";
 }

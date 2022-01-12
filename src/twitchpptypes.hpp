@@ -1736,4 +1736,36 @@ namespace TwitchPP {
                                         std::vector<TwitchEventSubSubscription> subscriptions = {});
             std::string to_json();
     };
+
+    class TwitchUserActiveExtension {
+        public:
+            bool m_active {};
+            std::string m_id {""};
+            std::string m_name {""};
+            std::string m_version {""};
+            int m_x_pos {-1};
+            int m_y_pos {-1};
+
+            TwitchUserActiveExtension();
+            TwitchUserActiveExtension(const std::string& json);
+            TwitchUserActiveExtension(const bool& active,
+                                      const std::string& id,
+                                      const std::string& name,
+                                      const std::string& version,
+                                      const int& x_pos,
+                                      const int& y_pos);
+            std::string to_json();
+    };
+
+    class TwitchUserActiveExtensions {
+        public:
+            std::vector<TwitchUserActiveExtension> m_panel {};
+            std::vector<TwitchUserActiveExtension> m_overlay {};
+            std::vector<TwitchUserActiveExtension> m_component {};
+
+            TwitchUserActiveExtensions(std::vector<TwitchUserActiveExtension> panel = {},
+                                       std::vector<TwitchUserActiveExtension> overlay = {},
+                                       std::vector<TwitchUserActiveExtension> component = {});
+            std::string to_json();
+    };
 }
