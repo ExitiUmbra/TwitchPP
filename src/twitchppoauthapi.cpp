@@ -1114,36 +1114,14 @@ namespace TwitchPP {
         std::string options {"?user_id=" + std::string(user_id)};
         std::string url {TWITCH_API_BASE + "users/extensions" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        std::string panel = get_object_param("\"panel\"", response.data);
-        std::vector<TwitchUserActiveExtension> panels {};
-        std::string overlay = get_object_param("\"overlay\"", response.data);
-        std::vector<TwitchUserActiveExtension> overlays {};
-        std::string component = get_object_param("\"component\"", response.data);
-        std::vector<TwitchUserActiveExtension> components {};
 
-        std::pair<std::string, std::string> cycle {"", panel};
-        do {
-            cycle = get_first_value(cycle.second);
-            if (cycle.first != "") {
-                panels.push_back(TwitchUserActiveExtension(cycle.first));
-            }
-        } while(cycle.second != "");
-        cycle.first = "";
-        cycle.second = overlay;
-        do {
-            cycle = get_first_value(cycle.second);
-            if (cycle.first != "") {
-                overlays.push_back(TwitchUserActiveExtension(cycle.first));
-            }
-        } while(cycle.second != "");
-        cycle.first = "";
-        cycle.second = component;
-        do {
-            cycle = get_first_value(cycle.second);
-            if (cycle.first != "") {
-                components.push_back(TwitchUserActiveExtension(cycle.first));
-            }
-        } while(cycle.second != "");
+        std::string panel = get_object_param("\"panel\"", response.data);
+        std::vector<TwitchUserActiveExtension> panels = this->string_to_vector_objects<TwitchUserActiveExtension>(panel);
+        std::string overlay = get_object_param("\"overlay\"", response.data);
+        std::vector<TwitchUserActiveExtension> overlays = this->string_to_vector_objects<TwitchUserActiveExtension>(overlay);
+        std::string component = get_object_param("\"component\"", response.data);
+        std::vector<TwitchUserActiveExtension> components = this->string_to_vector_objects<TwitchUserActiveExtension>(component);
+
         return {{panels, overlays, components}, response.cursor, response.code, response.message};
     }
 }

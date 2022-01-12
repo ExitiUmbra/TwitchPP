@@ -7,21 +7,25 @@ namespace TwitchPP {
             std::string m_app_access_token {""};
             std::string m_client_id {""};
             template<typename T>
-            VectorResponse<T> process_response(Response<std::string>& response) {
-                auto [data_string, leftovers] = get_first_value(response.data.substr(1, response.data.size() - 1));
-                auto [cursor_string, _] = get_first_value(leftovers);
-                std::string cursor = get_object_param("\"cursor\"", cursor_string);
-                std::string message = !data_string.size() ? get_object_param("\"message\"", response.data) : "";
-
+            std::vector<T> string_to_vector_objects(std::string data_string) {
                 std::pair<std::string, std::string> cycle {"", data_string};
-                std::vector<T> elements;
+                std::vector<T> elements {};
                 do {
                     cycle = get_first_value(cycle.second);
                     if (cycle.first != "") {
                         elements.push_back(T(cycle.first));
                     }
                 } while(cycle.second != "");
-
+                return elements;
+            }
+            template<typename T>
+            VectorResponse<T> process_response(Response<std::string>& response) {
+                auto [data_string, leftovers] = get_first_value(response.data.substr(1, response.data.size() - 1));
+                auto [cursor_string, _] = get_first_value(leftovers);
+                std::string cursor = get_object_param("\"cursor\"", cursor_string);
+                // TODO: Check if message passed correctly everywhere
+                std::string message = !data_string.size() ? get_object_param("\"message\"", response.data) : "";
+                std::vector<T> elements = this->string_to_vector_objects<T>(data_string);
                 return {elements, cursor, response.code, message};
             }
             template<typename T>
@@ -30,16 +34,7 @@ namespace TwitchPP {
                 auto [cursor_string, _] = get_first_value(leftovers);
                 std::string cursor = get_object_param("\"cursor\"", cursor_string);
                 std::string message = !data_string.size() ? get_object_param("\"message\"", response.data) : "";
-
-                std::pair<std::string, std::string> cycle {"", data_string};
-                std::vector<T> elements;
-                do {
-                    cycle = get_first_value(cycle.second);
-                    if (cycle.first != "") {
-                        elements.push_back(T(cycle.first));
-                    }
-                } while(cycle.second != "");
-
+                std::vector<T> elements = this->string_to_vector_objects<T>(data_string);
                 return {elements, cursor, response.code, message, leftovers};
             }
             template<typename T>
