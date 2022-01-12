@@ -119,14 +119,14 @@ namespace TwitchPP {
                                                               std::string_view term_id) {
         std::string options {"?moderator_id=" + this->m_moderator_id + "&broadcaster_id=" + std::string(broadcaster_id) + "&id=" + std::string(term_id)};
         std::string url {TWITCH_API_BASE + "moderation/blocked_terms" + options};
-        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_DELETE);
         return response;
     }
 
     Response<std::string> TwitchOauthAPI::unblock_user(std::string_view target_user_id) {
         std::string options {"?target_user_id=" + std::string(target_user_id)};
         std::string url {TWITCH_API_BASE + "users/blocks" + options};
-        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_DELETE);
         return response;
     }
 
@@ -420,7 +420,7 @@ namespace TwitchPP {
                                                            std::string_view user_id) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id) + "&moderator_id=" + this->m_moderator_id + "&user_id=" + std::string(user_id)};
         std::string url {TWITCH_API_BASE + "moderation/bans" + options};
-        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_DELETE);
         return response;
     }
 
@@ -668,7 +668,7 @@ namespace TwitchPP {
                                                                                  std::string_view id) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id) + "&id=" + std::string(id)};
         std::string url {TWITCH_API_BASE + "schedule/segment" + options};
-        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_DELETE);
         return response;
     }
 
@@ -747,11 +747,15 @@ namespace TwitchPP {
             options += (options == "?" ? "id=" : "&id=") + clip_id;
         }
         std::string url {TWITCH_API_BASE + "videos" + options};
-        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_DELETE);
         if (response.data == "") {
             return {{}, "", response.code, "Bad request"};
         }
-        return this->process_response<std::string>(response);
+
+        auto [data_string, _] = get_first_value(response.data.substr(1, response.data.size() - 1));
+        std::string message = !data_string.size() ? get_object_param("\"message\"", response.data) : "";
+
+        return {json_to_vector(data_string), "", response.code, message};
     }
 
     VectorResponse<TwitchCreatedClip> TwitchOauthAPI::create_clip(std::string_view broadcaster_id,
@@ -928,7 +932,7 @@ namespace TwitchPP {
                                                                                  std::string_view id) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id) + "&id=" + std::string(id)};
         std::string url {TWITCH_API_BASE + "channel_points/custom_rewards" + options};
-        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "DELETE");
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_DELETE);
         return response;
     }
 
