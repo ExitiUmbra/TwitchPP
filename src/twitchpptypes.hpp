@@ -1801,4 +1801,15 @@ namespace TwitchPP {
                                    const std::string& updated_at);
             std::string to_json();
     };
+
+    class TwitchDropsEntitlementStatus {
+        protected:
+            std::string m_status {""};
+            std::vector<std::string> m_ids {};
+        public:
+            explicit TwitchDropsEntitlementStatus(const std::string& json);
+            TwitchDropsEntitlementStatus(const std::string& status,
+                                         std::vector<std::string> ids);
+            std::string to_json();
+    };
 }

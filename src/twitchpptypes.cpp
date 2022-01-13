@@ -3027,3 +3027,20 @@ std::string TwitchPP::TwitchDropsEntitlement::to_json() {
         + "\"}";
     return json;
 }
+
+TwitchPP::TwitchDropsEntitlementStatus::TwitchDropsEntitlementStatus(const std::string& json) {
+    this->m_status = TwitchPP::get_object_param("\"status\"", json);
+    this->m_ids = TwitchPP::json_to_vector(TwitchPP::get_object_param("\"ids\"", json));
+}
+
+TwitchPP::TwitchDropsEntitlementStatus::TwitchDropsEntitlementStatus(const std::string& status,
+                                                                     std::vector<std::string> ids)
+                                                                     : m_status{status},
+                                                                       m_ids{ids} {
+}
+
+std::string TwitchPP::TwitchDropsEntitlementStatus::to_json() {
+    std::string json = "{\"status\":\"" + this->m_status
+        + ",\"ids\":" + TwitchPP::vector_to_json(this->m_ids) + "}";
+    return json;
+}

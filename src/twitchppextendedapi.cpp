@@ -135,4 +135,19 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchDropsEntitlement>(response);
     }
+
+    VectorResponse<TwitchDropsEntitlementStatus> TwitchExtendedAPI::update_drops_entitlements(std::string_view fulfillment_status,
+                                                                                              std::vector<std::string> entitlement_ids) {
+        std::string request_body {"{\"fulfillment_status\":\"" + std::string(fulfillment_status) + "\",\"entitlement_ids\":["};
+        for (size_t i {0}; i < entitlement_ids.size(); ++i) {
+            request_body += (i ? ",\"" : "\"") + entitlement_ids.at(i) + "\"";
+        }
+        request_body += "]}";
+        std::string url {TWITCH_API_BASE + "entitlements/drops"};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PATCH, request_body);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchDropsEntitlementStatus>(response);
+    }
 }

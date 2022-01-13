@@ -31,5 +31,7 @@ namespace TwitchPP {
                                                                           std::optional<std::string_view> fulfillment_status = std::nullopt,
                                                                           std::optional<size_t> first = std::nullopt,
                                                                           std::optional<std::string_view> after = std::nullopt);
+            VectorResponse<TwitchDropsEntitlementStatus> update_drops_entitlements(std::string_view fulfillment_status,
+                                                                                   std::vector<std::string> entitlement_ids);
     };
 }
