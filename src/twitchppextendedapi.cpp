@@ -74,4 +74,18 @@ namespace TwitchPP {
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_DELETE);
         return response;
     }
+
+    VectorResponse<TwitchCodeStatus> TwitchExtendedAPI::get_code_status(std::string_view user_id,
+                                                                        std::vector<std::string> codes) {
+        std::string options {"?user_id=" + std::string(user_id)};
+        for (std::string code : codes) {
+            options += "&code=" + code;
+        }
+        std::string url {TWITCH_API_BASE + "entitlements/codes" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchCodeStatus>(response);
+    }
 }

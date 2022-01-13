@@ -1769,4 +1769,15 @@ namespace TwitchPP {
                                        std::vector<TwitchUserActiveExtension> component = {});
             std::string to_json();
     };
+
+    class TwitchCodeStatus {
+        protected:
+            std::string m_code {""};
+            std::string m_status {""};
+        public:
+            explicit TwitchCodeStatus(const std::string& json);
+            TwitchCodeStatus(const std::string& code,
+                             const std::string& status);
+            std::string to_json();
+    };
 }

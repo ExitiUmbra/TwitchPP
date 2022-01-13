@@ -2971,3 +2971,21 @@ std::string TwitchPP::TwitchUserActiveExtensions::to_json() {
     }
     return json + "}}";
 }
+
+TwitchPP::TwitchCodeStatus::TwitchCodeStatus(const std::string& json) {
+    this->m_code = get_object_param("\"code\"", json);
+    this->m_status = get_object_param("\"status\"", json);
+}
+
+TwitchPP::TwitchCodeStatus::TwitchCodeStatus(const std::string& code,
+                                             const std::string& status)
+                                             : m_code{code},
+                                               m_status{status} {
+}
+
+std::string TwitchPP::TwitchCodeStatus::to_json() {
+    std::string json = "{\"code\":\"" + this->m_code
+        + "\",\"status\":\"" + this->m_status
+        + "\"}";
+    return json;
+}
