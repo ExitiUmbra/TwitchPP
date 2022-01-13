@@ -23,6 +23,8 @@ namespace TwitchPP {
             Response<std::string> delete_eventsub_subscription(std::string_view subscription_id);
             VectorResponse<TwitchCodeStatus> get_code_status(std::string_view user_id,
                                                              std::vector<std::string> codes);
+            VectorResponse<TwitchCodeStatus> redeem_code(std::string_view user_id,
+                                                         std::vector<std::string> codes);
             VectorResponse<TwitchDropsEntitlement> get_drops_entitlements(std::optional<std::string_view> id = std::nullopt,
                                                                           std::optional<std::string_view> user_id = std::nullopt,
                                                                           std::optional<std::string_view> game_id = std::nullopt,

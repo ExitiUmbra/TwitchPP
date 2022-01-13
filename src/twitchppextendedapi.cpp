@@ -89,6 +89,20 @@ namespace TwitchPP {
         return this->process_response<TwitchCodeStatus>(response);
     }
 
+    VectorResponse<TwitchCodeStatus> TwitchExtendedAPI::redeem_code(std::string_view user_id,
+                                                                    std::vector<std::string> codes) {
+        std::string options {"?user_id=" + std::string(user_id)};
+        for (std::string code : codes) {
+            options += "&code=" + code;
+        }
+        std::string url {TWITCH_API_BASE + "entitlements/codes" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_POST);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchCodeStatus>(response);
+    }
+
     VectorResponse<TwitchDropsEntitlement> TwitchExtendedAPI::get_drops_entitlements(std::optional<std::string_view> id,
                                                                                      std::optional<std::string_view> user_id,
                                                                                      std::optional<std::string_view> game_id,
