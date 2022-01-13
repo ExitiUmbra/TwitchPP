@@ -2989,3 +2989,41 @@ std::string TwitchPP::TwitchCodeStatus::to_json() {
         + "\"}";
     return json;
 }
+
+TwitchPP::TwitchDropsEntitlement::TwitchDropsEntitlement(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_benefit_id = get_object_param("\"benefit_id\"", json);
+    this->m_timestamp = get_object_param("\"timestamp\"", json);
+    this->m_user_id = get_object_param("\"user_id\"", json);
+    this->m_game_id = get_object_param("\"game_id\"", json);
+    this->m_fulfillment_status = get_object_param("\"fulfillment_status\"", json);
+    this->m_updated_at = get_object_param("\"updated_at\"", json);
+}
+
+TwitchPP::TwitchDropsEntitlement::TwitchDropsEntitlement(const std::string& id,
+                                                         const std::string& benefit_id,
+                                                         const std::string& timestamp,
+                                                         const std::string& user_id,
+                                                         const std::string& game_id,
+                                                         const std::string& fulfillment_status,
+                                                         const std::string& updated_at)
+                                                         : m_id{id},
+                                                           m_benefit_id{benefit_id},
+                                                           m_timestamp{timestamp},
+                                                           m_user_id{user_id},
+                                                           m_game_id{game_id},
+                                                           m_fulfillment_status{fulfillment_status},
+                                                           m_updated_at{updated_at} {
+}
+
+std::string TwitchPP::TwitchDropsEntitlement::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"benefit_id\":\"" + this->m_benefit_id
+        + "\",\"timestamp\":\"" + this->m_timestamp
+        + "\",\"user_id\":\"" + this->m_user_id
+        + "\",\"game_id\":\"" + this->m_game_id
+        + "\",\"fulfillment_status\":\"" + this->m_fulfillment_status
+        + "\",\"updated_at\":\"" + this->m_updated_at
+        + "\"}";
+    return json;
+}

@@ -1780,4 +1780,25 @@ namespace TwitchPP {
                              const std::string& status);
             std::string to_json();
     };
+
+    class TwitchDropsEntitlement {
+        protected:
+            std::string m_id {""};
+            std::string m_benefit_id{""};
+            std::string m_timestamp {""};
+            std::string m_user_id {""};
+            std::string m_game_id {""};
+            std::string m_fulfillment_status {""};
+            std::string m_updated_at {""};
+        public:
+            TwitchDropsEntitlement(const std::string& json);
+            TwitchDropsEntitlement(const std::string& id,
+                                   const std::string& benefit_id,
+                                   const std::string& timestamp,
+                                   const std::string& user_id,
+                                   const std::string& game_id,
+                                   const std::string& fulfillment_status,
+                                   const std::string& updated_at);
+            std::string to_json();
+    };
 }

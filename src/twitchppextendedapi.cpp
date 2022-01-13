@@ -88,4 +88,37 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchCodeStatus>(response);
     }
+
+    VectorResponse<TwitchDropsEntitlement> TwitchExtendedAPI::get_drops_entitlements(std::optional<std::string_view> id,
+                                                                                     std::optional<std::string_view> user_id,
+                                                                                     std::optional<std::string_view> game_id,
+                                                                                     std::optional<std::string_view> fulfillment_status,
+                                                                                     std::optional<size_t> first,
+                                                                                     std::optional<std::string_view> after) {
+        std::string options {""};
+        if (id) {
+            options += "&id=" + std::string(id.value());
+        }
+        if (user_id) {
+            options += "&user_id=" + std::string(user_id.value());
+        }
+        if (game_id) {
+            options += "&game_id=" + std::string(game_id.value());
+        }
+        if (fulfillment_status) {
+            options += "&fulfillment_status=" + std::string(fulfillment_status.value());
+        }
+        if (first) {
+            options += "&first=" + std::to_string(first.value());
+        }
+        if (after) {
+            options += "&after=" + std::string(after.value());
+        }
+        std::string url {TWITCH_API_BASE + "entitlements/drops" + (options.size() ? ("?" + options.substr(1, options.size())) : options)};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchDropsEntitlement>(response);
+    }
 }
