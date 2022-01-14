@@ -83,7 +83,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "entitlements/codes" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchCodeStatus>(response);
@@ -97,7 +97,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "entitlements/codes" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_POST);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchCodeStatus>(response);
@@ -130,7 +130,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "entitlements/drops" + (options.size() ? ("?" + options.substr(1, options.size())) : options)};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchDropsEntitlement>(response);
@@ -145,7 +145,7 @@ namespace TwitchPP {
         request_body += "]}";
         std::string url {TWITCH_API_BASE + "entitlements/drops"};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PATCH, request_body);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchDropsEntitlementStatus>(response);
@@ -163,7 +163,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "extensions/configurations" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchExtensionConfigurationSegment>(response);
@@ -188,7 +188,7 @@ namespace TwitchPP {
         request_body += "\"}";
         std::string url {TWITCH_API_BASE + "extensions/configurations"};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PUT, request_body);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return response;
@@ -205,7 +205,7 @@ namespace TwitchPP {
             + "\"}"};
         std::string url {TWITCH_API_BASE + "extensions/required_configuration" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PUT, request_body);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return response;
@@ -226,7 +226,7 @@ namespace TwitchPP {
         request_body += "}";
         std::string url {TWITCH_API_BASE + "extensions/pubsub"};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_POST, request_body);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return response;
@@ -243,9 +243,33 @@ namespace TwitchPP {
             + "\"}"};
         std::string url {TWITCH_API_BASE + "extensions/chat" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_POST, request_body);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return response;
+    }
+
+    VectorResponse<TwitchExtensionSecrets> TwitchExtendedAPI::get_extension_secrets(std::string_view extension_id) {
+        std::string options {"?extension_id=" + std::string(extension_id)};
+        std::string url {TWITCH_API_BASE + "extensions/jwt/secrets" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchExtensionSecrets>(response);
+    }
+
+    VectorResponse<TwitchExtensionSecrets> TwitchExtendedAPI::create_extension_secret(std::string_view extension_id,
+                                                                                      std::optional<size_t> delay) {
+        std::string options {"?extension_id=" + std::string(extension_id)};
+        if (delay) {
+            options += "&delay=" + std::to_string(delay.value());
+        }
+        std::string url {TWITCH_API_BASE + "extensions/jwt/secrets" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_POST);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchExtensionSecrets>(response);
     }
 }

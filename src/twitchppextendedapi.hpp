@@ -62,5 +62,10 @@ namespace TwitchPP {
                                                               std::string_view text,
                                                               std::string_view extension_id,
                                                               std::string_view extension_version);
+
+            VectorResponse<TwitchExtensionSecrets> get_extension_secrets(std::string_view extension_id);
+
+            VectorResponse<TwitchExtensionSecrets> create_extension_secret(std::string_view extension_id,
+                                                                           std::optional<size_t> delay = std::nullopt);
     };
 }

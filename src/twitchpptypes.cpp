@@ -3071,3 +3071,51 @@ std::string TwitchPP::TwitchExtensionConfigurationSegment::to_json() {
     }
     return json + "\"}";
 }
+
+TwitchPP::TwitchExtensionSecret::TwitchExtensionSecret(const std::string& json) {
+    this->m_content = get_object_param("\"content\"", json);
+    this->m_active_at = get_object_param("\"active_at\"", json);
+    this->m_expires_at = get_object_param("\"expires_at\"", json);
+}
+
+TwitchPP::TwitchExtensionSecret::TwitchExtensionSecret(const std::string& content,
+                                                       const std::string& active_at,
+                                                       const std::string& expires_at)
+                                                       : m_content{content},
+                                                         m_active_at{active_at},
+                                                         m_expires_at{expires_at} {
+}
+
+std::string TwitchPP::TwitchExtensionSecret::to_json() {
+    std::string json = "{\"content\":\"" + this->m_content
+        + "\",\"active_at\":\"" + this->m_active_at
+        + "\",\"expires_at\":\"" + this->m_expires_at
+        + "\"}";
+    return json;
+}
+
+TwitchPP::TwitchExtensionSecrets::TwitchExtensionSecrets(const std::string& json) {
+    this->m_format_version = std::stoul(TwitchPP::get_object_param("\"format_version\"", json, "0"));
+    std::vector<std::string> secrets = TwitchPP::json_to_vector(TwitchPP::get_object_param("\"ids\"", json));
+    for (std::string secret : secrets) {
+        this->m_secrets.push_back(TwitchPP::TwitchExtensionSecret(secret));
+    }
+}
+
+TwitchPP::TwitchExtensionSecrets::TwitchExtensionSecrets(const size_t& format_version,
+                                                         std::vector<TwitchExtensionSecret> secrets)
+                                                         : m_format_version{format_version},
+                                                           m_secrets{secrets} {
+}
+
+std::string TwitchPP::TwitchExtensionSecrets::to_json() {
+    std::string json = "{\"format_version\":\"" + std::to_string(this->m_format_version)
+        + ",\"secrets\":[";
+    for (size_t i {0}; i < this->m_secrets.size(); ++i) {
+        json += this->m_secrets.at(i).to_json();
+        if (i + 1 < this->m_secrets.size()) {
+            json += ',';
+        }
+    }
+    return json + "]}";
+}
