@@ -168,4 +168,29 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchExtensionConfigurationSegment>(response);
     }
+
+    Response<std::string> TwitchExtendedAPI::set_extension_configuration_segment(std::string_view extension_id,
+                                                                                 std::string_view segment,
+                                                                                 std::optional<std::string_view> broadcaster_id,
+                                                                                 std::optional<std::string_view> content,
+                                                                                 std::optional<std::string_view> version) {
+        std::string request_body {"{\"extension_id\":\"" + std::string(extension_id)};
+        request_body += "\",\"segment\":\"" + std::string(segment);
+        if (broadcaster_id) {
+            request_body += "\",\"broadcaster_id\":\"" + std::string(broadcaster_id.value());
+        }
+        if (content) {
+            request_body += "\",\"content\":\"" + std::string(content.value());
+        }
+        if (version) {
+            request_body += "\",\"version\":\"" + std::string(version.value());
+        }
+        request_body += "\"}";
+        std::string url {TWITCH_API_BASE + "extensions/configurations"};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PUT, request_body);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return response;
+    }
 }

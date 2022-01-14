@@ -21,20 +21,31 @@ namespace TwitchPP {
                                                                                      std::string_view transport);
 
             Response<std::string> delete_eventsub_subscription(std::string_view subscription_id);
+
             VectorResponse<TwitchCodeStatus> get_code_status(std::string_view user_id,
                                                              std::vector<std::string> codes);
+
             VectorResponse<TwitchCodeStatus> redeem_code(std::string_view user_id,
                                                          std::vector<std::string> codes);
+
             VectorResponse<TwitchDropsEntitlement> get_drops_entitlements(std::optional<std::string_view> id = std::nullopt,
                                                                           std::optional<std::string_view> user_id = std::nullopt,
                                                                           std::optional<std::string_view> game_id = std::nullopt,
                                                                           std::optional<std::string_view> fulfillment_status = std::nullopt,
                                                                           std::optional<size_t> first = std::nullopt,
                                                                           std::optional<std::string_view> after = std::nullopt);
+
             VectorResponse<TwitchDropsEntitlementStatus> update_drops_entitlements(std::string_view fulfillment_status,
+
                                                                                    std::vector<std::string> entitlement_ids);
             VectorResponse<TwitchExtensionConfigurationSegment> get_extension_configuration_segment(std::string_view extension_id,
                                                                                                     std::vector<std::string> segments,
                                                                                                     std::optional<std::string_view> broadcaster_id = std::nullopt);
+
+            Response<std::string> set_extension_configuration_segment(std::string_view extension_id,
+                                                                      std::string_view segment,
+                                                                      std::optional<std::string_view> broadcaster_id = std::nullopt,
+                                                                      std::optional<std::string_view> content = std::nullopt,
+                                                                      std::optional<std::string_view> version = std::nullopt);
     };
 }
