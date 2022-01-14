@@ -7,7 +7,7 @@ namespace TwitchPP {
                               const std::string& client_id);
             // TODO: Mention in documentation is_type parameter and similar to it
             VectorResponse<TwitchEventSubSubscriptions> get_eventsub_subscriptions(std::optional<std::string_view> filter = std::nullopt,
-                                                                                   bool is_type = false,
+                                                                                   const bool& is_type = false,
                                                                                    std::optional<std::string> after = std::nullopt);
             // TODO: Parameters might be optimized
             VectorResponse<TwitchEventSubSubscriptions> create_eventsub_subscription(std::string_view type,
@@ -36,8 +36,8 @@ namespace TwitchPP {
                                                                           std::optional<std::string_view> after = std::nullopt);
 
             VectorResponse<TwitchDropsEntitlementStatus> update_drops_entitlements(std::string_view fulfillment_status,
-
                                                                                    std::vector<std::string> entitlement_ids);
+
             VectorResponse<TwitchExtensionConfigurationSegment> get_extension_configuration_segment(std::string_view extension_id,
                                                                                                     std::vector<std::string> segments,
                                                                                                     std::optional<std::string_view> broadcaster_id = std::nullopt);
@@ -52,5 +52,10 @@ namespace TwitchPP {
                                                                        std::string_view extension_id,
                                                                        std::string_view extension_version,
                                                                        std::string_view configuration_version);
+
+            Response<std::string> send_extension_pubsub_message(std::string_view message,
+                                                                std::vector<std::string> targets,
+                                                                const bool& is_global_broadcast = false,
+                                                                std::optional<std::string_view> broadcaster_id = std::nullopt);
     };
 }

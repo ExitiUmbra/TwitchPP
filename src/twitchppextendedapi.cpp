@@ -7,7 +7,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchEventSubSubscriptions> TwitchExtendedAPI::get_eventsub_subscriptions(std::optional<std::string_view> filter,
-                                                                                              bool is_type,
+                                                                                              const bool& is_type,
                                                                                               std::optional<std::string> after) {
         std::string options {"?"};
         if (filter) {
@@ -205,6 +205,27 @@ namespace TwitchPP {
             + "\"}"};
         std::string url {TWITCH_API_BASE + "extensions/required_configuration" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PUT, request_body);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return response;
+    }
+
+    Response<std::string> TwitchExtendedAPI::send_extension_pubsub_message(std::string_view message,
+                                                                           std::vector<std::string> targets,
+                                                                           const bool& is_global_broadcast,
+                                                                           std::optional<std::string_view> broadcaster_id) {
+        std::string request_body {"{\"message\":\"" + std::string(message)
+            + "\",\"target\":\"" + vector_to_json(targets)};
+        if (broadcaster_id) {
+            request_body += ",\"broadcaster_id\":\"" + std::string(broadcaster_id.value()) + "\"";
+        }
+        if (is_global_broadcast) {
+            request_body += ",\"is_global_broadcast\":\"" + std::string(is_global_broadcast ? "true" : "false");
+        }
+        request_body += "}";
+        std::string url {TWITCH_API_BASE + "extensions/pubsub"};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_POST, request_body);
         if (response.data == "") {
             return {{}, "", response.code, "Bad request"};
         }
