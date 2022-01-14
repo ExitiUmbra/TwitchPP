@@ -57,5 +57,10 @@ namespace TwitchPP {
                                                                 std::vector<std::string> targets,
                                                                 const bool& is_global_broadcast = false,
                                                                 std::optional<std::string_view> broadcaster_id = std::nullopt);
+
+            Response<std::string> send_extension_chat_message(std::string_view broadcaster_id,
+                                                              std::string_view text,
+                                                              std::string_view extension_id,
+                                                              std::string_view extension_version);
     };
 }

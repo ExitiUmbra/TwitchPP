@@ -231,4 +231,21 @@ namespace TwitchPP {
         }
         return response;
     }
+
+    Response<std::string> TwitchExtendedAPI::send_extension_chat_message(std::string_view broadcaster_id,
+                                                                         std::string_view text,
+                                                                         std::string_view extension_id,
+                                                                         std::string_view extension_version) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        std::string request_body {"{\"extension_id\":\"" + std::string(extension_id)
+            + "\",\"extension_version\":\"" + std::string(extension_version)
+            + "\",\"text\":\"" + std::string(text)
+            + "\"}"};
+        std::string url {TWITCH_API_BASE + "extensions/chat" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_POST, request_body);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return response;
+    }
 }
