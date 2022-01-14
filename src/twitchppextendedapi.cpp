@@ -193,4 +193,21 @@ namespace TwitchPP {
         }
         return response;
     }
+
+    Response<std::string> TwitchExtendedAPI::set_extension_required_configuration(std::string_view broadcaster_id,
+                                                                                  std::string_view extension_id,
+                                                                                  std::string_view extension_version,
+                                                                                  std::string_view configuration_version) {
+        std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
+        std::string request_body {"{\"extension_id\":\"" + std::string(extension_id)
+            + "\",\"extension_version\":\"" + std::string(extension_version)
+            + "\",\"configuration_version\":\"" + std::string(configuration_version)
+            + "\"}"};
+        std::string url {TWITCH_API_BASE + "extensions/required_configuration" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PUT, request_body);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return response;
+    }
 }

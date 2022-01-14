@@ -47,5 +47,10 @@ namespace TwitchPP {
                                                                       std::optional<std::string_view> broadcaster_id = std::nullopt,
                                                                       std::optional<std::string_view> content = std::nullopt,
                                                                       std::optional<std::string_view> version = std::nullopt);
+
+            Response<std::string> set_extension_required_configuration(std::string_view broadcaster_id,
+                                                                       std::string_view extension_id,
+                                                                       std::string_view extension_version,
+                                                                       std::string_view configuration_version);
     };
 }
