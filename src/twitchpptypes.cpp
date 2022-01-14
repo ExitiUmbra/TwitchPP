@@ -3044,3 +3044,30 @@ std::string TwitchPP::TwitchDropsEntitlementStatus::to_json() {
         + ",\"ids\":" + TwitchPP::vector_to_json(this->m_ids) + "}";
     return json;
 }
+
+TwitchPP::TwitchExtensionConfigurationSegment::TwitchExtensionConfigurationSegment(const std::string& json) {
+    this->m_segment = get_object_param("\"segment\"", json);
+    this->m_content = get_object_param("\"content\"", json);
+    this->m_version = get_object_param("\"version\"", json);
+    this->m_broadcaster_id = get_object_param("\"broadcaster_id\"", json);
+}
+
+TwitchPP::TwitchExtensionConfigurationSegment::TwitchExtensionConfigurationSegment(const std::string& segment,
+                                                                                   const std::string& content,
+                                                                                   const std::string& version,
+                                                                                   std::optional<std::string> broadcaster_id)
+                                                                                   : m_segment{segment},
+                                                                                     m_content{content},
+                                                                                     m_version{version},
+                                                                                     m_broadcaster_id{broadcaster_id.value_or("")} {
+}
+
+std::string TwitchPP::TwitchExtensionConfigurationSegment::to_json() {
+    std::string json = "{\"segment\":\"" + this->m_segment
+        + "\",\"content\":\"" + this->m_content
+        + "\",\"version\":\"" + this->m_version;
+    if (this->m_broadcaster_id.size()) {
+        json += "\",\"broadcaster_id\":\"" + this->m_broadcaster_id;
+    }
+    return json + "\"}";
+}

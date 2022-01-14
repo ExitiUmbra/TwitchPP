@@ -150,4 +150,22 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchDropsEntitlementStatus>(response);
     }
+
+    VectorResponse<TwitchExtensionConfigurationSegment> TwitchExtendedAPI::get_extension_configuration_segment(std::string_view extension_id,
+                                                                                                               std::vector<std::string> segments,
+                                                                                                               std::optional<std::string_view> broadcaster_id) {
+        std::string options {"?extension_id=" + std::string(extension_id)};
+        for (std::string segment : segments) {
+            options += "&segment=" + segment;
+        }
+        if (broadcaster_id) {
+            options += "&broadcaster_id=" + std::string(broadcaster_id.value());
+        }
+        std::string url {TWITCH_API_BASE + "extensions/configurations" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (response.data == "") {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchExtensionConfigurationSegment>(response);
+    }
 }

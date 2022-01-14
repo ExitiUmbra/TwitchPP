@@ -1812,4 +1812,19 @@ namespace TwitchPP {
                                          std::vector<std::string> ids);
             std::string to_json();
     };
+
+    class TwitchExtensionConfigurationSegment {
+        protected:
+            std::string m_segment {""};
+            std::string m_content {""};
+            std::string m_version {""};
+            std::string m_broadcaster_id {""};
+        public:
+            TwitchExtensionConfigurationSegment(const std::string& json);
+            TwitchExtensionConfigurationSegment(const std::string& segment,
+                                                const std::string& content,
+                                                const std::string& version,
+                                                std::optional<std::string> broadcaster_id = std::nullopt);
+            std::string to_json();
+    };
 }
