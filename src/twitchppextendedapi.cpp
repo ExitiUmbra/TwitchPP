@@ -291,13 +291,42 @@ namespace TwitchPP {
         return this->process_response<TwitchExtensionLiveChannel>(response);
     }
 
-    VectorResponse<TwitchExtensionLiveChannel> TwitchExtendedAPI::get_extension_bits_products(const bool& is_global_broadcast) {
+    VectorResponse<TwitchExtensionBitsProduct> TwitchExtendedAPI::get_extension_bits_products(const bool& is_global_broadcast) {
         std::string options {(is_global_broadcast ? "?is_global_broadcast=true" : "")};
         std::string url {TWITCH_API_BASE + "bits/extensions" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
-        return this->process_response<TwitchExtensionLiveChannel>(response);
+        return this->process_response<TwitchExtensionBitsProduct>(response);
+    }
+
+    VectorResponse<TwitchExtensionBitsProduct> TwitchExtendedAPI::update_extension_bits_product(const std::string& sku,
+                                                                                                const std::string& display_name,
+                                                                                                const std::string& cost_type,
+                                                                                                const size_t& cost_amount,
+                                                                                                std::optional<std::string> expiration,
+                                                                                                const bool& in_development,
+                                                                                                const bool& is_broadcast) {
+        std::string request_body = "{\"sku\":\"" + sku
+            + "\",\"display_name\":\"" + display_name
+            + "\",\"cost\":{\"type\":\"" + cost_type
+            + "\",\"amount\":" + std::to_string(cost_amount) + "}";
+        if (expiration) {
+            request_body += ",\"expiration\":\"" + expiration.value() + "\"";
+        }
+        if (in_development) {
+            request_body += ",\"in_development\":true";
+        }
+        if (is_broadcast) {
+            request_body += ",\"is_broadcast\":true";
+        }
+        request_body += "}";
+        std::string url {TWITCH_API_BASE + "bits/extensions"};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PUT, request_body);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchExtensionBitsProduct>(response);
     }
 }

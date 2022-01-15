@@ -3154,9 +3154,9 @@ TwitchPP::TwitchExtensionBitsProduct::TwitchExtensionBitsProduct(const std::stri
     this->m_sku = TwitchPP::get_object_param("\"sku\"", json);
     this->m_display_name = TwitchPP::get_object_param("\"display_name\"", json);
     this->m_expiration = TwitchPP::get_object_param("\"expiration\"", json);
-    this->m_cost_type = TwitchPP::get_object_param("\"cost_type\"", json);
+    this->m_cost_type = TwitchPP::get_object_param("\"type\"", json);
     // TODO: check if everywhere fallback for int values
-    this->m_cost_amount = std::stoul(TwitchPP::get_object_param("\"cost_amount\"", json, "0"));
+    this->m_cost_amount = std::stoul(TwitchPP::get_object_param("\"amount\"", json, "0"));
     this->m_in_development = TwitchPP::get_object_param("\"in_development\"", json) == "true";
     this->m_is_broadcast = TwitchPP::get_object_param("\"is_broadcast\"", json) == "true";
 }
@@ -3181,9 +3181,9 @@ std::string TwitchPP::TwitchExtensionBitsProduct::to_json() {
     std::string json = "{\"sku\":\"" + this->m_sku
         + "\",\"display_name\":\"" + this->m_display_name
         + "\",\"expiration\":\"" + this->m_expiration
-        + "\",\"cost_type\":\"" + this->m_cost_type
-        + ",\"cost_amount\":" + std::to_string(this->m_cost_amount)
-        + ",\"in_development\":" + (this->m_in_development ? "true" : "false")
+        + "\",\"cost\":{\"type\":\"" + this->m_cost_type
+        + ",\"amount\":" + std::to_string(this->m_cost_amount)
+        + "},\"in_development\":" + (this->m_in_development ? "true" : "false")
         + ",\"is_broadcast\":" + (this->m_is_broadcast ? "true" : "false")
         + "}";
     return json;

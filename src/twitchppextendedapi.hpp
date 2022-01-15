@@ -72,6 +72,14 @@ namespace TwitchPP {
                                                                                    std::optional<size_t> first = std::nullopt,
                                                                                    std::optional<std::string_view> after = std::nullopt);
 
-            VectorResponse<TwitchExtensionLiveChannel> get_extension_bits_products(const bool& is_global_broadcast = false);
+            VectorResponse<TwitchExtensionBitsProduct> get_extension_bits_products(const bool& is_global_broadcast = false);
+
+            VectorResponse<TwitchExtensionBitsProduct> update_extension_bits_product(const std::string& sku,
+                                                                                     const std::string& display_name,
+                                                                                     const std::string& cost_type,
+                                                                                     const size_t& cost_amount,
+                                                                                     std::optional<std::string> expiration = std::nullopt,
+                                                                                     const bool& in_development = false,
+                                                                                     const bool& is_broadcast = false);
     };
 }
