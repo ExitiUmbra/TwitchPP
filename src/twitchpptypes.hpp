@@ -1868,4 +1868,25 @@ namespace TwitchPP {
                                        const std::string& title);
             std::string to_json();
     };
+
+    class TwitchExtensionBitsProduct {
+        protected:
+            std::string m_sku {""};
+            std::string m_display_name{""};
+            std::string m_expiration {""};
+            std::string m_cost_type {""};
+            size_t m_cost_amount {};
+            bool m_in_development {};
+            bool m_is_broadcast {};
+        public:
+            TwitchExtensionBitsProduct(const std::string& json);
+            TwitchExtensionBitsProduct(const std::string& sku,
+                                       const std::string& display_name,
+                                       const std::string& expiration,
+                                       const std::string& cost_type,
+                                       const size_t& cost_amount,
+                                       const bool& in_development,
+                                       const bool& is_broadcast);
+            std::string to_json();
+    };
 }

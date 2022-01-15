@@ -290,4 +290,14 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchExtensionLiveChannel>(response);
     }
+
+    VectorResponse<TwitchExtensionLiveChannel> TwitchExtendedAPI::get_extension_bits_products(const bool& is_global_broadcast) {
+        std::string options {(is_global_broadcast ? "?is_global_broadcast=true" : "")};
+        std::string url {TWITCH_API_BASE + "bits/extensions" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchExtensionLiveChannel>(response);
+    }
 }

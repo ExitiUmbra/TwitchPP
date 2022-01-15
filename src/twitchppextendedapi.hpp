@@ -71,5 +71,7 @@ namespace TwitchPP {
             VectorResponse<TwitchExtensionLiveChannel> get_extension_live_channels(std::string_view extension_id,
                                                                                    std::optional<size_t> first = std::nullopt,
                                                                                    std::optional<std::string_view> after = std::nullopt);
+
+            VectorResponse<TwitchExtensionLiveChannel> get_extension_bits_products(const bool& is_global_broadcast = false);
     };
 }
