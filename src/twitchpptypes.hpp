@@ -1851,4 +1851,21 @@ namespace TwitchPP {
                                    std::vector<TwitchExtensionSecret> secrets);
             std::string to_json();
     };
+
+    class TwitchExtensionLiveChannel {
+        protected:
+            std::string m_broadcaster_id {""};
+            std::string m_broadcaster_name{""};
+            std::string m_game_name {""};
+            std::string m_game_id {""};
+            std::string m_title {""};
+        public:
+            TwitchExtensionLiveChannel(const std::string& json);
+            TwitchExtensionLiveChannel(const std::string& broadcaster_id,
+                                       const std::string& broadcaster_name,
+                                       const std::string& game_name,
+                                       const std::string& game_id,
+                                       const std::string& title);
+            std::string to_json();
+    };
 }

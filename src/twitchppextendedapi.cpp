@@ -272,4 +272,22 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchExtensionSecrets>(response);
     }
+
+    VectorResponse<TwitchExtensionLiveChannel> TwitchExtendedAPI::get_extension_live_channels(std::string_view extension_id,
+                                                                                              std::optional<size_t> first,
+                                                                                              std::optional<std::string_view> after) {
+        std::string options {"?extension_id=" + std::string(extension_id)};
+        if (first) {
+            options += "&first=" + std::to_string(first.value());
+        }
+        if (after) {
+            options += "&after=" + std::string(after.value());
+        }
+        std::string url {TWITCH_API_BASE + "extensions/live" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchExtensionLiveChannel>(response);
+    }
 }

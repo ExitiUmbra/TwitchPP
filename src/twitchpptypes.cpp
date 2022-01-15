@@ -3119,3 +3119,33 @@ std::string TwitchPP::TwitchExtensionSecrets::to_json() {
     }
     return json + "]}";
 }
+
+TwitchPP::TwitchExtensionLiveChannel::TwitchExtensionLiveChannel(const std::string& json) {
+    this->m_broadcaster_id = get_object_param("\"broadcaster_id\"", json);
+    this->m_broadcaster_name = get_object_param("\"broadcaster_name\"", json);
+    this->m_game_name = get_object_param("\"game_name\"", json);
+    this->m_game_id = get_object_param("\"game_id\"", json);
+    this->m_title = get_object_param("\"title\"", json);
+}
+
+TwitchPP::TwitchExtensionLiveChannel::TwitchExtensionLiveChannel(const std::string& broadcaster_id,
+                                                                 const std::string& broadcaster_name,
+                                                                 const std::string& game_name,
+                                                                 const std::string& game_id,
+                                                                 const std::string& title)
+                                                                 : m_broadcaster_id{broadcaster_id},
+                                                                   m_broadcaster_name{broadcaster_name},
+                                                                   m_game_name{game_name},
+                                                                   m_game_id{game_id},
+                                                                   m_title{title} {
+}
+
+std::string TwitchPP::TwitchExtensionLiveChannel::to_json() {
+    std::string json = "{\"broadcaster_id\":\"" + this->m_broadcaster_id
+        + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
+        + "\",\"game_name\":\"" + this->m_game_name
+        + "\",\"game_id\":\"" + this->m_game_id
+        + "\",\"title\":\"" + this->m_title
+        + "\"}";
+    return json;
+}

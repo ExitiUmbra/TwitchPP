@@ -67,5 +67,9 @@ namespace TwitchPP {
 
             VectorResponse<TwitchExtensionSecrets> create_extension_secret(std::string_view extension_id,
                                                                            std::optional<size_t> delay = std::nullopt);
+
+            VectorResponse<TwitchExtensionLiveChannel> get_extension_live_channels(std::string_view extension_id,
+                                                                                   std::optional<size_t> first = std::nullopt,
+                                                                                   std::optional<std::string_view> after = std::nullopt);
     };
 }
