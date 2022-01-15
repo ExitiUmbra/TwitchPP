@@ -81,5 +81,9 @@ namespace TwitchPP {
                                                                                      std::optional<std::string> expiration = std::nullopt,
                                                                                      const bool& in_development = false,
                                                                                      const bool& is_broadcast = false);
+            VectorResponse<TwitchExtensionTransaction> get_extension_transactions(std::string_view extension_id,
+                                                                                  std::vector<std::string> ids = {},
+                                                                                  std::optional<size_t> first = std::nullopt,
+                                                                                  std::optional<std::string> after = std::nullopt);
     };
 }

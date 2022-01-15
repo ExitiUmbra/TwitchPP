@@ -1878,6 +1878,7 @@ namespace TwitchPP {
             size_t m_cost_amount {};
             bool m_in_development {};
             bool m_is_broadcast {};
+            std::string m_domain {""};
         public:
             TwitchExtensionBitsProduct(const std::string& json);
             TwitchExtensionBitsProduct(const std::string& sku,
@@ -1886,7 +1887,35 @@ namespace TwitchPP {
                                        const std::string& cost_type,
                                        const size_t& cost_amount,
                                        const bool& in_development,
-                                       const bool& is_broadcast);
+                                       const bool& is_broadcast,
+                                       std::optional<std::string> m_domain = std::nullopt);
+            std::string to_json();
+    };
+
+    class TwitchExtensionTransaction {
+        protected:
+            std::string m_id {""};
+            std::string m_timestamp {""};
+            std::string m_broadcaster_id {""};
+            std::string m_broadcaster_login {""};
+            std::string m_broadcaster_name {""};
+            std::string m_user_id {""};
+            std::string m_user_login {""};
+            std::string m_user_name {""};
+            std::string m_product_type {""};
+            std::shared_ptr<TwitchExtensionBitsProduct> m_product_data = nullptr;
+        public:
+            TwitchExtensionTransaction(const std::string& json);
+            TwitchExtensionTransaction(const std::string& id,
+                                       const std::string& timestamp,
+                                       const std::string& broadcaster_id,
+                                       const std::string& broadcaster_login,
+                                       const std::string& broadcaster_name,
+                                       const std::string& user_id,
+                                       const std::string& user_login,
+                                       const std::string& user_name,
+                                       const std::string& product_type,
+                                       std::shared_ptr<TwitchExtensionBitsProduct> product_data = nullptr);
             std::string to_json();
     };
 }

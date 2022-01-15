@@ -3153,12 +3153,22 @@ std::string TwitchPP::TwitchExtensionLiveChannel::to_json() {
 TwitchPP::TwitchExtensionBitsProduct::TwitchExtensionBitsProduct(const std::string& json) {
     this->m_sku = TwitchPP::get_object_param("\"sku\"", json);
     this->m_display_name = TwitchPP::get_object_param("\"display_name\"", json);
+    if (!this->m_display_name.size()) {
+        this->m_display_name = TwitchPP::get_object_param("\"displayName\"", json) == "true";
+    }
     this->m_expiration = TwitchPP::get_object_param("\"expiration\"", json);
+    this->m_domain = TwitchPP::get_object_param("\"domain\"", json);
     this->m_cost_type = TwitchPP::get_object_param("\"type\"", json);
     // TODO: check if everywhere fallback for int values
     this->m_cost_amount = std::stoul(TwitchPP::get_object_param("\"amount\"", json, "0"));
     this->m_in_development = TwitchPP::get_object_param("\"in_development\"", json) == "true";
+    if (!this->m_in_development) {
+        this->m_in_development = TwitchPP::get_object_param("\"inDevelopment\"", json) == "true";
+    }
     this->m_is_broadcast = TwitchPP::get_object_param("\"is_broadcast\"", json) == "true";
+    if (!this->m_is_broadcast) {
+        this->m_is_broadcast = TwitchPP::get_object_param("\"broadcast\"", json) == "true";
+    }
 }
 
 TwitchPP::TwitchExtensionBitsProduct::TwitchExtensionBitsProduct(const std::string& sku,
@@ -3167,14 +3177,16 @@ TwitchPP::TwitchExtensionBitsProduct::TwitchExtensionBitsProduct(const std::stri
                                                                  const std::string& cost_type,
                                                                  const size_t& cost_amount,
                                                                  const bool& in_development,
-                                                                 const bool& is_broadcast)
+                                                                 const bool& is_broadcast,
+                                                                 std::optional<std::string> domain)
                                                                  : m_sku{sku},
                                                                    m_display_name{display_name},
                                                                    m_expiration{expiration},
                                                                    m_cost_type{cost_type},
                                                                    m_cost_amount{cost_amount},
                                                                    m_in_development{in_development},
-                                                                   m_is_broadcast{is_broadcast} {
+                                                                   m_is_broadcast{is_broadcast},
+                                                                   m_domain{domain.value()} {
 }
 
 std::string TwitchPP::TwitchExtensionBitsProduct::to_json() {
@@ -3184,7 +3196,63 @@ std::string TwitchPP::TwitchExtensionBitsProduct::to_json() {
         + "\",\"cost\":{\"type\":\"" + this->m_cost_type
         + ",\"amount\":" + std::to_string(this->m_cost_amount)
         + "},\"in_development\":" + (this->m_in_development ? "true" : "false")
-        + ",\"is_broadcast\":" + (this->m_is_broadcast ? "true" : "false")
-        + "}";
-    return json;
+        + ",\"is_broadcast\":" + (this->m_is_broadcast ? "true" : "false");
+    if (this->m_domain.size()) {
+        json += ",\"domain\":\"" + this->m_domain + "\"";
+    }
+    return json + "}";
+}
+
+TwitchPP::TwitchExtensionTransaction::TwitchExtensionTransaction(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_timestamp = get_object_param("\"timestamp\"", json);
+    this->m_broadcaster_id = get_object_param("\"broadcaster_id\"", json);
+    this->m_broadcaster_login = get_object_param("\"broadcaster_login\"", json);
+    this->m_broadcaster_name = get_object_param("\"broadcaster_name\"", json);
+    this->m_user_id = get_object_param("\"user_id\"", json);
+    this->m_user_login = get_object_param("\"user_login\"", json);
+    this->m_user_name = get_object_param("\"user_name\"", json);
+    this->m_product_type = get_object_param("\"product_type\"", json);
+    std::string product_data = get_object_param("\"product_data\"", json);
+    if (product_data == "null") {
+        this->m_product_data = nullptr;
+    } else {
+        this->m_product_data = std::make_shared<TwitchPP::TwitchExtensionBitsProduct>(product_data);
+    }
+}
+
+TwitchPP::TwitchExtensionTransaction::TwitchExtensionTransaction(const std::string& id,
+                                                                 const std::string& timestamp,
+                                                                 const std::string& broadcaster_id,
+                                                                 const std::string& broadcaster_login,
+                                                                 const std::string& broadcaster_name,
+                                                                 const std::string& user_id,
+                                                                 const std::string& user_login,
+                                                                 const std::string& user_name,
+                                                                 const std::string& product_type,
+                                                                 std::shared_ptr<TwitchExtensionBitsProduct> product_data)
+                                                                 : m_id{id},
+                                                                   m_timestamp{timestamp},
+                                                                   m_broadcaster_id{broadcaster_id},
+                                                                   m_broadcaster_login{broadcaster_login},
+                                                                   m_broadcaster_name{broadcaster_name},
+                                                                   m_user_id{user_id},
+                                                                   m_user_login{user_login},
+                                                                   m_user_name{user_name},
+                                                                   m_product_type{product_type},
+                                                                   m_product_data{product_data} {
+}
+
+std::string TwitchPP::TwitchExtensionTransaction::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"timestamp\":\"" + this->m_timestamp
+        + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
+        + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
+        + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
+        + "\",\"user_id\":\"" + this->m_user_id
+        + "\",\"user_login\":\"" + this->m_user_login
+        + "\",\"user_name\":\"" + this->m_user_name
+        + "\",\"product_type\":\"" + this->m_product_type
+        + "\",\"product_data\":" + (this->m_product_data == nullptr ? "null" : this->m_product_data->to_json());
+    return json + "}";
 }

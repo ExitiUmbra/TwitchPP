@@ -329,4 +329,26 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchExtensionBitsProduct>(response);
     }
+
+    VectorResponse<TwitchExtensionTransaction> TwitchExtendedAPI::get_extension_transactions(std::string_view extension_id,
+                                                                                             std::vector<std::string> ids,
+                                                                                             std::optional<size_t> first,
+                                                                                             std::optional<std::string> after) {
+        std::string options {"?extension_id=" + std::string(extension_id)};
+        for (std::string id : ids) {
+            options += "&id=" + id;
+        }
+        if (first) {
+            options += "&first=" + std::to_string(first.value());
+        }
+        if (after) {
+            options += "&after=" + after.value();
+        }
+        std::string url {TWITCH_API_BASE + "extensions/transactions" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchExtensionTransaction>(response);
+    }
 }
