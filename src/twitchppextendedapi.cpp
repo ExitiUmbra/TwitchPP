@@ -351,4 +351,32 @@ namespace TwitchPP {
         }
         return this->process_response<TwitchExtensionTransaction>(response);
     }
+
+    VectorResponse<TwitchExtension> TwitchExtendedAPI::get_extensions(std::string_view extension_id,
+                                                                      std::optional<std::string_view> extension_version) {
+        std::string options {"?extension_id=" + std::string(extension_id)};
+        if (extension_version) {
+            options += "&extension_version=" + std::string(extension_version.value());
+        }
+        std::string url {TWITCH_API_BASE + "extensions" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchExtension>(response);
+    }
+
+    VectorResponse<TwitchExtension> TwitchExtendedAPI::get_released_extensions(std::string_view extension_id,
+                                                                               std::optional<std::string_view> extension_version) {
+        std::string options {"?extension_id=" + std::string(extension_id)};
+        if (extension_version) {
+            options += "&extension_version=" + std::string(extension_version.value());
+        }
+        std::string url {TWITCH_API_BASE + "extensions/released" + options};
+        Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
+        if (!response.data.size()) {
+            return {{}, "", response.code, "Bad request"};
+        }
+        return this->process_response<TwitchExtension>(response);
+    }
 }

@@ -23,7 +23,7 @@ TwitchPP::TwitchEmote::TwitchEmote(const std::string& json, const std::string& e
     this->m_theme_mode = TwitchPP::json_to_vector(TwitchPP::get_object_param("\"theme_mode\"", json));
     this->m_template = emote_template;
 }
-
+// TODO: check vectors, mb optimization
 TwitchPP::TwitchEmote::TwitchEmote(const std::string& id,
                                    const std::string& name,
                                    const std::string& url_1x,
@@ -3254,5 +3254,224 @@ std::string TwitchPP::TwitchExtensionTransaction::to_json() {
         + "\",\"user_name\":\"" + this->m_user_name
         + "\",\"product_type\":\"" + this->m_product_type
         + "\",\"product_data\":" + (this->m_product_data == nullptr ? "null" : this->m_product_data->to_json());
+    return json + "}";
+}
+
+TwitchPP::TwitchExtensionComponent::TwitchExtensionComponent(const std::string& json) {
+    this->m_viewer_url = TwitchPP::get_object_param("\"viewer_url\"", json);
+    this->m_height = std::stoul(TwitchPP::get_object_param("\"height\"", json, "0"));
+    this->m_aspect_width = std::stoul(TwitchPP::get_object_param("\"aspect_width\"", json, "0"));
+    this->m_aspect_height = std::stoul(TwitchPP::get_object_param("\"aspect_height\"", json, "0"));
+    this->m_aspect_ratio_x = std::stoul(TwitchPP::get_object_param("\"aspect_ratio_x\"", json, "0"));
+    this->m_aspect_ratio_y = std::stoul(TwitchPP::get_object_param("\"aspect_ratio_y\"", json, "0"));
+    this->m_scale_pixels = std::stoul(TwitchPP::get_object_param("\"scale_pixels\"", json, "0"));
+    this->m_target_height = std::stoul(TwitchPP::get_object_param("\"target_height\"", json, "0"));
+    this->m_size = std::stoul(TwitchPP::get_object_param("\"size\"", json, "0"));
+    this->m_zoom_pixels = std::stoul(TwitchPP::get_object_param("\"zoom_pixels\"", json, "0"));
+    this->m_autoscale = TwitchPP::get_object_param("\"autoscale\"", json) == "true";
+    this->m_zoom = TwitchPP::get_object_param("\"zoom\"", json) == "true";
+    this->m_can_link_external_content = TwitchPP::get_object_param("\"can_link_external_content\"", json) == "true";
+}
+// TODO: check that bool is const everywhere
+TwitchPP::TwitchExtensionComponent::TwitchExtensionComponent(const std::string& viewer_url,
+                                                             const size_t& height,
+                                                             const size_t& aspect_width,
+                                                             const size_t& aspect_height,
+                                                             const size_t& aspect_ratio_x,
+                                                             const size_t& aspect_ratio_y,
+                                                             const size_t& scale_pixels,
+                                                             const size_t& target_height,
+                                                             const size_t& size,
+                                                             const size_t& zoom_pixels,
+                                                             const bool& autoscale,
+                                                             const bool& zoom,
+                                                             const bool& can_link_external_content)
+                                                             : m_viewer_url{viewer_url},
+                                                               m_height{height},
+                                                               m_aspect_width{aspect_width},
+                                                               m_aspect_height{aspect_height},
+                                                               m_aspect_ratio_x{aspect_ratio_x},
+                                                               m_aspect_ratio_y{aspect_ratio_y},
+                                                               m_scale_pixels{scale_pixels},
+                                                               m_target_height{target_height},
+                                                               m_size{size},
+                                                               m_zoom_pixels{zoom_pixels},
+                                                               m_autoscale{autoscale},
+                                                               m_zoom{zoom},
+                                                               m_can_link_external_content{can_link_external_content} {
+}
+
+std::string TwitchPP::TwitchExtensionComponent::to_json(std::optional<std::string_view> type) {
+    std::string json {"{\"viewer_url\":\"" + this->m_viewer_url + "\""};
+    if (type.value_or("") == "video_overlay" || type.value_or("") == "panel") {
+        json += ",\"can_link_external_content\":" + std::string(this->m_can_link_external_content ? "true" : "false");
+    }
+    if (type.value_or("") == "panel") {
+        json += ",\"height\":" + this->m_height;
+    }
+    if (type.value_or("") == "component") {
+        json += ",\"aspect_width\":" + std::to_string(this->m_aspect_width)
+            + ",\"aspect_height\":" + std::to_string(this->m_aspect_height)
+            + ",\"aspect_ratio_x\":" + std::to_string(this->m_aspect_ratio_x)
+            + ",\"aspect_ratio_y\":" + std::to_string(this->m_aspect_ratio_y)
+            + ",\"scale_pixels\":" + std::to_string(this->m_scale_pixels)
+            + ",\"target_height\":" + std::to_string(this->m_target_height)
+            + ",\"size\":" + std::to_string(this->m_size)
+            + ",\"zoom_pixels\":" + std::to_string(this->m_zoom_pixels)
+            + ",\"autoscale\":" + std::string(this->m_autoscale ? "true" : "false")
+            + ",\"zoom\":" + std::string(this->m_zoom ? "true" : "false");
+    }
+    return json + "}";
+}
+
+TwitchPP::TwitchExtensionViews::TwitchExtensionViews(const std::string& json) {
+    std::string mobile = get_object_param("\"mobile\"", json);
+    if (mobile == "null" || !mobile.size()) {
+        this->m_mobile = nullptr;
+    } else {
+        this->m_mobile = std::make_shared<TwitchPP::TwitchExtensionComponent>(mobile);
+    }
+    std::string panel = get_object_param("\"panel\"", json);
+    if (panel == "null" || !panel.size()) {
+        this->m_panel = nullptr;
+    } else {
+        this->m_panel = std::make_shared<TwitchPP::TwitchExtensionComponent>(panel);
+    }
+    std::string video_overlay = get_object_param("\"video_overlay\"", json);
+    if (video_overlay == "null" || !video_overlay.size()) {
+        this->m_video_overlay = nullptr;
+    } else {
+        this->m_video_overlay = std::make_shared<TwitchPP::TwitchExtensionComponent>(video_overlay);
+    }
+    std::string component = get_object_param("\"component\"", json);
+    if (component == "null" || !component.size()) {
+        this->m_component = nullptr;
+    } else {
+        this->m_component = std::make_shared<TwitchPP::TwitchExtensionComponent>(component);
+    }
+}
+
+TwitchPP::TwitchExtensionViews::TwitchExtensionViews(std::shared_ptr<TwitchPP::TwitchExtensionComponent> mobile,
+                                                     std::shared_ptr<TwitchPP::TwitchExtensionComponent> panel,
+                                                     std::shared_ptr<TwitchPP::TwitchExtensionComponent> video_overlay,
+                                                     std::shared_ptr<TwitchPP::TwitchExtensionComponent> component)
+                                                     : m_mobile{mobile},
+                                                       m_panel{panel},
+                                                       m_video_overlay{video_overlay},
+                                                       m_component{component} {
+}
+
+std::string TwitchPP::TwitchExtensionViews::to_json() {
+    std::string json = "{\"mobile\":" + (this->m_mobile == nullptr ? "null" : this->m_mobile->to_json())
+        + ",\"panel\":" + (this->m_panel == nullptr ? "null" : this->m_panel->to_json("panel"))
+        + ",\"video_overlay\":" + (this->m_video_overlay == nullptr ? "null" : this->m_video_overlay->to_json("video_overlay"))
+        + ",\"component\":" + (this->m_component == nullptr ? "null" : this->m_component->to_json("component"));
+    return json + "}";
+}
+
+TwitchPP::TwitchExtension::TwitchExtension(const std::string& json) {
+    this->m_id = get_object_param("\"id\"", json);
+    this->m_name = get_object_param("\"name\"", json);
+    this->m_author_name = get_object_param("\"author_name\"", json);
+    this->m_configuration_location = get_object_param("\"configuration_location\"", json);
+    this->m_description = get_object_param("\"description\"", json);
+    this->m_eula_tos_url = get_object_param("\"eula_tos_url\"", json);
+    this->m_icon_url = get_object_param("\"icon_url\"", json);
+    this->m_privacy_policy_url = get_object_param("\"privacy_policy_url\"", json);
+    this->m_state = get_object_param("\"state\"", json);
+    this->m_subscriptions_support_level = get_object_param("\"subscriptions_support_level\"", json);
+    this->m_summary = get_object_param("\"summary\"", json);
+    this->m_support_email = get_object_param("\"support_email\"", json);
+    this->m_version = get_object_param("\"version\"", json);
+    this->m_viewer_summary = get_object_param("\"viewer_summary\"", json);
+    this->m_bits_enabled = TwitchPP::get_object_param("\"bits_enabled\"", json) == "true";
+    this->m_can_install = TwitchPP::get_object_param("\"can_install\"", json) == "true";
+    this->m_has_chat_support = TwitchPP::get_object_param("\"has_chat_support\"", json) == "true";
+    this->m_request_identity_link = TwitchPP::get_object_param("\"request_identity_link\"", json) == "true";
+    this->m_allowlisted_config_urls = TwitchPP::json_to_vector(TwitchPP::get_object_param("\"allowlisted_config_urls\"", json));
+    this->m_allowlisted_panel_urls = TwitchPP::json_to_vector(TwitchPP::get_object_param("\"allowlisted_panel_urls\"", json));
+    this->m_screenshot_urls = TwitchPP::json_to_vector(TwitchPP::get_object_param("\"screenshot_urls\"", json));
+    std::string icon_urls = get_object_param("\"icon_urls\"", json);
+    this->m_icon_urls = string_to_string_map(icon_urls);
+    std::string views = get_object_param("\"views\"", json);
+    if (views == "null") {
+        this->m_views = nullptr;
+    } else {
+        this->m_views = std::make_shared<TwitchPP::TwitchExtensionViews>(views);
+    }
+}
+
+TwitchPP::TwitchExtension::TwitchExtension(const std::string& id,
+                                           const std::string& name,
+                                           const std::string& author_name,
+                                           const std::string& configuration_location,
+                                           const std::string& description,
+                                           const std::string& eula_tos_url,
+                                           const std::string& icon_url,
+                                           const std::string& privacy_policy_url,
+                                           const std::string& state,
+                                           const std::string& subscriptions_support_level,
+                                           const std::string& summary,
+                                           const std::string& support_email,
+                                           const std::string& version,
+                                           const std::string& viewer_summary,
+                                           const bool& bits_enabled,
+                                           const bool& can_install,
+                                           const bool& has_chat_support,
+                                           const bool& request_identity_link,
+                                           std::vector<std::string> allowlisted_config_urls,
+                                           std::vector<std::string> allowlisted_panel_urls,
+                                           std::vector<std::string> screenshot_urls,
+                                           StringMap icon_urls,
+                                           std::shared_ptr<TwitchPP::TwitchExtensionViews> views)
+                                           : m_id{id},
+                                             m_name{name},
+                                             m_author_name{author_name},
+                                             m_configuration_location{configuration_location},
+                                             m_description{description},
+                                             m_eula_tos_url{eula_tos_url},
+                                             m_icon_url{icon_url},
+                                             m_privacy_policy_url{privacy_policy_url},
+                                             m_state{state},
+                                             m_subscriptions_support_level{subscriptions_support_level},
+                                             m_summary{summary},
+                                             m_support_email{support_email},
+                                             m_version{version},
+                                             m_viewer_summary{viewer_summary},
+                                             m_bits_enabled{bits_enabled},
+                                             m_can_install{can_install},
+                                             m_has_chat_support{has_chat_support},
+                                             m_request_identity_link{request_identity_link},
+                                             m_allowlisted_config_urls{allowlisted_config_urls},
+                                             m_allowlisted_panel_urls{allowlisted_panel_urls},
+                                             m_screenshot_urls{screenshot_urls},
+                                             m_icon_urls{icon_urls},
+                                             m_views{views} {
+}
+
+std::string TwitchPP::TwitchExtension::to_json() {
+    std::string json = "{\"id\":\"" + this->m_id
+        + "\",\"name\":\"" + this->m_name
+        + "\",\"author_name\":\"" + this->m_author_name
+        + "\",\"configuration_location\":\"" + this->m_configuration_location
+        + "\",\"description\":\"" + this->m_description
+        + "\",\"eula_tos_url\":\"" + this->m_eula_tos_url
+        + "\",\"icon_url\":\"" + this->m_icon_url
+        + "\",\"privacy_policy_url\":\"" + this->m_privacy_policy_url
+        + "\",\"state\":\"" + this->m_state
+        + "\",\"subscriptions_support_level\":\"" + this->m_subscriptions_support_level
+        + "\",\"summary\":\"" + this->m_summary
+        + "\",\"support_email\":\"" + this->m_support_email
+        + "\",\"version\":\"" + this->m_version
+        + "\",\"viewer_summary\":\"" + this->m_viewer_summary
+        + "\",\"bits_enabled\":" + std::string(this->m_bits_enabled ? "true" : "false")
+        + ",\"can_install\":" + std::string(this->m_can_install ? "true" : "false");
+        + ",\"has_chat_support\":" + std::string(this->m_has_chat_support ? "true" : "false")
+        + ",\"request_identity_link\":" + std::string(this->m_request_identity_link ? "true" : "false");
+        + ",\"allowlisted_config_urls\":" + vector_to_json(this->m_allowlisted_config_urls)
+        + ",\"allowlisted_panel_urls\":" + vector_to_json(this->m_allowlisted_panel_urls)
+        + ",\"screenshot_urls\":" + vector_to_json(this->m_screenshot_urls)
+        + ",\"icon_urls\":{" + string_map_to_string(this->m_icon_urls)
+        + "},\"views\":" + (this->m_views == nullptr ? "null" : this->m_views->to_json());
     return json + "}";
 }

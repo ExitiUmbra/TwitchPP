@@ -85,5 +85,11 @@ namespace TwitchPP {
                                                                                   std::vector<std::string> ids = {},
                                                                                   std::optional<size_t> first = std::nullopt,
                                                                                   std::optional<std::string> after = std::nullopt);
+
+            VectorResponse<TwitchExtension> get_extensions(std::string_view extension_id,
+                                                           std::optional<std::string_view> extension_version = std::nullopt);
+
+            VectorResponse<TwitchExtension> get_released_extensions(std::string_view extension_id,
+                                                                    std::optional<std::string_view> extension_version = std::nullopt);
     };
 }

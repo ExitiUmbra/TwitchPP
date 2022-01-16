@@ -1784,7 +1784,7 @@ namespace TwitchPP {
     class TwitchDropsEntitlement {
         protected:
             std::string m_id {""};
-            std::string m_benefit_id{""};
+            std::string m_benefit_id {""};
             std::string m_timestamp {""};
             std::string m_user_id {""};
             std::string m_game_id {""};
@@ -1916,6 +1916,108 @@ namespace TwitchPP {
                                        const std::string& user_name,
                                        const std::string& product_type,
                                        std::shared_ptr<TwitchExtensionBitsProduct> product_data = nullptr);
+            std::string to_json();
+    };
+
+    class TwitchExtensionComponent {
+        protected:
+            std::string m_viewer_url {""};
+            size_t m_height {};
+            size_t m_aspect_width {};
+            size_t m_aspect_height {};
+            size_t m_aspect_ratio_x {};
+            size_t m_aspect_ratio_y {};
+            size_t m_scale_pixels {};
+            size_t m_target_height {};
+            size_t m_size {};
+            size_t m_zoom_pixels {};
+            bool m_autoscale {};
+            bool m_zoom {};
+            bool m_can_link_external_content {};
+        public:
+            TwitchExtensionComponent(const std::string& json);
+            TwitchExtensionComponent(const std::string& viewer_url,
+                                     const size_t& height,
+                                     const size_t& aspect_width,
+                                     const size_t& aspect_height,
+                                     const size_t& aspect_ratio_x,
+                                     const size_t& aspect_ratio_y,
+                                     const size_t& scale_pixels,
+                                     const size_t& target_height,
+                                     const size_t& size,
+                                     const size_t& zoom_pixels,
+                                     const bool& autoscale,
+                                     const bool& zoom,
+                                     const bool& can_link_external_content);
+            std::string to_json(std::optional<std::string_view> type = std::nullopt);
+    };
+
+    class TwitchExtensionViews {
+        protected:
+            std::shared_ptr<TwitchExtensionComponent> m_mobile = nullptr;
+            std::shared_ptr<TwitchExtensionComponent> m_panel = nullptr;
+            std::shared_ptr<TwitchExtensionComponent> m_video_overlay = nullptr;
+            std::shared_ptr<TwitchExtensionComponent> m_component = nullptr;
+        public:
+            explicit TwitchExtensionViews(const std::string& json);
+            TwitchExtensionViews(std::shared_ptr<TwitchExtensionComponent> mobile = nullptr,
+                                 std::shared_ptr<TwitchExtensionComponent> panel = nullptr,
+                                 std::shared_ptr<TwitchExtensionComponent> video_overlay = nullptr,
+                                 std::shared_ptr<TwitchExtensionComponent> component = nullptr);
+            std::string to_json();
+    };
+
+    class TwitchExtension {
+        protected:
+            std::string m_id {""};
+            std::string m_name {""};
+            std::string m_author_name {""};
+            std::string m_configuration_location {""};
+            std::string m_description {""};
+            std::string m_eula_tos_url {""};
+            std::string m_icon_url {""};
+            std::string m_privacy_policy_url {""};
+            std::string m_state {""};
+            std::string m_subscriptions_support_level {""};
+            std::string m_summary {""};
+            std::string m_support_email {""};
+            std::string m_version {""};
+            std::string m_viewer_summary {""};
+            bool m_bits_enabled {};
+            bool m_can_install {};
+            bool m_has_chat_support {};
+            bool m_request_identity_link {};
+            std::vector<std::string> m_allowlisted_config_urls {};
+            std::vector<std::string> m_allowlisted_panel_urls {};
+            std::vector<std::string> m_screenshot_urls {};
+            // TODO: check where can change icon urls to string maps
+            StringMap m_icon_urls {};
+            std::shared_ptr<TwitchExtensionViews> m_views = nullptr;
+        public:
+            TwitchExtension(const std::string& json);
+            TwitchExtension(const std::string& id,
+                            const std::string& name,
+                            const std::string& author_name,
+                            const std::string& configuration_location,
+                            const std::string& description,
+                            const std::string& eula_tos_url,
+                            const std::string& icon_url,
+                            const std::string& privacy_policy_url,
+                            const std::string& state,
+                            const std::string& subscriptions_support_level,
+                            const std::string& summary,
+                            const std::string& support_email,
+                            const std::string& version,
+                            const std::string& viewer_summary,
+                            const bool& bits_enabled,
+                            const bool& can_install,
+                            const bool& has_chat_support,
+                            const bool& request_identity_link,
+                            std::vector<std::string> allowlisted_config_urls,
+                            std::vector<std::string> allowlisted_panel_urls,
+                            std::vector<std::string> screenshot_urls,
+                            StringMap icon_urls,
+                            std::shared_ptr<TwitchExtensionViews> views = nullptr);
             std::string to_json();
     };
 }
