@@ -7,7 +7,7 @@ namespace TwitchPP {
                                    std::optional<std::string_view> request_type,
                                    std::optional<std::string> request_body) {
         std::string result {""};
-        std::vector<std::string> headers {""};
+        std::vector<std::string> headers {};
         size_t response_code {500};
         CURL *curl;
         CURLcode res;
@@ -153,7 +153,7 @@ namespace TwitchPP {
         return subject;
     }
 
-    std::string vector_to_json(std::vector<std::string>& elements) {
+    std::string vector_to_json(const std::vector<std::string>& elements) {
         std::string result {"["};
         for (size_t i {0}; i < elements.size(); ++i) {
             result += "\"" + elements[i] + "\"" + (i + 1 < elements.size() ? "," : "");

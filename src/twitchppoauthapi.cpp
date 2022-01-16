@@ -154,7 +154,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchBasicUser> TwitchOauthAPI::get_moderators(std::string_view broadcaster_id,
-                                                                   std::vector<std::string> user_ids,
+                                                                   const std::vector<std::string>& user_ids,
                                                                    std::optional<size_t> first,
                                                                    std::optional<std::string> after) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
@@ -176,7 +176,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchBannedUser> TwitchOauthAPI::get_banned_users(std::string_view broadcaster_id,
-                                                                      std::vector<std::string> user_ids,
+                                                                      const std::vector<std::string>& user_ids,
                                                                       std::optional<size_t> first) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
         for (std::string user_id : user_ids) {
@@ -231,7 +231,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchBannedEvent> TwitchOauthAPI::get_banned_events(std::string_view broadcaster_id,
-                                                                        std::vector<std::string> user_ids,
+                                                                        const std::vector<std::string>& user_ids,
                                                                         std::optional<size_t> first) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
         for (std::string user_id : user_ids) {
@@ -267,7 +267,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchModeratorEvent> TwitchOauthAPI::get_moderator_events(std::string_view broadcaster_id,
-                                                                              std::vector<std::string> user_ids,
+                                                                              const std::vector<std::string>& user_ids,
                                                                               std::optional<size_t> first) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
         for (std::string user_id : user_ids) {
@@ -303,7 +303,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchPoll> TwitchOauthAPI::get_polls(std::string_view broadcaster_id,
-                                                         std::vector<std::string> ids,
+                                                         const std::vector<std::string>& ids,
                                                          std::optional<size_t> first,
                                                          std::optional<std::string> after) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
@@ -325,7 +325,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchPrediction> TwitchOauthAPI::get_predictions(std::string_view broadcaster_id,
-                                                                     std::vector<std::string> ids,
+                                                                     const std::vector<std::string>& ids,
                                                                      std::optional<size_t> first,
                                                                      std::optional<std::string> after) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
@@ -741,7 +741,7 @@ namespace TwitchPP {
         return this->process_response<TwitchUser>(response);
     }
 
-    VectorResponse<std::string> TwitchOauthAPI::delete_videos(std::vector<std::string> ids) {
+    VectorResponse<std::string> TwitchOauthAPI::delete_videos(const std::vector<std::string>& ids) {
         std::string options {"?"};
         for (std::string clip_id : ids) {
             options += (options == "?" ? "id=" : "&id=") + clip_id;
@@ -785,7 +785,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchBroadcasterSubscriptions> TwitchOauthAPI::get_broadcaster_subscriptions(std::string_view broadcaster_id,
-                                                                                                 std::vector<std::string> user_ids,
+                                                                                                 const std::vector<std::string>& user_ids,
                                                                                                  std::optional<size_t> first,
                                                                                                  std::optional<std::string> after) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
@@ -810,7 +810,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchCustomReward> TwitchOauthAPI::get_custom_reward(std::string_view broadcaster_id,
-                                                                         std::vector<std::string> ids,
+                                                                         const std::vector<std::string>& ids,
                                                                          std::optional<bool> only_manageable_rewards) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
         for (std::string reward_id : ids) {
@@ -938,7 +938,7 @@ namespace TwitchPP {
 
     VectorResponse<TwitchCustomRewardRedemption> TwitchOauthAPI::get_custom_reward_redemption(std::string_view broadcaster_id,
                                                                                               std::string_view reward_id,
-                                                                                              std::vector<std::string> ids,
+                                                                                              const std::vector<std::string>& ids,
                                                                                               std::optional<std::string> status,
                                                                                               std::optional<std::string> sort,
                                                                                               std::optional<size_t> first,
@@ -1030,7 +1030,7 @@ namespace TwitchPP {
     }
 
     Response<std::string> TwitchOauthAPI::replace_stream_tags(std::string_view broadcaster_id,
-                                                              std::vector<std::string> tag_ids) {
+                                                              const std::vector<std::string>& tag_ids) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
         std::string request_body {"{\"tag_ids\":" + vector_to_json(tag_ids) + "}"};
         std::string url {TWITCH_API_BASE + "streams/tags" + options};
@@ -1039,7 +1039,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchAutoModMessageStatus> TwitchOauthAPI::check_automod_status(std::string_view broadcaster_id,
-                                                                                    std::vector<TwitchAutoModMessage> messages) {
+                                                                                    const std::vector<TwitchAutoModMessage>& messages) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
         std::string request_body {"{\"data\":["};
         for (size_t i {0}; i < messages.size(); ++i) {

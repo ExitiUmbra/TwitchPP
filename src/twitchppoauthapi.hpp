@@ -28,11 +28,11 @@ namespace TwitchPP {
             VectorResponse<TwitchAutoModSettings> update_automod_settings(std::string_view broadcaster_id, TwitchAutoModSettings& settings, const bool& is_overall = false);
             Response<std::string> get_stream_key(std::string_view broadcaster_id);
             VectorResponse<TwitchBasicUser> get_moderators(std::string_view broadcaster_id,
-                                                           std::vector<std::string> user_ids = {},
+                                                           const std::vector<std::string>& user_ids = {},
                                                            std::optional<size_t> first = std::nullopt,
                                                            std::optional<std::string> after = std::nullopt);
             VectorResponse<TwitchBannedUser> get_banned_users(std::string_view broadcaster_id,
-                                                              std::vector<std::string> user_ids = {},
+                                                              const std::vector<std::string>& user_ids = {},
                                                               std::optional<size_t> first = std::nullopt);
             VectorResponse<TwitchBannedUser> get_banned_users(std::string_view broadcaster_id,
                                                               const bool& is_after,
@@ -42,23 +42,23 @@ namespace TwitchPP {
                                                               std::optional<size_t> first = std::nullopt,
                                                               std::optional<std::string> after = std::nullopt);
             VectorResponse<TwitchBannedEvent> get_banned_events(std::string_view broadcaster_id,
-                                                                std::vector<std::string> user_ids,
+                                                                const std::vector<std::string>& user_ids,
                                                                 std::optional<size_t> first = std::nullopt);
             VectorResponse<TwitchBannedEvent> get_banned_events(std::string_view broadcaster_id,
                                                                 std::optional<size_t> first = std::nullopt,
                                                                 std::optional<std::string> cursor = std::nullopt);
             VectorResponse<TwitchModeratorEvent> get_moderator_events(std::string_view broadcaster_id,
-                                                                      std::vector<std::string> user_ids,
+                                                                      const std::vector<std::string>& user_ids,
                                                                       std::optional<size_t> first = std::nullopt);
             VectorResponse<TwitchModeratorEvent> get_moderator_events(std::string_view broadcaster_id,
                                                                       std::optional<size_t> first = std::nullopt,
                                                                       std::optional<std::string> cursor = std::nullopt);
             VectorResponse<TwitchPoll> get_polls(std::string_view broadcaster_id,
-                                                 std::vector<std::string> ids = {},
+                                                 const std::vector<std::string>& ids = {},
                                                  std::optional<size_t> first = std::nullopt,
                                                  std::optional<std::string> after = std::nullopt);
             VectorResponse<TwitchPrediction> get_predictions(std::string_view broadcaster_id,
-                                                             std::vector<std::string> ids = {},
+                                                             const std::vector<std::string>& ids = {},
                                                              std::optional<size_t> first = std::nullopt,
                                                              std::optional<std::string> after = std::nullopt);
             VectorResponse<TwitchCreatorsGoal> get_creators_goals(std::string_view broadcaster_id);
@@ -118,15 +118,15 @@ namespace TwitchPP {
                                                                                                std::optional<std::string_view> title = std::nullopt,
                                                                                                std::optional<std::string_view> category_id = std::nullopt);
             VectorResponse<TwitchUser> update_user(std::string_view description);
-            VectorResponse<std::string> delete_videos(std::vector<std::string> ids);
+            VectorResponse<std::string> delete_videos(const std::vector<std::string>& ids);
             VectorResponse<TwitchCreatedClip> create_clip(std::string_view broadcaster_id,
                                                           std::optional<bool> has_delay = std::nullopt);
             VectorResponse<TwitchBroadcasterSubscriptions> get_broadcaster_subscriptions(std::string_view broadcaster_id,
-                                                                                         std::vector<std::string> user_ids = {},
+                                                                                         const std::vector<std::string>& user_ids = {},
                                                                                          std::optional<size_t> first = std::nullopt,
                                                                                          std::optional<std::string> after = std::nullopt);
             VectorResponse<TwitchCustomReward> get_custom_reward(std::string_view broadcaster_id,
-                                                                 std::vector<std::string> ids = {},
+                                                                 const std::vector<std::string>& ids = {},
                                                                  std::optional<bool> only_manageable_rewards = std::nullopt);
             VectorResponse<TwitchCustomReward> create_custom_rewards(std::string_view broadcaster_id,
                                                                      CreateRewardRequest& request);
@@ -137,7 +137,7 @@ namespace TwitchPP {
                                                        std::string_view id);
             VectorResponse<TwitchCustomRewardRedemption> get_custom_reward_redemption(std::string_view broadcaster_id,
                                                                                       std::string_view reward_id,
-                                                                                      std::vector<std::string> ids = {},
+                                                                                      const std::vector<std::string>& ids = {},
                                                                                       std::optional<std::string> status = std::nullopt,
                                                                                       std::optional<std::string> sort = std::nullopt,
                                                                                       std::optional<size_t> first = std::nullopt,
@@ -157,9 +157,9 @@ namespace TwitchPP {
                                                                        std::optional<std::string> cursor = std::nullopt,
                                                                        const bool& is_before = false);
             Response<std::string> replace_stream_tags(std::string_view broadcaster_id,
-                                                      std::vector<std::string> tag_ids = {});
+                                                      const std::vector<std::string>& tag_ids = {});
             VectorResponse<TwitchAutoModMessageStatus> check_automod_status(std::string_view broadcaster_id,
-                                                                            std::vector<TwitchAutoModMessage> messages = {});
+                                                                            const std::vector<TwitchAutoModMessage>& messages = {});
             Response<std::string> manage_held_automod_messages(TwitchAutoModMessageManaging message);
             VectorResponse<TwitchHypeTrainEvent> get_hype_train_events(std::string_view broadcaster_id,
                                                                        std::optional<std::string_view> hype_train_id = std::nullopt,

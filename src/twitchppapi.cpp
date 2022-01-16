@@ -56,7 +56,7 @@ namespace TwitchPP {
         return this->process_response<TwitchGame>(response);
     }
 
-    VectorResponse<TwitchGame> TwitchAPI::get_games(std::vector<std::string> game_query,
+    VectorResponse<TwitchGame> TwitchAPI::get_games(const std::vector<std::string>& game_query,
                                                     bool search_by_name) {
         std::string parameter {search_by_name ? "name" : "id"};
         std::string options {"?"};
@@ -107,7 +107,7 @@ namespace TwitchPP {
         return this->process_response<TwitchUser>(response);
     }
 
-    VectorResponse<TwitchUser> TwitchAPI::get_users(std::vector<std::string> user_query,
+    VectorResponse<TwitchUser> TwitchAPI::get_users(const std::vector<std::string>& user_query,
                                                     bool search_by_login) {
         std::string parameter {search_by_login ? "login" : "id"};
         std::string options {"?"};
@@ -169,7 +169,7 @@ namespace TwitchPP {
         return this->process_response<TwitchChannelEmote>(response, "template");
     }
 
-    VectorResponse<TwitchChannelEmote> TwitchAPI::get_emote_sets(std::vector<std::string> emote_set_ids) {
+    VectorResponse<TwitchChannelEmote> TwitchAPI::get_emote_sets(const std::vector<std::string>& emote_set_ids) {
         std::string options {"?"};
         for (std::string_view element : emote_set_ids) {
             if (options != "?") {
@@ -385,7 +385,7 @@ namespace TwitchPP {
         return this->process_response<TwitchTeam>(response);
     }
 
-    VectorResponse<TwitchTeam> TwitchAPI::get_teams(std::vector<std::string> team_query,
+    VectorResponse<TwitchTeam> TwitchAPI::get_teams(const std::vector<std::string>& team_query,
                                                     bool search_by_name) {
         std::string parameter {search_by_name ? "name" : "id"};
         std::string options {"?"};
@@ -470,7 +470,7 @@ namespace TwitchPP {
         return this->process_response<TwitchCurrentTrack>(response);
     }
 
-    VectorResponse<TwitchStreamTag> TwitchAPI::get_all_stream_tags(std::vector<std::string> tag_ids,
+    VectorResponse<TwitchStreamTag> TwitchAPI::get_all_stream_tags(const std::vector<std::string>& tag_ids,
                                                                    std::optional<size_t> first,
                                                                    std::optional<std::string> after) {
         std::string options {""};

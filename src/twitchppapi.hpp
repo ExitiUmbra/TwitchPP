@@ -55,21 +55,21 @@ namespace TwitchPP {
                                                          std::optional<std::string_view> starting_cursor = std::nullopt);
             VectorResponse<TwitchGame> get_games(std::string_view game_query,
                                                  bool search_by_name = false);
-            VectorResponse<TwitchGame> get_games(std::vector<std::string> game_query,
+            VectorResponse<TwitchGame> get_games(const std::vector<std::string>& game_query,
                                                  bool search_by_name = false);
             VectorResponse<TwitchGame> get_top_games(std::optional<size_t> first = std::nullopt,
                                                      std::optional<std::string> starting_cursor = std::nullopt,
                                                      std::optional<bool> is_after = true);
             VectorResponse<TwitchUser> get_users(std::optional<std::string_view> user_query = std::nullopt,
                                                  std::optional<bool> search_by_login = false);
-            VectorResponse<TwitchUser> get_users(std::vector<std::string> game_query,
+            VectorResponse<TwitchUser> get_users(const std::vector<std::string>& game_query,
                                                  bool search_by_login = false);
             VectorResponse<TwitchEmote> get_global_emotes();
             VectorResponse<TwitchChannelEmote> get_channel_emotes(std::string_view broadcaster_id);
             VectorResponse<TwitchBadgeSet> get_global_chat_badges();
             VectorResponse<TwitchBadgeSet> get_channel_chat_badges(std::string_view broadcaster_id);
             VectorResponse<TwitchChannelEmote> get_emote_sets(std::string_view emote_set_id);
-            VectorResponse<TwitchChannelEmote> get_emote_sets(std::vector<std::string> emote_set_ids);
+            VectorResponse<TwitchChannelEmote> get_emote_sets(const std::vector<std::string>& emote_set_ids);
             VectorResponse<TwitchChannelInformation> get_channel_information(std::string_view broadcaster_id);
             VectorResponse<TwitchChatSettings> get_chat_settings(std::string_view broadcaster_id);
             VectorResponse<TwitchChannel> search_channels(std::string_view query,
@@ -88,14 +88,14 @@ namespace TwitchPP {
                                                                                     std::optional<OptionalScheduleRequest> options = std::nullopt);
             VectorResponse<TwitchTeam> get_teams(std::string_view team_query,
                                                  bool search_by_name = false);
-            VectorResponse<TwitchTeam> get_teams(std::vector<std::string> team_query,
+            VectorResponse<TwitchTeam> get_teams(const std::vector<std::string>& team_query,
                                                  bool search_by_name = false);
             Response<std::string> get_channel_icalendar(std::string_view broadcaster_id);
             VectorResponse<TwitchCheermote> get_cheermotes(std::optional<std::string_view> broadcaster_id = std::nullopt);
             VectorResponse<TwitchBasicPlaylist> get_soundtrack_playlists();
             VectorResponse<TwitchPlaylist> get_soundtrack_playlist(std::string_view playlist_id);
             VectorResponse<TwitchCurrentTrack> get_soundtrack_current_track(std::string_view broadcaster_id);
-            VectorResponse<TwitchStreamTag> get_all_stream_tags(std::vector<std::string> tag_ids = {},
+            VectorResponse<TwitchStreamTag> get_all_stream_tags(const std::vector<std::string>& tag_ids = {},
                                                                 std::optional<size_t> first = std::nullopt,
                                                                 std::optional<std::string> after = std::nullopt);
             VectorResponse<TwitchStreamTag> get_stream_tags(std::string_view broadcaster_id);

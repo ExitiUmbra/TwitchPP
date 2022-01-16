@@ -24,15 +24,15 @@ namespace TwitchPP {
         this->m_theme_mode = json_to_vector(get_object_param("\"theme_mode\"", json));
         this->m_template = emote_template;
     }
-    // TODO: check vectors, mb optimization
+
     TwitchEmote::TwitchEmote(const std::string& id,
                              const std::string& name,
                              const std::string& url_1x,
                              const std::string& url_2x,
                              const std::string& url_4x,
-                             std::vector<std::string>& format,
-                             std::vector<std::string>& scale,
-                             std::vector<std::string>& theme_mode,
+                             const std::vector<std::string>& format,
+                             const std::vector<std::string>& scale,
+                             const std::vector<std::string>& theme_mode,
                              const std::string& emote_template)
                              : m_id{id},
                                m_name{name},
@@ -45,7 +45,7 @@ namespace TwitchPP {
                                m_template{emote_template} {
     }
 
-    std::string TwitchEmote::to_json() {
+    std::string TwitchEmote::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"name\":\"" + this->m_name
             + "\",\"images\":{"
@@ -65,9 +65,9 @@ namespace TwitchPP {
                                            const std::string& url_1x,
                                            const std::string& url_2x,
                                            const std::string& url_4x,
-                                           std::vector<std::string>& format,
-                                           std::vector<std::string>& scale,
-                                           std::vector<std::string>& theme_mode,
+                                           const std::vector<std::string>& format,
+                                           const std::vector<std::string>& scale,
+                                           const std::vector<std::string>& theme_mode,
                                            const std::string& emote_template,
                                            const std::string& emote_type,
                                            const std::string& emote_set_id,
@@ -90,7 +90,7 @@ namespace TwitchPP {
         this->m_owner_id = owner_id.value_or(get_object_param("\"owner_id\"", json));
     }
 
-    std::string TwitchChannelEmote::to_json() {
+    std::string TwitchChannelEmote::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"name\":\"" + this->m_name
             + "\",\"emote_type\":\"" + this->m_emote_type
@@ -123,7 +123,7 @@ namespace TwitchPP {
                                                m_created_at{created_at} {
     }
 
-    std::string TwitchChannelEditor::to_json() {
+    std::string TwitchChannelEditor::to_json() const {
         std::string json = "{\"user_id\":\"" + this->m_user_id
             + "\",\"user_name\":\"" + this->m_user_name
             + "\",\"created_at\":\"" + this->m_created_at
@@ -143,7 +143,7 @@ namespace TwitchPP {
                                              const std::string& version,
                                              const std::string& name,
                                              const bool& can_activate,
-                                             std::vector<std::string> type)
+                                             const std::vector<std::string>& type)
                                              : m_id{id},
                                                m_version{version},
                                                m_name{name},
@@ -151,7 +151,7 @@ namespace TwitchPP {
                                                m_type{type} {
     }
 
-    std::string TwitchUserExtension::to_json() {
+    std::string TwitchUserExtension::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"version\":\"" + this->m_version
             + "\",\"name\":\"" + this->m_name
@@ -177,7 +177,7 @@ namespace TwitchPP {
                                        m_user_login{user_login} {
     }
 
-    std::string TwitchBasicUser::to_json() {
+    std::string TwitchBasicUser::to_json() const {
         std::string json = "{\"user_id\":\"" + this->m_user_id
             + "\",\"user_name\":\"" + this->m_user_name
             + "\",\"user_login\":\"" + this->m_user_login
@@ -213,7 +213,7 @@ namespace TwitchPP {
                                                        m_url{url} {
     }
 
-    std::string TwitchAnalyticsResponse::to_json() {
+    std::string TwitchAnalyticsResponse::to_json() const {
         std::string json = "{\"" + this->m_id_var + "\":\"" + this->m_id
             + "\",\"date_range\":{\"started_at\":\"" + this->m_started_at
             + "\",\"ended_at\":\"" + this->m_ended_at
@@ -237,7 +237,7 @@ namespace TwitchPP {
                                                          m_retry_after{retry_after} {
     }
 
-    std::string TwitchCommercialResponse::to_json() {
+    std::string TwitchCommercialResponse::to_json() const {
         std::string json = "{\"message\":\"" + this->m_message
             + "\",\"length\":" + std::to_string(this->m_length)
             + ",\"retry_after\":" + std::to_string(this->m_retry_after)
@@ -262,7 +262,7 @@ namespace TwitchPP {
                                            m_end_time{end_time} {
     }
 
-    std::string TwitchBanResponse::to_json() {
+    std::string TwitchBanResponse::to_json() const {
         std::string json = "{\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"moderator_id\":\"" + this->m_moderator_id
             + "\",\"user_id\":\"" + this->m_user_id
@@ -295,7 +295,7 @@ namespace TwitchPP {
                                          m_reason{reason} {
     }
 
-    std::string TwitchBannedUser::to_json() {
+    std::string TwitchBannedUser::to_json() const {
         std::string json = "{\"user_id\":\"" + this->m_user_id
             + "\",\"user_name\":\"" + this->m_user_name
             + "\",\"user_login\":\"" + this->m_user_login
@@ -323,7 +323,7 @@ namespace TwitchPP {
                                      m_score{score} {
     }
 
-    std::string TwitchUserBits::to_json() {
+    std::string TwitchUserBits::to_json() const {
         std::string json = "{\"user_id\":\"" + this->m_user_id
             + "\",\"user_name\":\"" + this->m_user_name
             + "\",\"user_login\":\"" + this->m_user_login
@@ -333,7 +333,7 @@ namespace TwitchPP {
         return json;
     }
 
-    TwitchBitsLeaderboard::TwitchBitsLeaderboard(const std::string& json, std::vector<TwitchUserBits> users) {
+    TwitchBitsLeaderboard::TwitchBitsLeaderboard(const std::string& json, const std::vector<TwitchUserBits>& users) {
         this->m_started_at = get_object_param("\"started_at\"", json);
         this->m_ended_at = get_object_param("\"ended_at\"", json);
         this->m_total = std::stoul(get_object_param("\"total\"", json, "0"));
@@ -343,14 +343,14 @@ namespace TwitchPP {
     TwitchBitsLeaderboard::TwitchBitsLeaderboard(const std::string& started_at,
                                                  const std::string& ended_at,
                                                  const size_t& total,
-                                                 std::vector<TwitchUserBits> users)
+                                                 const std::vector<TwitchUserBits>& users)
                                                  : m_started_at{started_at},
                                                    m_ended_at{ended_at},
                                                    m_total{total},
                                                    m_users{users} {
     }
 
-    std::string TwitchBitsLeaderboard::to_json() {
+    std::string TwitchBitsLeaderboard::to_json() const {
         std::string json = "{\"started_at\":\"" + this->m_started_at
             + "\",\"ended_at\":\"" + this->m_ended_at
             + "\",\"total\":" + std::to_string(this->m_total)
@@ -382,7 +382,7 @@ namespace TwitchPP {
                                                          m_broadcaster_name{broadcaster_name} {
     }
 
-    std::string TwitchModeratorEventData::to_json() {
+    std::string TwitchModeratorEventData::to_json() const {
         std::string json = "{\"user_id\":\"" + this->m_user_id
             + "\",\"user_name\":\"" + this->m_user_name
             + "\",\"user_login\":\"" + this->m_user_login
@@ -423,7 +423,7 @@ namespace TwitchPP {
                                              m_broadcaster_name{broadcaster_name} {
     }
 
-    std::string TwitchBannedUserEx::to_json() {
+    std::string TwitchBannedUserEx::to_json() const {
         std::string json = "{\"user_id\":\"" + this->m_user_id
             + "\",\"user_name\":\"" + this->m_user_name
             + "\",\"user_login\":\"" + this->m_user_login
@@ -459,7 +459,7 @@ namespace TwitchPP {
                                            m_event_data{&event_data} {
     }
 
-    std::string TwitchBannedEvent::to_json() {
+    std::string TwitchBannedEvent::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"event_type\":\"" + this->m_event_type
             + "\",\"event_timestamp\":\"" + this->m_event_timestamp
@@ -489,7 +489,7 @@ namespace TwitchPP {
                                                  m_event_data{&event_data} {
     }
 
-    std::string TwitchModeratorEvent::to_json() {
+    std::string TwitchModeratorEvent::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"event_type\":\"" + this->m_event_type
             + "\",\"event_timestamp\":\"" + this->m_event_timestamp
@@ -510,7 +510,7 @@ namespace TwitchPP {
                                      m_end_time{end_time} {
     }
 
-    std::string DatetimePeriod::to_json() {
+    std::string DatetimePeriod::to_json() const {
         std::string json = "{\"start_time\":\"" + this->m_start_time
             + "\",\"end_time\":\"" + this->m_end_time
             + "\"}";
@@ -528,15 +528,15 @@ namespace TwitchPP {
                                      m_name{name} {
     }
 
-    std::string TwitchCategory::get_id() {
+    std::string TwitchCategory::get_id() const {
         return this->m_id;
     }
 
-    std::string TwitchCategory::get_name() {
+    std::string TwitchCategory::get_name() const {
         return this->m_name;
     }
 
-    std::string TwitchCategory::to_json() {
+    std::string TwitchCategory::to_json() const {
         return "{\"id\":\"" + this->m_id + "\",\"name\":\"" + this->m_name + "\"}";
     }
 
@@ -560,7 +560,7 @@ namespace TwitchPP {
         return sized_url;
     }
 
-    std::string TwitchGame::to_json() {
+    std::string TwitchGame::to_json() const {
         std::string category_json = TwitchCategory::to_json();
         return category_json.substr(0, category_json.size() - 1) + ",\"box_art_url\":\"" + this->m_box_art_url + "\"}";
     }
@@ -603,11 +603,11 @@ namespace TwitchPP {
                              m_email{email} {
     }
 
-    std::string TwitchUser::get_id() {
+    std::string TwitchUser::get_id() const {
         return this->m_id;
     }
 
-    std::string TwitchUser::to_json() {
+    std::string TwitchUser::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"login\":\"" + this->m_login
             + "\",\"display_name\":\"" + this->m_display_name
@@ -654,7 +654,7 @@ namespace TwitchPP {
                                                          m_delay{delay} {
     }
 
-    std::string TwitchChannelInformation::to_json() {
+    std::string TwitchChannelInformation::to_json() const {
         std::string json = "{\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
             + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
@@ -698,7 +698,7 @@ namespace TwitchPP {
                                              m_unique_chat_mode{unique_chat_mode} {
     }
 
-    std::string TwitchChatSettings::to_json() {
+    std::string TwitchChatSettings::to_json() const {
         return "{\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"slow_mode\":" + (this->m_slow_mode ? "true" : "false")
             + ",\"slow_mode_wait_time\":" + (this->m_slow_mode_wait_time > -1 ? std::to_string(this->m_slow_mode_wait_time) : "null")
@@ -742,7 +742,7 @@ namespace TwitchPP {
                                                                       m_non_moderator_chat_delay_duration{non_moderator_chat_delay_duration} {
     }
 
-    std::string TwitchModeratorChatSettings::to_json() {
+    std::string TwitchModeratorChatSettings::to_json() const {
         std::string json = TwitchChatSettings::to_json();
         return json.substr(0, json.size() - 1)
             + ",\"moderator_id\":\"" + this->m_broadcaster_id
@@ -751,11 +751,11 @@ namespace TwitchPP {
             + "}";
     }
 
-    std::string TwitchModeratorChatSettings::get_broadcaster_id() {
+    std::string TwitchModeratorChatSettings::get_broadcaster_id() const {
         return this->m_broadcaster_id;
     }
 
-    std::string TwitchModeratorChatSettings::to_request() {
+    std::string TwitchModeratorChatSettings::to_request() const {
         std::string json = std::string("{\"slow_mode\":") + (this->m_slow_mode ? "true" : "false")
             + ",\"slow_mode_wait_time\":" + (this->m_slow_mode_wait_time > -1 ? std::to_string(this->m_slow_mode_wait_time) : "null")
             + ",\"follower_mode\":" + (this->m_follower_mode ? "true" : "false")
@@ -789,7 +789,7 @@ namespace TwitchPP {
                                  const std::string& game_id,
                                  const std::string& game_name,
                                  const bool& is_live,
-                                 std::vector<std::string>& tags_ids,
+                                 const std::vector<std::string>& tags_ids,
                                  const std::string& thumbnail_url,
                                  const std::string& title,
                                  const std::string& started_at)
@@ -806,7 +806,7 @@ namespace TwitchPP {
                                    m_started_at{started_at} {
     }
 
-    std::string TwitchChannel::to_json() {
+    std::string TwitchChannel::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"broadcaster_language\":\"" + this->m_broadcaster_language
             + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
@@ -863,7 +863,7 @@ namespace TwitchPP {
                                            m_team_display_name{team_display_name} {
     }
 
-    std::string TwitchChannelTeam::to_json() {
+    std::string TwitchChannelTeam::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
@@ -908,7 +908,7 @@ namespace TwitchPP {
                                const std::string& started_at,
                                const std::string& language,
                                const std::string& thumbnail_url,
-                               std::vector<std::string>& tag_ids,
+                               const std::vector<std::string>& tag_ids,
                                const size_t& viewer_count,
                                const bool& is_mature)
                                : m_id{id},
@@ -927,7 +927,7 @@ namespace TwitchPP {
                                  m_is_mature{is_mature} {
     }
 
-    std::string TwitchStream::to_json() {
+    std::string TwitchStream::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"user_id\":\"" + this->m_user_id
             + "\",\"user_name\":\"" + this->m_user_name
@@ -969,7 +969,7 @@ namespace TwitchPP {
                                              m_followed_at{followed_at} {
     }
 
-    std::string TwitchUsersFollows::to_json() {
+    std::string TwitchUsersFollows::to_json() const {
         std::string json = "{\"from_id\":\"" + this->m_from_id
             + "\",\"from_login\":\"" + this->m_from_login
             + "\",\"from_name\":\"" + this->m_from_name
@@ -1030,7 +1030,7 @@ namespace TwitchPP {
                                m_duration{duration} {
     }
 
-    std::string TwitchClips::to_json() {
+    std::string TwitchClips::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"url\":\"" + this->m_url
             + "\",\"embed_url\":\"" + this->m_embed_url
@@ -1106,7 +1106,7 @@ namespace TwitchPP {
                                  m_muted_segments{muted_segments} {
     }
 
-    std::string TwitchVideos::to_json() {
+    std::string TwitchVideos::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"stream_id\":\"" + this->m_stream_id
             + "\",\"user_id\":\"" + this->m_user_id
@@ -1165,7 +1165,7 @@ namespace TwitchPP {
                                                    m_is_recurring{is_recurring} {
     }
 
-    std::string TwitchScheduleSegment::to_json() {
+    std::string TwitchScheduleSegment::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"start_time\":\"" + this->m_start_time
             + "\",\"end_time\":\"" + this->m_end_time
@@ -1192,7 +1192,7 @@ namespace TwitchPP {
         }
     }
 
-    TwitchChannelStreamSchedule::TwitchChannelStreamSchedule(std::vector<TwitchScheduleSegment> segments,
+    TwitchChannelStreamSchedule::TwitchChannelStreamSchedule(const std::vector<TwitchScheduleSegment>& segments,
                                                              const std::string& broadcaster_id,
                                                              const std::string& broadcaster_name,
                                                              const std::string& broadcaster_login,
@@ -1203,7 +1203,7 @@ namespace TwitchPP {
                                                                m_broadcaster_login{broadcaster_login},
                                                                m_vacation{vacation} {}
 
-    std::string TwitchChannelStreamSchedule::to_json() {
+    std::string TwitchChannelStreamSchedule::to_json() const {
         std::string json {"{\"segments\":["};
         for (size_t i {0}; i < this->m_segments.size(); ++i) {
             json += this->m_segments.at(i).to_json();
@@ -1245,7 +1245,7 @@ namespace TwitchPP {
                            const std::string& background_image_url,
                            const std::string& created_at,
                            const std::string& updated_at,
-                           std::vector<TwitchBasicUser> users)
+                           const std::vector<TwitchBasicUser>& users)
                            : m_id{id},
                              m_team_name{team_name},
                              m_team_display_name{team_display_name},
@@ -1258,7 +1258,7 @@ namespace TwitchPP {
                              m_users{users} {
     }
 
-    std::string TwitchTeam::to_json() {
+    std::string TwitchTeam::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"team_name\":\"" + this->m_team_name
             + "\",\"team_display_name\":\"" + this->m_team_display_name
@@ -1295,7 +1295,7 @@ namespace TwitchPP {
                                              m_image_url_4x{image_url_4x} {
     }
 
-    std::string TwitchBadgeVersion::to_json() {
+    std::string TwitchBadgeVersion::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"image_url_1x\":\"" + this->m_image_url_1x
             + "\",\"image_url_2x\":\"" + this->m_image_url_2x
@@ -1314,12 +1314,12 @@ namespace TwitchPP {
     }
 
     TwitchBadgeSet::TwitchBadgeSet(const std::string& set_id,
-                                   std::vector<TwitchBadgeVersion> versions)
+                                   const std::vector<TwitchBadgeVersion>& versions)
                                    : m_set_id{set_id},
                                      m_versions{versions} {
     }
 
-    std::string TwitchBadgeSet::to_json() {
+    std::string TwitchBadgeSet::to_json() const {
         std::string json = "{\"set_id\":\"" + this->m_set_id
             + "\",\"versions\":[";
         for (size_t i {0}; i < this->m_versions.size(); ++i) {
@@ -1352,7 +1352,7 @@ namespace TwitchPP {
                                        m_4{url_4} {
     }
 
-    std::string TwitchImageUrls::to_json() {
+    std::string TwitchImageUrls::to_json() const {
         std::string json = (this->m_1 != "" ? "{\"1\":\"" + this->m_1
             + "\",\"1.5\":\"" + this->m_15
             + "\",\"2\":\"" + this->m_2
@@ -1375,7 +1375,7 @@ namespace TwitchPP {
                                          m_static{&img_static} {
     }
 
-    std::string TwitchImageTypes::to_json() {
+    std::string TwitchImageTypes::to_json() const {
         std::string json {"{"};
         if (this->m_animated) {
             json += "\"animated\":" + this->m_animated->to_json();
@@ -1402,7 +1402,7 @@ namespace TwitchPP {
                                            m_light{&light} {
     }
 
-    std::string TwitchImageThemes::to_json() {
+    std::string TwitchImageThemes::to_json() const {
         std::string json {"{"};
         if (this->m_dark) {
             json += "\"dark\":" + this->m_dark->to_json();
@@ -1439,7 +1439,7 @@ namespace TwitchPP {
                                                m_images{images} {
     }
 
-    std::string TwitchCheermoteTier::to_json() {
+    std::string TwitchCheermoteTier::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"min_bits\":" + std::to_string(this->m_min_bits)
             + ",\"color\":\"" + this->m_color
@@ -1468,7 +1468,7 @@ namespace TwitchPP {
                                      const size_t& order,
                                      const std::string& last_updated,
                                      const bool& is_charitable,
-                                     std::vector<TwitchCheermoteTier> tiers)
+                                     const std::vector<TwitchCheermoteTier>& tiers)
                                      : m_prefix{prefix},
                                        m_type{type},
                                        m_order{order},
@@ -1477,7 +1477,7 @@ namespace TwitchPP {
                                        m_tiers{tiers} {
     }
 
-    std::string TwitchCheermote::to_json() {
+    std::string TwitchCheermote::to_json() const {
         std::string json = "{\"prefix\":\"" + this->m_prefix
             + "\",\"type\":\"" + this->m_type
             + "\",\"order\":" + std::to_string(this->m_order)
@@ -1519,7 +1519,7 @@ namespace TwitchPP {
                                            m_expires_at{expires_at} {
     }
 
-    std::string TwitchBlockedTerm::to_json() {
+    std::string TwitchBlockedTerm::to_json() const {
         std::string json = "{\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"moderator_id\":\"" + this->m_moderator_id
             + "\",\"id\":\"" + this->m_id
@@ -1570,7 +1570,7 @@ namespace TwitchPP {
                                                    m_sex_based_terms{sex_based_terms} {
     }
 
-    std::string TwitchAutoModSettings::to_json() {
+    std::string TwitchAutoModSettings::to_json() const {
         std::string json = "{\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"moderator_id\":\"" + this->m_moderator_id
             + "\",\"overall_level\":" + (this->m_overall_level > -1 ? std::to_string(this->m_overall_level) : "null")
@@ -1620,7 +1620,7 @@ namespace TwitchPP {
                                          m_bits_votes{bits_votes} {
     }
 
-    std::string TwitchPollChoice::to_json() {
+    std::string TwitchPollChoice::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"title\":\"" + this->m_title
             + "\",\"votes\":" + std::to_string(this->m_votes)
@@ -1662,7 +1662,7 @@ namespace TwitchPP {
                            const size_t& bits_per_vote,
                            const size_t& channel_points_per_vote,
                            const size_t& duration,
-                           std::vector<TwitchPollChoice> choices)
+                           const std::vector<TwitchPollChoice>& choices)
                            : m_id{id},
                              m_broadcaster_id{broadcaster_id},
                              m_broadcaster_name{broadcaster_name},
@@ -1678,11 +1678,11 @@ namespace TwitchPP {
                              m_choices{choices} {
     }
 
-    std::string TwitchPoll::get_id() {
+    std::string TwitchPoll::get_id() const {
         return this->m_id;
     }
 
-    std::string TwitchPoll::to_json() {
+    std::string TwitchPoll::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
@@ -1720,7 +1720,7 @@ namespace TwitchPP {
                                        m_channel_points_won{channel_points_won} {
     }
 
-    std::string TwitchPredictor::to_json() {
+    std::string TwitchPredictor::to_json() const {
         std::string json = "{\"user_id\":\"" + this->m_user_id
             + "\",\"user_name\":\"" + this->m_user_name
             + "\",\"user_login\":\"" + this->m_user_login
@@ -1750,7 +1750,7 @@ namespace TwitchPP {
                                                      const std::string& color,
                                                      const size_t& users,
                                                      const size_t& channel_points,
-                                                     std::vector<TwitchPredictor> top_predictors)
+                                                     const std::vector<TwitchPredictor>& top_predictors)
                                                      : m_id{id},
                                                        m_title{title},
                                                        m_color{color},
@@ -1759,7 +1759,7 @@ namespace TwitchPP {
                                                        m_top_predictors{top_predictors} {
     }
 
-    std::string TwitchPredictionOutcome::to_json() {
+    std::string TwitchPredictionOutcome::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"title\":\"" + this->m_title
             + "\",\"color\":\"" + this->m_color
@@ -1811,7 +1811,7 @@ namespace TwitchPP {
                                        const std::string& ended_at,
                                        const std::string& locked_at,
                                        const size_t& prediction_window,
-                                       std::vector<TwitchPredictionOutcome> outcomes)
+                                       const std::vector<TwitchPredictionOutcome>& outcomes)
                                        : m_id{id},
                                          m_broadcaster_id{broadcaster_id},
                                          m_broadcaster_name{broadcaster_name},
@@ -1826,11 +1826,11 @@ namespace TwitchPP {
                                          m_outcomes{outcomes} {
     }
 
-    std::string TwitchPrediction::get_id() {
+    std::string TwitchPrediction::get_id() const {
         return this->m_id;
     }
 
-    std::string TwitchPrediction::to_json() {
+    std::string TwitchPrediction::to_json() const {
         std::string json {"{\"id\":\"" + this->m_id
             + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
@@ -1884,7 +1884,7 @@ namespace TwitchPP {
                                              m_target_amount{target_amount} {
     }
 
-    std::string TwitchCreatorsGoal::to_json() {
+    std::string TwitchCreatorsGoal::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
@@ -1917,7 +1917,7 @@ namespace TwitchPP {
                                            m_remaining{remaining} {
     }
 
-    std::string TwitchCreatedClip::to_json() {
+    std::string TwitchCreatedClip::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"edit_url\":\"" + this->m_edit_url
             + "\",\"limit\":" + std::to_string(this->m_limit)
@@ -1967,7 +1967,7 @@ namespace TwitchPP {
                                                                    m_is_gift{is_gift} {
     }
 
-    std::string TwitchBroadcasterSubscription::to_json() {
+    std::string TwitchBroadcasterSubscription::to_json() const {
         std::string json = "{\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
             + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
@@ -1986,13 +1986,13 @@ namespace TwitchPP {
 
     TwitchBroadcasterSubscriptions::TwitchBroadcasterSubscriptions(const size_t& total,
                                                                    const size_t& points,
-                                                                   std::vector<TwitchBroadcasterSubscription> broadcaster_subscriptions)
+                                                                   const std::vector<TwitchBroadcasterSubscription>& broadcaster_subscriptions)
                                                                    : m_total{total},
                                                                      m_points{points},
                                                                      m_broadcaster_subscriptions{broadcaster_subscriptions} {
     }
 
-    std::string TwitchBroadcasterSubscriptions::to_json() {
+    std::string TwitchBroadcasterSubscriptions::to_json() const {
         std::string json = "{\"total\":" + std::to_string(this->m_total)
             + ",\"points\":" + std::to_string(this->m_points)
             + ",\"broadcaster_subscriptions\":[";
@@ -2100,7 +2100,7 @@ namespace TwitchPP {
                                              m_default_url_4x{default_url_4x} {
     }
 
-    std::string TwitchCustomReward::to_json() {
+    std::string TwitchCustomReward::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
@@ -2184,7 +2184,7 @@ namespace TwitchPP {
                                                                  m_reward_cost{reward_cost} {
     }
 
-    std::string TwitchCustomRewardRedemption::to_json() {
+    std::string TwitchCustomRewardRedemption::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
@@ -2229,7 +2229,7 @@ namespace TwitchPP {
                                                      m_is_gift{is_gift} {
     }
 
-    std::string TwitchUserSubscription::to_json() {
+    std::string TwitchUserSubscription::to_json() const {
         std::string json = "{\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
             + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
@@ -2261,7 +2261,7 @@ namespace TwitchPP {
                                              m_position_seconds{position_seconds} {
     }
 
-    std::string TwitchStreamMarker::to_json() {
+    std::string TwitchStreamMarker::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"description\":\"" + this->m_description
             + "\",\"created_at\":\"" + this->m_created_at
@@ -2281,12 +2281,12 @@ namespace TwitchPP {
     }
 
     TwitchVideoWithMarkers::TwitchVideoWithMarkers(const std::string& video_id,
-                                                   std::vector<TwitchStreamMarker> markers)
+                                                   const std::vector<TwitchStreamMarker>& markers)
                                                    : m_video_id{video_id},
                                                      m_markers{markers} {
     }
 
-    std::string TwitchVideoWithMarkers::to_json() {
+    std::string TwitchVideoWithMarkers::to_json() const {
         std::string json = "{\"video_id\":\"" + this->m_video_id
             + "\",\"markers\":[";
         for (size_t i {0}; i < this->m_markers.size(); ++i) {
@@ -2312,14 +2312,14 @@ namespace TwitchPP {
     TwitchVideosWithMarkers::TwitchVideosWithMarkers(const std::string& user_id,
                                                      const std::string& user_name,
                                                      const std::string& user_login,
-                                                     std::vector<TwitchVideoWithMarkers> videos)
+                                                     const std::vector<TwitchVideoWithMarkers>& videos)
                                                      : m_user_id{user_id},
                                                        m_user_name{user_name},
                                                        m_user_login{user_login},
                                                        m_videos{videos} {
     }
 
-    std::string TwitchVideosWithMarkers::to_json() {
+    std::string TwitchVideosWithMarkers::to_json() const {
         std::string json = "{\"user_id\":\"" + this->m_user_id
             + "\",\"user_name\":\"" + this->m_user_name
             + "\",\"user_login\":\"" + this->m_user_login
@@ -2352,11 +2352,11 @@ namespace TwitchPP {
                                        m_localization_descriptions{localization_descriptions} {
     }
 
-    std::string TwitchStreamTag::to_json() {
-        std::string json = "{\"tag_id\":\"" + this->m_tag_id
-            + "\",\"is_auto\":" + std::string(this->m_is_auto ? "true" : "false")
-            + ",\"localization_names\":{" + string_map_to_string(this->m_localization_names)
-            + "},\"localization_descriptions\":{" + string_map_to_string(this->m_localization_descriptions);
+    std::string TwitchStreamTag::to_json() const {
+        std::string json = "{\"tag_id\":\"" + m_tag_id
+            + "\",\"is_auto\":" + std::string(m_is_auto ? "true" : "false")
+            + ",\"localization_names\":{" + string_map_to_string(m_localization_names)
+            + "},\"localization_descriptions\":{" + string_map_to_string(m_localization_descriptions);
         return json + "}}";
     }
 
@@ -2374,11 +2374,11 @@ namespace TwitchPP {
                                                  m_user_id{user_id} {
     }
 
-    std::string TwitchAutoModMessage::to_json() {
-        std::string json = "{\"msg_id\":\"" + this->m_msg_id
+    std::string TwitchAutoModMessage::to_json() const {
+        const std::string json {"{\"msg_id\":\"" + this->m_msg_id
             + "\",\"msg_text\":\"" + this->m_msg_text
             + "\",\"user_id\":\"" + this->m_user_id
-            + "\"}";
+            + "\"}"};
         return json;
     }
 
@@ -2393,7 +2393,7 @@ namespace TwitchPP {
                                                              m_is_permitted{is_permitted} {
     }
 
-    std::string TwitchAutoModMessageStatus::to_json() {
+    std::string TwitchAutoModMessageStatus::to_json() const {
         std::string json = "{\"msg_id\":\"" + this->m_msg_id
             + "\",\"is_permitted\":" + std::string(this->m_is_permitted ? "true" : "false")
             + "}";
@@ -2414,7 +2414,7 @@ namespace TwitchPP {
                                                                  m_action{action} {
     }
 
-    std::string TwitchAutoModMessageManaging::to_json() {
+    std::string TwitchAutoModMessageManaging::to_json() const {
         std::string json = "{\"msg_id\":\"" + this->m_msg_id
             + "\",\"user_id\":\"" + this->m_user_id
             + "\",\"action\":\"" + this->m_action
@@ -2436,7 +2436,7 @@ namespace TwitchPP {
                                                                m_total{total} {
     }
 
-    std::string TwitchHypeTrainContribution::to_json() {
+    std::string TwitchHypeTrainContribution::to_json() const {
         std::string json = "{\"user\":\"" + this->m_user
             + "\",\"type\":\"" + this->m_type
             + "\",\"total\":" + std::to_string(this->m_total)
@@ -2475,7 +2475,7 @@ namespace TwitchPP {
                                              const size_t& total,
                                              const size_t& goal,
                                              std::shared_ptr<TwitchHypeTrainContribution> last_contribution,
-                                             std::vector<TwitchHypeTrainContribution> top_contributions)
+                                             const std::vector<TwitchHypeTrainContribution>& top_contributions)
                                              : m_id{id},
                                                m_broadcaster_id{broadcaster_id},
                                                m_cooldown_end_time{cooldown_end_time},
@@ -2488,7 +2488,7 @@ namespace TwitchPP {
                                                m_top_contributions{top_contributions} {
     }
 
-    std::string TwitchHypeTrainData::to_json() {
+    std::string TwitchHypeTrainData::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"cooldown_end_time\":\"" + this->m_cooldown_end_time
@@ -2528,7 +2528,7 @@ namespace TwitchPP {
                                                  m_event_data{&event_data} {
     }
 
-    std::string TwitchHypeTrainEvent::to_json() {
+    std::string TwitchHypeTrainEvent::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"event_type\":\"" + this->m_event_type
             + "\",\"event_timestamp\":\"" + this->m_event_timestamp
@@ -2552,7 +2552,7 @@ namespace TwitchPP {
                                            m_creator_channel_id{creator_channel_id} {
     }
 
-    std::string TwitchMusicArtist::to_json() {
+    std::string TwitchMusicArtist::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"name\":\"" + this->m_name
             + "\",\"creator_channel_id\":" + (this->m_creator_channel_id == "null" ? this->m_creator_channel_id : std::string("\"" + this->m_creator_channel_id + "\""))
@@ -2574,7 +2574,7 @@ namespace TwitchPP {
                                          m_image_url{image_url} {
     }
 
-    std::string TwitchMusicAlbum::to_json() {
+    std::string TwitchMusicAlbum::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"name\":\"" + this->m_name
             + "\",\"image_url\":\"" + this->m_image_url
@@ -2605,7 +2605,7 @@ namespace TwitchPP {
                                            m_image_url{image_url} {
     }
 
-    std::string TwitchMusicSource::to_json() {
+    std::string TwitchMusicSource::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"title\":\"" + this->m_title
             + "\",\"content_type\":\"" + this->m_content_type
@@ -2637,7 +2637,7 @@ namespace TwitchPP {
                              const std::string& title,
                              const size_t& duration,
                              std::shared_ptr<TwitchMusicAlbum> album,
-                             std::vector<TwitchMusicArtist> artists)
+                             const std::vector<TwitchMusicArtist>& artists)
                              : m_id{id},
                                m_title{title},
                                m_duration{duration},
@@ -2645,7 +2645,7 @@ namespace TwitchPP {
                                m_artists{artists} {
     }
 
-    std::string TwitchTrack::to_json() {
+    std::string TwitchTrack::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"title\":\"" + this->m_title
             + "\",\"duration\":" + std::to_string(this->m_duration)
@@ -2681,7 +2681,7 @@ namespace TwitchPP {
                                              m_source{source} {
     }
 
-    std::string TwitchCurrentTrack::to_json() {
+    std::string TwitchCurrentTrack::to_json() const {
         std::string json = "{\"track\":" + (this->m_track == nullptr ? "null" : this->m_track->to_json())
             + ",\"source\":" + (this->m_source == nullptr ? "null" : this->m_source->to_json());
         return json + "}";
@@ -2704,7 +2704,7 @@ namespace TwitchPP {
                                                m_image_url{image_url} {
     }
 
-    std::string TwitchBasicPlaylist::to_json() {
+    std::string TwitchBasicPlaylist::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"title\":\"" + this->m_title
             + "\",\"description\":\"" + this->m_description
@@ -2725,12 +2725,12 @@ namespace TwitchPP {
                                    const std::string& title,
                                    const std::string& description,
                                    const std::string& image_url,
-                                   std::vector<TwitchTrack> tracks)
+                                   const std::vector<TwitchTrack>& tracks)
                                    : TwitchBasicPlaylist{id, title, description, image_url},
                                      m_tracks{tracks} {
     }
 
-    std::string TwitchPlaylist::to_json() {
+    std::string TwitchPlaylist::to_json() const {
         std::string basic_json {TwitchBasicPlaylist::to_json()};
         std::string json = basic_json.substr(0, basic_json.size() - 1) + ",\"catalog_tracks\":[";
         for (size_t i {0}; i < this->m_tracks.size(); ++i) {
@@ -2756,7 +2756,7 @@ namespace TwitchPP {
                                        m_secret{secret} {
     }
 
-    std::string TwitchTransport::to_json() {
+    std::string TwitchTransport::to_json() const {
         std::string json = "{\"method\":\"" + this->m_method
             + "\",\"callback\":\"" + this->m_callback
             + "\"}";
@@ -2809,7 +2809,7 @@ namespace TwitchPP {
                                        m_campaign_id{campaign_id} {
     }
 
-    std::string TwitchCondition::to_json() {
+    std::string TwitchCondition::to_json() const {
         std::string json = "{";
         if (this->m_broadcaster_user_id.size()) {
             json += "\"broadcaster_user_id\":\"" + this->m_broadcaster_user_id + "\"";
@@ -2886,7 +2886,7 @@ namespace TwitchPP {
                                                              m_condition{condition} {
     }
 
-    std::string TwitchEventSubSubscription::to_json() {
+    std::string TwitchEventSubSubscription::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"status\":\"" + this->m_status
             + "\",\"type\":\"" + this->m_type
@@ -2899,7 +2899,7 @@ namespace TwitchPP {
     }
 
     TwitchEventSubSubscriptions::TwitchEventSubSubscriptions(const std::string& json,
-                                                             std::vector<TwitchEventSubSubscription> subscriptions)
+                                                             const std::vector<TwitchEventSubSubscription>& subscriptions)
                                                              : m_subscriptions{subscriptions} {
         this->m_total = std::stoul(get_object_param("\"total\"", json, "0"));
         this->m_total_cost = std::stoul(get_object_param("\"total_cost\"", json, "0"));
@@ -2909,14 +2909,14 @@ namespace TwitchPP {
     TwitchEventSubSubscriptions::TwitchEventSubSubscriptions(const size_t& total,
                                                              const size_t& total_cost,
                                                              const size_t& max_total_cost,
-                                                             std::vector<TwitchEventSubSubscription> subscriptions)
+                                                             const std::vector<TwitchEventSubSubscription>& subscriptions)
                                                              : m_total{total},
                                                                m_total_cost{total_cost},
                                                                m_max_total_cost{max_total_cost},
                                                                m_subscriptions{subscriptions} {
     }
 
-    std::string TwitchEventSubSubscriptions::to_json() {
+    std::string TwitchEventSubSubscriptions::to_json() const {
         std::string json = "{\"total\":" + std::to_string(this->m_total)
             + ",\"total_cost\":" + std::to_string(this->m_total_cost)
             + ",\"max_total_cost\":" + std::to_string(this->m_max_total_cost)
@@ -2955,7 +2955,7 @@ namespace TwitchPP {
                                                            m_y_pos{y_pos} {
     }
 
-    std::string TwitchUserActiveExtension::to_json() {
+    std::string TwitchUserActiveExtension::to_json() const {
         std::string json {"{\"active\":" + std::string(this->m_active ? "true" : "false")};
         if (this->m_active) {
             json += ",\"id\":\"" + this->m_id
@@ -2969,15 +2969,15 @@ namespace TwitchPP {
         return json + "}";
     }
 
-    TwitchUserActiveExtensions::TwitchUserActiveExtensions(std::vector<TwitchUserActiveExtension> panel,
-                                                           std::vector<TwitchUserActiveExtension> overlay,
-                                                           std::vector<TwitchUserActiveExtension> component)
+    TwitchUserActiveExtensions::TwitchUserActiveExtensions(const std::vector<TwitchUserActiveExtension>& panel,
+                                                           const std::vector<TwitchUserActiveExtension>& overlay,
+                                                           const std::vector<TwitchUserActiveExtension>& component)
                                                            : m_panel{panel},
                                                              m_overlay{overlay},
                                                              m_component{component} {
     }
 
-    std::string TwitchUserActiveExtensions::to_json() {
+    std::string TwitchUserActiveExtensions::to_json() const {
         std::string json {"{\"panel\":{"};
         for (size_t i {0}; i < this->m_panel.size(); ++i) {
             json += "\"" + std::to_string(i + 1) + "\":" + this->m_panel.at(i).to_json();
@@ -3013,7 +3013,7 @@ namespace TwitchPP {
                                          m_status{status} {
     }
 
-    std::string TwitchCodeStatus::to_json() {
+    std::string TwitchCodeStatus::to_json() const {
         std::string json = "{\"code\":\"" + this->m_code
             + "\",\"status\":\"" + this->m_status
             + "\"}";
@@ -3046,7 +3046,7 @@ namespace TwitchPP {
                                                      m_updated_at{updated_at} {
     }
 
-    std::string TwitchDropsEntitlement::to_json() {
+    std::string TwitchDropsEntitlement::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"benefit_id\":\"" + this->m_benefit_id
             + "\",\"timestamp\":\"" + this->m_timestamp
@@ -3064,12 +3064,12 @@ namespace TwitchPP {
     }
 
     TwitchDropsEntitlementStatus::TwitchDropsEntitlementStatus(const std::string& status,
-                                                               std::vector<std::string> ids)
+                                                               const std::vector<std::string>& ids)
                                                                : m_status{status},
                                                                  m_ids{ids} {
     }
 
-    std::string TwitchDropsEntitlementStatus::to_json() {
+    std::string TwitchDropsEntitlementStatus::to_json() const {
         std::string json = "{\"status\":\"" + this->m_status
             + ",\"ids\":" + vector_to_json(this->m_ids) + "}";
         return json;
@@ -3092,7 +3092,7 @@ namespace TwitchPP {
                                                                                m_broadcaster_id{broadcaster_id.value_or("")} {
     }
 
-    std::string TwitchExtensionConfigurationSegment::to_json() {
+    std::string TwitchExtensionConfigurationSegment::to_json() const {
         std::string json = "{\"segment\":\"" + this->m_segment
             + "\",\"content\":\"" + this->m_content
             + "\",\"version\":\"" + this->m_version;
@@ -3116,7 +3116,7 @@ namespace TwitchPP {
                                                    m_expires_at{expires_at} {
     }
 
-    std::string TwitchExtensionSecret::to_json() {
+    std::string TwitchExtensionSecret::to_json() const {
         std::string json = "{\"content\":\"" + this->m_content
             + "\",\"active_at\":\"" + this->m_active_at
             + "\",\"expires_at\":\"" + this->m_expires_at
@@ -3133,12 +3133,12 @@ namespace TwitchPP {
     }
 
     TwitchExtensionSecrets::TwitchExtensionSecrets(const size_t& format_version,
-                                                   std::vector<TwitchExtensionSecret> secrets)
+                                                   const std::vector<TwitchExtensionSecret>& secrets)
                                                    : m_format_version{format_version},
                                                      m_secrets{secrets} {
     }
 
-    std::string TwitchExtensionSecrets::to_json() {
+    std::string TwitchExtensionSecrets::to_json() const {
         std::string json = "{\"format_version\":\"" + std::to_string(this->m_format_version)
             + ",\"secrets\":[";
         for (size_t i {0}; i < this->m_secrets.size(); ++i) {
@@ -3170,7 +3170,7 @@ namespace TwitchPP {
                                                              m_title{title} {
     }
 
-    std::string TwitchExtensionLiveChannel::to_json() {
+    std::string TwitchExtensionLiveChannel::to_json() const {
         std::string json = "{\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
             + "\",\"game_name\":\"" + this->m_game_name
@@ -3219,7 +3219,7 @@ namespace TwitchPP {
                                                              m_domain{domain.value_or("")} {
     }
 
-    std::string TwitchExtensionBitsProduct::to_json() {
+    std::string TwitchExtensionBitsProduct::to_json() const {
         std::string json = "{\"sku\":\"" + this->m_sku
             + "\",\"display_name\":\"" + this->m_display_name
             + "\",\"expiration\":\"" + this->m_expiration
@@ -3273,7 +3273,7 @@ namespace TwitchPP {
                                                              m_product_data{product_data} {
     }
 
-    std::string TwitchExtensionTransaction::to_json() {
+    std::string TwitchExtensionTransaction::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"timestamp\":\"" + this->m_timestamp
             + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
@@ -3331,7 +3331,7 @@ namespace TwitchPP {
                                                          m_can_link_external_content{can_link_external_content} {
     }
 
-    std::string TwitchExtensionComponent::to_json(std::optional<std::string_view> type) {
+    std::string TwitchExtensionComponent::to_json(std::optional<std::string_view> type) const {
         std::string json {"{\"viewer_url\":\"" + this->m_viewer_url + "\""};
         if (type.value_or("") == "video_overlay" || type.value_or("") == "panel") {
             json += ",\"can_link_external_content\":" + std::string(this->m_can_link_external_content ? "true" : "false");
@@ -3391,7 +3391,7 @@ namespace TwitchPP {
                                                  m_component{component} {
     }
 
-    std::string TwitchExtensionViews::to_json() {
+    std::string TwitchExtensionViews::to_json() const {
         std::string json = "{\"mobile\":" + (this->m_mobile == nullptr ? "null" : this->m_mobile->to_json())
             + ",\"panel\":" + (this->m_panel == nullptr ? "null" : this->m_panel->to_json("panel"))
             + ",\"video_overlay\":" + (this->m_video_overlay == nullptr ? "null" : this->m_video_overlay->to_json("video_overlay"))
@@ -3449,9 +3449,9 @@ namespace TwitchPP {
                                      const bool& can_install,
                                      const bool& has_chat_support,
                                      const bool& request_identity_link,
-                                     std::vector<std::string> allowlisted_config_urls,
-                                     std::vector<std::string> allowlisted_panel_urls,
-                                     std::vector<std::string> screenshot_urls,
+                                     const std::vector<std::string>& allowlisted_config_urls,
+                                     const std::vector<std::string>& allowlisted_panel_urls,
+                                     const std::vector<std::string>& screenshot_urls,
                                      StringMap icon_urls,
                                      std::shared_ptr<TwitchExtensionViews> views)
                                      : m_id{id},
@@ -3479,7 +3479,7 @@ namespace TwitchPP {
                                        m_views{views} {
     }
 
-    std::string TwitchExtension::to_json() {
+    std::string TwitchExtension::to_json() const {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"name\":\"" + this->m_name
             + "\",\"author_name\":\"" + this->m_author_name

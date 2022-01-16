@@ -76,7 +76,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchCodeStatus> TwitchExtendedAPI::get_code_status(std::string_view user_id,
-                                                                        std::vector<std::string> codes) {
+                                                                        const std::vector<std::string>& codes) {
         std::string options {"?user_id=" + std::string(user_id)};
         for (std::string code : codes) {
             options += "&code=" + code;
@@ -90,7 +90,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchCodeStatus> TwitchExtendedAPI::redeem_code(std::string_view user_id,
-                                                                    std::vector<std::string> codes) {
+                                                                    const std::vector<std::string>& codes) {
         std::string options {"?user_id=" + std::string(user_id)};
         for (std::string code : codes) {
             options += "&code=" + code;
@@ -137,7 +137,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchDropsEntitlementStatus> TwitchExtendedAPI::update_drops_entitlements(std::string_view fulfillment_status,
-                                                                                              std::vector<std::string> entitlement_ids) {
+                                                                                              const std::vector<std::string>& entitlement_ids) {
         std::string request_body {"{\"fulfillment_status\":\"" + std::string(fulfillment_status) + "\",\"entitlement_ids\":["};
         for (size_t i {0}; i < entitlement_ids.size(); ++i) {
             request_body += (i ? ",\"" : "\"") + entitlement_ids.at(i) + "\"";
@@ -152,7 +152,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchExtensionConfigurationSegment> TwitchExtendedAPI::get_extension_configuration_segment(std::string_view extension_id,
-                                                                                                               std::vector<std::string> segments,
+                                                                                                               const std::vector<std::string>& segments,
                                                                                                                std::optional<std::string_view> broadcaster_id) {
         std::string options {"?extension_id=" + std::string(extension_id)};
         for (std::string segment : segments) {
@@ -212,7 +212,7 @@ namespace TwitchPP {
     }
 
     Response<std::string> TwitchExtendedAPI::send_extension_pubsub_message(std::string_view message,
-                                                                           std::vector<std::string> targets,
+                                                                           const std::vector<std::string>& targets,
                                                                            const bool& is_global_broadcast,
                                                                            std::optional<std::string_view> broadcaster_id) {
         std::string request_body {"{\"message\":\"" + std::string(message)
@@ -331,7 +331,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchExtensionTransaction> TwitchExtendedAPI::get_extension_transactions(std::string_view extension_id,
-                                                                                             std::vector<std::string> ids,
+                                                                                             const std::vector<std::string>& ids,
                                                                                              std::optional<size_t> first,
                                                                                              std::optional<std::string> after) {
         std::string options {"?extension_id=" + std::string(extension_id)};

@@ -23,10 +23,10 @@ namespace TwitchPP {
             Response<std::string> delete_eventsub_subscription(std::string_view subscription_id);
 
             VectorResponse<TwitchCodeStatus> get_code_status(std::string_view user_id,
-                                                             std::vector<std::string> codes);
+                                                             const std::vector<std::string>& codes);
 
             VectorResponse<TwitchCodeStatus> redeem_code(std::string_view user_id,
-                                                         std::vector<std::string> codes);
+                                                         const std::vector<std::string>& codes);
 
             VectorResponse<TwitchDropsEntitlement> get_drops_entitlements(std::optional<std::string_view> id = std::nullopt,
                                                                           std::optional<std::string_view> user_id = std::nullopt,
@@ -36,10 +36,10 @@ namespace TwitchPP {
                                                                           std::optional<std::string_view> after = std::nullopt);
 
             VectorResponse<TwitchDropsEntitlementStatus> update_drops_entitlements(std::string_view fulfillment_status,
-                                                                                   std::vector<std::string> entitlement_ids);
+                                                                                   const std::vector<std::string>& entitlement_ids);
 
             VectorResponse<TwitchExtensionConfigurationSegment> get_extension_configuration_segment(std::string_view extension_id,
-                                                                                                    std::vector<std::string> segments,
+                                                                                                    const std::vector<std::string>& segments,
                                                                                                     std::optional<std::string_view> broadcaster_id = std::nullopt);
 
             Response<std::string> set_extension_configuration_segment(std::string_view extension_id,
@@ -54,7 +54,7 @@ namespace TwitchPP {
                                                                        std::string_view configuration_version);
 
             Response<std::string> send_extension_pubsub_message(std::string_view message,
-                                                                std::vector<std::string> targets,
+                                                                const std::vector<std::string>& targets,
                                                                 const bool& is_global_broadcast = false,
                                                                 std::optional<std::string_view> broadcaster_id = std::nullopt);
 
@@ -82,7 +82,7 @@ namespace TwitchPP {
                                                                                      const bool& in_development = false,
                                                                                      const bool& is_broadcast = false);
             VectorResponse<TwitchExtensionTransaction> get_extension_transactions(std::string_view extension_id,
-                                                                                  std::vector<std::string> ids = {},
+                                                                                  const std::vector<std::string>& ids = {},
                                                                                   std::optional<size_t> first = std::nullopt,
                                                                                   std::optional<std::string> after = std::nullopt);
 
