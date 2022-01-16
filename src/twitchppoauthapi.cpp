@@ -20,7 +20,7 @@ namespace TwitchPP {
             url += "&moderator_id=" + this->m_moderator_id;
         }
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchModeratorChatSettings>(response);
@@ -28,10 +28,10 @@ namespace TwitchPP {
 
     VectorResponse<TwitchModeratorChatSettings> TwitchOauthAPI::update_chat_settings(TwitchModeratorChatSettings& settings) {
         std::string url {TWITCH_API_BASE + "chat/settings?broadcaster_id="
-            + std::string(settings.get_broadcaster_id() == "" ? this->m_moderator_id : settings.get_broadcaster_id())
+            + std::string(settings.get_broadcaster_id().size() ? settings.get_broadcaster_id() : this->m_moderator_id)
             + "&moderator_id=" + this->m_moderator_id};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PATCH, settings.to_request());
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchModeratorChatSettings>(response);
@@ -40,7 +40,7 @@ namespace TwitchPP {
     VectorResponse<TwitchModeratorChatSettings> TwitchOauthAPI::update_chat_settings(std::string_view broadcaster_id, std::string_view settings) {
         std::string url {TWITCH_API_BASE + "chat/settings?broadcaster_id=" + std::string(broadcaster_id) + "&moderator_id=" + this->m_moderator_id};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_PATCH, settings.data());
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchModeratorChatSettings>(response);
@@ -58,7 +58,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "users/blocks" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchBasicUser>(response);
@@ -76,7 +76,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "moderation/blocked_terms" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchBlockedTerm>(response);
@@ -86,7 +86,7 @@ namespace TwitchPP {
         std::string options {"?moderator_id=" + this->m_moderator_id + "&broadcaster_id=" + std::string(broadcaster_id)};
         std::string url {TWITCH_API_BASE + "moderation/automod/settings" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchAutoModSettings>(response);
@@ -98,7 +98,7 @@ namespace TwitchPP {
         std::string options {"?moderator_id=" + this->m_moderator_id + "&broadcaster_id=" + std::string(broadcaster_id)};
         std::string url {TWITCH_API_BASE + "moderation/automod/settings" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PUT", settings.to_request(is_overall));
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchAutoModSettings>(response);
@@ -109,7 +109,7 @@ namespace TwitchPP {
         std::string options {"?moderator_id=" + this->m_moderator_id + "&broadcaster_id=" + std::string(broadcaster_id)};
         std::string url {TWITCH_API_BASE + "moderation/blocked_terms" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "POST", std::string("{\"text\":\"") + std::string(text) + "\"}");
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchBlockedTerm>(response);
@@ -169,7 +169,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "moderation/moderators" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchBasicUser>(response);
@@ -187,7 +187,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "moderation/banned" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchBannedUser>(response);
@@ -206,7 +206,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "moderation/banned" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchBannedUser>(response);
@@ -224,7 +224,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "streams/followed" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchStream>(response);
@@ -242,7 +242,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "moderation/banned/events" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchBannedEvent>(response);
@@ -260,7 +260,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "moderation/banned/events" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchBannedEvent>(response);
@@ -278,7 +278,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "moderation/moderators/events" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchModeratorEvent>(response);
@@ -296,7 +296,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "moderation/moderators/events" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchModeratorEvent>(response);
@@ -318,7 +318,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "polls" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchPoll>(response);
@@ -340,7 +340,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "predictions" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchPrediction>(response);
@@ -350,7 +350,7 @@ namespace TwitchPP {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
         std::string url {TWITCH_API_BASE + "goals" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchCreatorsGoal>(response);
@@ -360,7 +360,7 @@ namespace TwitchPP {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
         std::string url {TWITCH_API_BASE + "channels/editors" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchChannelEditor>(response);
@@ -369,7 +369,7 @@ namespace TwitchPP {
     VectorResponse<TwitchUserExtension> TwitchOauthAPI::get_user_extensions() {
         std::string url {TWITCH_API_BASE + "users/extensions/list"};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchUserExtension>(response);
@@ -391,7 +391,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "bits/leaderboard" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         VectorResponseLeftovers<TwitchUserBits> users_response = this->process_response_leftovers<TwitchUserBits>(response);
@@ -410,7 +410,7 @@ namespace TwitchPP {
         request += "}}";
         std::string url {TWITCH_API_BASE + "moderation/bans" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "POST", request);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchBanResponse>(response);
@@ -429,7 +429,7 @@ namespace TwitchPP {
         std::string request {"{\"broadcaster_id\":\"" + std::string(broadcaster_id) + "\",\"length\":" + std::to_string(length) + "}"};
         std::string url {TWITCH_API_BASE + "channels/commercial"};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "POST", request);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchCommercialResponse>(response);
@@ -459,7 +459,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "analytics/games" + (options.size() ? ("?" + options.substr(1, options.size())) : options)};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchAnalyticsResponse>(response);
@@ -490,7 +490,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "analytics/extensions" + (options.size() ? ("?" + options.substr(1, options.size())) : options)};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchAnalyticsResponse>(response);
@@ -553,7 +553,7 @@ namespace TwitchPP {
         request += "}";
         std::string url {TWITCH_API_BASE + "polls"};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "POST", request);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchPoll>(response);
@@ -569,7 +569,7 @@ namespace TwitchPP {
         request += "\"}";
         std::string url {TWITCH_API_BASE + "polls"};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PATCH", request);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchPoll>(response);
@@ -593,7 +593,7 @@ namespace TwitchPP {
         request += "]}";
         std::string url {TWITCH_API_BASE + "predictions"};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "POST", request);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchPrediction>(response);
@@ -609,7 +609,7 @@ namespace TwitchPP {
         request += "\"}";
         std::string url {TWITCH_API_BASE + "predictions"};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PATCH", request);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchPrediction>(response);
@@ -658,7 +658,7 @@ namespace TwitchPP {
         request += "}";
         std::string url {TWITCH_API_BASE + "schedule/segment" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "POST", request);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_single_response<TwitchChannelStreamSchedule>(response);
@@ -718,7 +718,7 @@ namespace TwitchPP {
         request += "}";
         std::string url {TWITCH_API_BASE + "schedule/segment" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PATCH", request);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_single_response<TwitchChannelStreamSchedule>(response);
@@ -735,7 +735,7 @@ namespace TwitchPP {
         curl_easy_cleanup(curl);
         std::string url {TWITCH_API_BASE + "users" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "PUT");
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchUser>(response);
@@ -748,7 +748,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "videos" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_DELETE);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
 
@@ -766,7 +766,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "clips" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, "POST");
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         size_t limit {};
@@ -800,7 +800,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "subscriptions" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         VectorResponseLeftovers<TwitchBroadcasterSubscription> subs_response = this->process_response_leftovers<TwitchBroadcasterSubscription>(response);
@@ -1024,7 +1024,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "streams/markers" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchVideosWithMarkers>(response);
@@ -1108,7 +1108,7 @@ namespace TwitchPP {
         }
         std::string url {TWITCH_API_BASE + "hypetrain/events" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
-        if (response.data == "") {
+        if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
         return this->process_response<TwitchHypeTrainEvent>(response);

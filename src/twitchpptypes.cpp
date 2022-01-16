@@ -164,7 +164,7 @@ namespace TwitchPP {
         this->m_user_id = get_object_param("\"user_id\"", json);
         this->m_user_name = get_object_param("\"user_name\"", json);
         this->m_user_login = get_object_param("\"user_login\"", json);
-        if (this->m_user_name == "") {
+        if (!this->m_user_name.size()) {
             this->m_user_name = get_object_param("\"display_name\"", json);
         }
     }
@@ -187,7 +187,7 @@ namespace TwitchPP {
 
     TwitchAnalyticsResponse::TwitchAnalyticsResponse(const std::string& json) {
         this->m_id = get_object_param("\"game_id\"", json);
-        if (this->m_id == "") {
+        if (!this->m_id.size()) {
             this->m_id = get_object_param("\"extension_id\"", json);
             this->m_id_var = "extension_id";
         } else {
@@ -672,9 +672,9 @@ namespace TwitchPP {
         std::string fmd {get_object_param("\"follower_mode_duration\"", json)};
         this->m_broadcaster_id = get_object_param("\"broadcaster_id\"", json);
         this->m_slow_mode = get_object_param("\"slow_mode\"", json) == "true";
-        this->m_slow_mode_wait_time = smwt == "null" || smwt == "" ? -1 : std::stoi(smwt);
+        this->m_slow_mode_wait_time = smwt == "null" || !smwt.size() ? -1 : std::stoi(smwt);
         this->m_follower_mode = get_object_param("\"follower_mode\"", json) == "true";
-        this->m_follower_mode_duration = fmd == "null" || fmd == "" ? -1 : std::stoi(fmd);
+        this->m_follower_mode_duration = fmd == "null" || !fmd.size() ? -1 : std::stoi(fmd);
         this->m_subscriber_mode = get_object_param("\"subscriber_mode\"", json) == "true";
         this->m_emote_mode = get_object_param("\"emote_mode\"", json) == "true";
         this->m_unique_chat_mode = get_object_param("\"unique_chat_mode\"", json) == "true";
@@ -715,7 +715,7 @@ namespace TwitchPP {
         std::string nmcdd {get_object_param("\"non_moderator_chat_delay_duration\"", json)};
         this->m_moderator_id = get_object_param("\"moderator_id\"", json);
         this->m_non_moderator_chat_delay = get_object_param("\"non_moderator_chat_delay\"", json) == "true";
-        this->m_non_moderator_chat_delay_duration = nmcdd == "null" || nmcdd == "" ? -1 : std::stoi(nmcdd);
+        this->m_non_moderator_chat_delay_duration = nmcdd == "null" || !nmcdd.size() ? -1 : std::stoi(nmcdd);
     }
 
     TwitchModeratorChatSettings::TwitchModeratorChatSettings(const std::string& broadcaster_id,
@@ -1365,8 +1365,8 @@ namespace TwitchPP {
     TwitchImageTypes::TwitchImageTypes(const std::string& json) {
         std::string animated_str = get_object_param("\"animated\"", json);
         std::string static_str = get_object_param("\"static\"", json);
-        this->m_animated = (animated_str == "" ? nullptr : std::make_shared<TwitchImageUrls>(animated_str));
-        this->m_static = (static_str == "" ? nullptr : std::make_shared<TwitchImageUrls>(static_str));
+        this->m_animated = (animated_str.size() ? std::make_shared<TwitchImageUrls>(animated_str) : nullptr);
+        this->m_static = (static_str.size() ? std::make_shared<TwitchImageUrls>(static_str) : nullptr);
     }
 
     TwitchImageTypes::TwitchImageTypes(TwitchImageUrls& animated,
@@ -1392,8 +1392,8 @@ namespace TwitchPP {
     TwitchImageThemes::TwitchImageThemes(const std::string& json) {
         std::string dark_str = get_object_param("\"dark\"", json);
         std::string light_str = get_object_param("\"light\"", json);
-        this->m_dark = (dark_str == "" ? nullptr : std::make_shared<TwitchImageTypes>(dark_str));
-        this->m_light = (light_str == "" ? nullptr : std::make_shared<TwitchImageTypes>(light_str));
+        this->m_dark = (dark_str.size() ? std::make_shared<TwitchImageTypes>(dark_str) : nullptr);
+        this->m_light = (light_str.size() ? std::make_shared<TwitchImageTypes>(light_str) : nullptr);
     }
 
     TwitchImageThemes::TwitchImageThemes(TwitchImageTypes& dark,
