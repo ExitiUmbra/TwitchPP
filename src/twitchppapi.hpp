@@ -95,5 +95,9 @@ namespace TwitchPP {
             VectorResponse<TwitchBasicPlaylist> get_soundtrack_playlists();
             VectorResponse<TwitchPlaylist> get_soundtrack_playlist(std::string_view playlist_id);
             VectorResponse<TwitchCurrentTrack> get_soundtrack_current_track(std::string_view broadcaster_id);
+            VectorResponse<TwitchStreamTag> get_all_stream_tags(std::vector<std::string> tag_ids = {},
+                                                                std::optional<size_t> first = std::nullopt,
+                                                                std::optional<std::string> after = std::nullopt);
+            VectorResponse<TwitchStreamTag> get_stream_tags(std::string_view broadcaster_id);
     };
 }
