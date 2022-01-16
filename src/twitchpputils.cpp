@@ -193,7 +193,7 @@ namespace TwitchPP {
         for (size_t start_pos {elements.find("{", 0)}; start_pos < std::string::npos; start_pos = elements.find("\"", start_pos)) {
             end_pos = elements.find("}", start_pos + 1);
             std::string_view obj = elements.substr(start_pos + 1, end_pos - start_pos - 1);
-            result.push_back(VideoSegment{std::stoul(get_object_param("\"duration\"", obj)), std::stoul(get_object_param("\"offset\"", obj))});
+            result.push_back(VideoSegment{std::stoul(get_object_param("\"duration\"", obj, "0")), std::stoul(get_object_param("\"offset\"", obj, "0"))});
             start_pos = end_pos + 1;
         }
         return result;

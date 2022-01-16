@@ -575,7 +575,7 @@ namespace TwitchPP {
         this->m_profile_image_url = get_object_param("\"profile_image_url\"", json);
         this->m_offline_image_url = get_object_param("\"offline_image_url\"", json);
         this->m_created_at = get_object_param("\"created_at\"", json);
-        this->m_view_count = std::stoul(get_object_param("\"view_count\"", json));
+        this->m_view_count = std::stoul(get_object_param("\"view_count\"", json, "0"));
         this->m_email = get_object_param("\"email\"", json);
     }
 
@@ -633,7 +633,7 @@ namespace TwitchPP {
         this->m_game_id = get_object_param("\"game_id\"", json);
         this->m_broadcaster_language = get_object_param("\"broadcaster_language\"", json);
         this->m_title = get_object_param("\"title\"", json);
-        this->m_delay = std::stoul(get_object_param("\"delay\"", json));
+        this->m_delay = std::stoul(get_object_param("\"delay\"", json, "0"));
     }
 
     TwitchChannelInformation::TwitchChannelInformation(const std::string& broadcaster_id,
@@ -668,13 +668,13 @@ namespace TwitchPP {
     }
 
     TwitchChatSettings::TwitchChatSettings(const std::string& json) {
-        std::string smwt {get_object_param("\"slow_mode_wait_time\"", json)};
-        std::string fmd {get_object_param("\"follower_mode_duration\"", json)};
+        std::string smwt {get_object_param("\"slow_mode_wait_time\"", json, "null")};
+        std::string fmd {get_object_param("\"follower_mode_duration\"", json, "null")};
         this->m_broadcaster_id = get_object_param("\"broadcaster_id\"", json);
         this->m_slow_mode = get_object_param("\"slow_mode\"", json) == "true";
-        this->m_slow_mode_wait_time = smwt == "null" || !smwt.size() ? -1 : std::stoi(smwt);
+        this->m_slow_mode_wait_time = smwt == "null" ? -1 : std::stoi(smwt);
         this->m_follower_mode = get_object_param("\"follower_mode\"", json) == "true";
-        this->m_follower_mode_duration = fmd == "null" || !fmd.size() ? -1 : std::stoi(fmd);
+        this->m_follower_mode_duration = fmd == "null" ? -1 : std::stoi(fmd);
         this->m_subscriber_mode = get_object_param("\"subscriber_mode\"", json) == "true";
         this->m_emote_mode = get_object_param("\"emote_mode\"", json) == "true";
         this->m_unique_chat_mode = get_object_param("\"unique_chat_mode\"", json) == "true";
@@ -712,10 +712,10 @@ namespace TwitchPP {
 
     TwitchModeratorChatSettings::TwitchModeratorChatSettings(const std::string& json)
                                                              : TwitchChatSettings{json} {
-        std::string nmcdd {get_object_param("\"non_moderator_chat_delay_duration\"", json)};
+        std::string nmcdd {get_object_param("\"non_moderator_chat_delay_duration\"", json, "null")};
         this->m_moderator_id = get_object_param("\"moderator_id\"", json);
         this->m_non_moderator_chat_delay = get_object_param("\"non_moderator_chat_delay\"", json) == "true";
-        this->m_non_moderator_chat_delay_duration = nmcdd == "null" || !nmcdd.size() ? -1 : std::stoi(nmcdd);
+        this->m_non_moderator_chat_delay_duration = nmcdd == "null" ? -1 : std::stoi(nmcdd);
     }
 
     TwitchModeratorChatSettings::TwitchModeratorChatSettings(const std::string& broadcaster_id,
@@ -868,8 +868,8 @@ namespace TwitchPP {
             + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
             + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
-            + "\",\"background_image_url\":" + (this->m_background_image_url == "null" ? "null" : ("\"" + this->m_background_image_url + "\""))
-            + ",\"banner\":\"" + (this->m_banner == "null" ? "null" : ("\"" + this->m_banner + "\""))
+            + "\",\"background_image_url\":" + (this->m_background_image_url == "null" ? this->m_background_image_url : std::string("\"" + this->m_background_image_url + "\""))
+            + ",\"banner\":\"" + (this->m_banner == "null" ? this->m_banner : std::string("\"" + this->m_banner + "\""))
             + ",\"created_at\":\"" + this->m_created_at
             + "\",\"updated_at\":\"" + this->m_updated_at
             + "\",\"info\":\"" + this->m_info
@@ -893,7 +893,7 @@ namespace TwitchPP {
         this->m_language = get_object_param("\"language\"", json);
         this->m_thumbnail_url = get_object_param("\"thumbnail_url\"", json);
         this->m_tag_ids = json_to_vector(get_object_param("\"tag_ids\"", json));
-        this->m_viewer_count = std::stoul(get_object_param("\"viewer_count\"", json));
+        this->m_viewer_count = std::stoul(get_object_param("\"viewer_count\"", json, "0"));
         this->m_is_mature = get_object_param("\"is_mature\"", json) == "true";
     }
 
@@ -992,10 +992,10 @@ namespace TwitchPP {
         this->m_game_id = get_object_param("\"game_id\"", json);
         this->m_language = get_object_param("\"language\"", json);
         this->m_title = get_object_param("\"title\"", json);
-        this->m_view_count = std::stoul(get_object_param("\"view_count\"", json));
+        this->m_view_count = std::stoul(get_object_param("\"view_count\"", json, "0"));
         this->m_created_at = get_object_param("\"created_at\"", json);
         this->m_thumbnail_url = get_object_param("\"thumbnail_url\"", json);
-        this->m_duration = std::stoul(get_object_param("\"duration\"", json));
+        this->m_duration = std::stoul(get_object_param("\"duration\"", json, "0"));
     }
 
     TwitchClips::TwitchClips(const std::string& id,
@@ -1063,7 +1063,7 @@ namespace TwitchPP {
         this->m_url = get_object_param("\"url\"", json);
         this->m_thumbnail_url = get_object_param("\"thumbnail_url\"", json);
         this->m_viewable = get_object_param("\"viewable\"", json);
-        this->m_view_count = std::stoul(get_object_param("\"view_count\"", json));
+        this->m_view_count = std::stoul(get_object_param("\"view_count\"", json, "0"));
         this->m_language = get_object_param("\"language\"", json);
         this->m_type = get_object_param("\"type\"", json);
         this->m_duration = get_object_param("\"duration\"", json);
@@ -1140,7 +1140,7 @@ namespace TwitchPP {
         this->m_end_time = get_object_param("\"end_time\"", json);
         this->m_title = get_object_param("\"title\"", json);
         this->m_canceled_until = get_object_param("\"canceled_until\"", json);
-        std::string category_str = get_object_param("\"category\"", json);
+        std::string category_str = get_object_param("\"category\"", json, "null");
         if (category_str == "null") {
             this->m_category = nullptr;
         } else {
@@ -1170,7 +1170,7 @@ namespace TwitchPP {
             + "\",\"start_time\":\"" + this->m_start_time
             + "\",\"end_time\":\"" + this->m_end_time
             + "\",\"title\":\"" + this->m_title
-            + "\",\"canceled_until\":" + (this->m_canceled_until == "null" ? this->m_canceled_until : ("\"" + this->m_canceled_until + "\""))
+            + "\",\"canceled_until\":" + (this->m_canceled_until == "null" ? this->m_canceled_until : std::string("\"" + this->m_canceled_until + "\""))
             + ",\"category\":" + (this->m_category == nullptr ? "null" : this->m_category->to_json())
             + ",\"is_recurring\":" + (this->m_is_recurring ? "true" : "false")
             + "}";
@@ -1418,7 +1418,7 @@ namespace TwitchPP {
 
     TwitchCheermoteTier::TwitchCheermoteTier(const std::string& json) {
         this->m_id = get_object_param("\"id\"", json);
-        this->m_min_bits = std::stoul(get_object_param("\"min_bits\"", json));
+        this->m_min_bits = std::stoul(get_object_param("\"min_bits\"", json, "0"));
         this->m_color = get_object_param("\"color\"", json);
         this->m_can_cheer = get_object_param("\"can_cheer\"", json) == "true";
         this->m_show_in_bits_card = get_object_param("\"show_in_bits_card\"", json) == "true";
@@ -1453,7 +1453,7 @@ namespace TwitchPP {
     TwitchCheermote::TwitchCheermote(const std::string& json) {
         this->m_prefix = get_object_param("\"prefix\"", json);
         this->m_type = get_object_param("\"type\"", json);
-        this->m_order = std::stoul(get_object_param("\"order\"", json));
+        this->m_order = std::stoul(get_object_param("\"order\"", json, "0"));
         this->m_last_updated = get_object_param("\"last_updated\"", json);
         this->m_is_charitable = get_object_param("\"is_charitable\"", json) == "true";
         std::string string_with_tiers = get_object_param("\"tiers\"", json);
@@ -1526,7 +1526,7 @@ namespace TwitchPP {
             + "\",\"text\":\"" + this->m_text
             + "\",\"created_at\":\"" + this->m_created_at
             + "\",\"updated_at\":\"" + this->m_updated_at
-            + "\",\"expires_at\":" + (this->m_expires_at == "null" ? this->m_expires_at : ("\"" + this->m_expires_at + "\""))
+            + "\",\"expires_at\":" + (this->m_expires_at == "null" ? this->m_expires_at : std::string("\"" + this->m_expires_at + "\""))
             + "}";
         return json;
     }
@@ -1831,18 +1831,18 @@ namespace TwitchPP {
     }
 
     std::string TwitchPrediction::to_json() {
-        std::string json = "{\"id\":\"" + this->m_id
+        std::string json {"{\"id\":\"" + this->m_id
             + "\",\"broadcaster_id\":\"" + this->m_broadcaster_id
             + "\",\"broadcaster_name\":\"" + this->m_broadcaster_name
             + "\",\"broadcaster_login\":\"" + this->m_broadcaster_login
             + "\",\"title\":\"" + this->m_title
             + "\",\"status\":\"" + this->m_status
-            + "\",\"winning_outcome_id\":" + (this->m_winning_outcome_id == "null" ? "null" : ("\"" + this->m_winning_outcome_id + "\""))
+            + "\",\"winning_outcome_id\":" + (this->m_winning_outcome_id == "null" ? this->m_winning_outcome_id : std::string("\"" + this->m_winning_outcome_id + "\""))
             + ",\"created_at\":\"" + this->m_created_at
-            + "\",\"ended_at\":" + (this->m_ended_at == "null" ? "null" : ("\"" + this->m_ended_at + "\""))
-            + ",\"locked_at\":" + (this->m_locked_at == "null" ? "null" : ("\"" + this->m_locked_at + "\""))
+            + "\",\"ended_at\":" + (this->m_ended_at == "null" ? this->m_ended_at : std::string("\"" + this->m_ended_at + "\""))
+            + ",\"locked_at\":" + (this->m_locked_at == "null" ? this->m_locked_at : std::string("\"" + this->m_locked_at + "\""))
             + ",\"prediction_window\":" + std::to_string(this->m_prediction_window)
-            + ",\"outcomes\":[";
+            + ",\"outcomes\":["};
         for (size_t i {0}; i < this->m_outcomes.size(); ++i) {
             json += this->m_outcomes.at(i).to_json();
             if (i + 1 < this->m_outcomes.size()) {
@@ -2108,7 +2108,7 @@ namespace TwitchPP {
             + "\",\"title\":\"" + this->m_title
             + "\",\"prompt\":\"" + this->m_prompt
             + "\",\"background_color\":\"" + this->m_background_color
-            + "\",\"cooldown_expires_at\":" + (this->m_cooldown_expires_at == "null" ? "null" : ("\"" + this->m_cooldown_expires_at + "\""))
+            + "\",\"cooldown_expires_at\":" + (this->m_cooldown_expires_at == "null" ? this->m_cooldown_expires_at : ("\"" + this->m_cooldown_expires_at + "\""))
             + ",\"cost\":" + std::to_string(this->m_cost)
             + ",\"is_enabled\":" + std::string(this->m_is_enabled ? "true" : "false")
             + ",\"is_user_input_required\":" + std::string(this->m_is_user_input_required ? "true" : "false")
@@ -2453,7 +2453,7 @@ namespace TwitchPP {
         this->m_level = std::stoul(get_object_param("\"level\"", json, "0"));
         this->m_total = std::stoul(get_object_param("\"total\"", json, "0"));
         this->m_goal = std::stoul(get_object_param("\"goal\"", json, "0"));
-        std::string last_contribution = get_object_param("\"last_contribution\"", json);
+        std::string last_contribution = get_object_param("\"last_contribution\"", json, "null");
         if (last_contribution == "null") {
             this->m_last_contribution = nullptr;
         } else {
@@ -2551,7 +2551,7 @@ namespace TwitchPP {
                                            m_name{name},
                                            m_creator_channel_id{creator_channel_id} {
     }
-    // TODO: Check if == "null" everywhere is fine
+
     std::string TwitchMusicArtist::to_json() {
         std::string json = "{\"id\":\"" + this->m_id
             + "\",\"name\":\"" + this->m_name
@@ -2620,7 +2620,7 @@ namespace TwitchPP {
         this->m_id = get_object_param("\"id\"", json);
         this->m_title = get_object_param("\"title\"", json);
         this->m_duration = std::stoul(get_object_param("\"duration\"", json, "0"));
-        std::string album = get_object_param("\"album\"", json);
+        std::string album = get_object_param("\"album\"", json, "null");
         if (album == "null") {
             this->m_album = nullptr;
         } else {
@@ -2661,13 +2661,13 @@ namespace TwitchPP {
     }
 
     TwitchCurrentTrack::TwitchCurrentTrack(const std::string& json) {
-        std::string track = get_object_param("\"track\"", json);
+        std::string track = get_object_param("\"track\"", json, "null");
         if (track == "null") {
             this->m_track = nullptr;
         } else {
             this->m_track = std::make_shared<TwitchTrack>(track);
         }
-        std::string source = get_object_param("\"source\"", json);
+        std::string source = get_object_param("\"source\"", json, "null");
         if (source == "null") {
             this->m_source = nullptr;
         } else {
@@ -2854,13 +2854,13 @@ namespace TwitchPP {
         this->m_version = get_object_param("\"version\"", json);
         this->m_created_at = get_object_param("\"created_at\"", json);
         this->m_cost = std::stoul(get_object_param("\"cost\"", json, "0"));
-        std::string transport = get_object_param("\"transport\"", json);
+        std::string transport = get_object_param("\"transport\"", json, "null");
         if (transport == "null") {
             this->m_transport = nullptr;
         } else {
             this->m_transport = std::make_shared<TwitchTransport>(transport);
         }
-        std::string condition = get_object_param("\"condition\"", json);
+        std::string condition = get_object_param("\"condition\"", json, "null");
         if (condition == "null") {
             this->m_condition = nullptr;
         } else {
@@ -3243,7 +3243,7 @@ namespace TwitchPP {
         this->m_user_login = get_object_param("\"user_login\"", json);
         this->m_user_name = get_object_param("\"user_name\"", json);
         this->m_product_type = get_object_param("\"product_type\"", json);
-        std::string product_data = get_object_param("\"product_data\"", json);
+        std::string product_data = get_object_param("\"product_data\"", json, "null");
         if (product_data == "null") {
             this->m_product_data = nullptr;
         } else {
@@ -3355,26 +3355,26 @@ namespace TwitchPP {
     }
 
     TwitchExtensionViews::TwitchExtensionViews(const std::string& json) {
-        std::string mobile = get_object_param("\"mobile\"", json);
-        if (mobile == "null" || !mobile.size()) {
+        std::string mobile = get_object_param("\"mobile\"", json, "null");
+        if (mobile == "null") {
             this->m_mobile = nullptr;
         } else {
             this->m_mobile = std::make_shared<TwitchExtensionComponent>(mobile);
         }
-        std::string panel = get_object_param("\"panel\"", json);
-        if (panel == "null" || !panel.size()) {
+        std::string panel = get_object_param("\"panel\"", json, "null");
+        if (panel == "null") {
             this->m_panel = nullptr;
         } else {
             this->m_panel = std::make_shared<TwitchExtensionComponent>(panel);
         }
-        std::string video_overlay = get_object_param("\"video_overlay\"", json);
-        if (video_overlay == "null" || !video_overlay.size()) {
+        std::string video_overlay = get_object_param("\"video_overlay\"", json, "null");
+        if (video_overlay == "null") {
             this->m_video_overlay = nullptr;
         } else {
             this->m_video_overlay = std::make_shared<TwitchExtensionComponent>(video_overlay);
         }
-        std::string component = get_object_param("\"component\"", json);
-        if (component == "null" || !component.size()) {
+        std::string component = get_object_param("\"component\"", json, "null");
+        if (component == "null") {
             this->m_component = nullptr;
         } else {
             this->m_component = std::make_shared<TwitchExtensionComponent>(component);
@@ -3423,7 +3423,7 @@ namespace TwitchPP {
         this->m_screenshot_urls = json_to_vector(get_object_param("\"screenshot_urls\"", json));
         std::string icon_urls = get_object_param("\"icon_urls\"", json);
         this->m_icon_urls = string_to_string_map(icon_urls);
-        std::string views = get_object_param("\"views\"", json);
+        std::string views = get_object_param("\"views\"", json, "null");
         if (views == "null") {
             this->m_views = nullptr;
         } else {
