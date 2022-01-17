@@ -1992,7 +1992,6 @@ namespace TwitchPP {
             std::vector<std::string> m_allowlisted_config_urls {};
             std::vector<std::string> m_allowlisted_panel_urls {};
             std::vector<std::string> m_screenshot_urls {};
-            // TODO: check where can change icon urls to string maps
             StringMap m_icon_urls {};
             std::shared_ptr<TwitchExtensionViews> m_views = nullptr;
         public:
