@@ -76,7 +76,6 @@ namespace TwitchPP {
     constexpr std::string_view CONDITION_EXTENSION_CLIENT { "EXTENSION_CLIENT" };
 
     template<typename T> using VectorResponse = TwitchPP::Response<std::vector<T>>;
-    template<typename T> using VectorResponseLeftovers = TwitchPP::ResponseLeftovers<std::vector<T>>;
 
     struct StreamsRequest {
         std::optional<size_t> first = std::nullopt;

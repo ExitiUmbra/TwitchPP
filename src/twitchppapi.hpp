@@ -23,19 +23,9 @@ namespace TwitchPP {
                 auto [data_string, leftovers] = get_first_value(response.data.substr(1, response.data.size() - 1));
                 auto [cursor_string, _] = get_first_value(leftovers);
                 std::string cursor = get_object_param("\"cursor\"", cursor_string);
-                // TODO: Check if message passed correctly everywhere
                 std::string message = !data_string.size() ? get_object_param("\"message\"", response.data) : "";
                 std::vector<T> elements = this->string_to_vector_objects<T>(data_string);
-                return {elements, cursor, response.code, message};
-            }
-            template<typename T>
-            VectorResponseLeftovers<T> process_response_leftovers(Response<std::string>& response) {
-                auto [data_string, leftovers] = get_first_value(response.data.substr(1, response.data.size() - 1));
-                auto [cursor_string, _] = get_first_value(leftovers);
-                std::string cursor = get_object_param("\"cursor\"", cursor_string);
-                std::string message = !data_string.size() ? get_object_param("\"message\"", response.data) : "";
-                std::vector<T> elements = this->string_to_vector_objects<T>(data_string);
-                return {elements, cursor, response.code, message, leftovers};
+                return {elements, cursor, response.code, message, response.headers, leftovers};
             }
             template<typename T>
             VectorResponse<T> process_single_response(Response<std::string>& response) {

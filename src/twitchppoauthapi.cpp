@@ -398,7 +398,7 @@ namespace TwitchPP {
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
-        VectorResponseLeftovers<TwitchUserBits> users_response = this->process_response_leftovers<TwitchUserBits>(response);
+        VectorResponse<TwitchUserBits> users_response = this->process_response<TwitchUserBits>(response);
         return {{TwitchBitsLeaderboard(users_response.leftovers, users_response.data)}, users_response.cursor, users_response.code, users_response.message};
     }
 
@@ -807,7 +807,7 @@ namespace TwitchPP {
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
-        VectorResponseLeftovers<TwitchBroadcasterSubscription> subs_response = this->process_response_leftovers<TwitchBroadcasterSubscription>(response);
+        VectorResponse<TwitchBroadcasterSubscription> subs_response = this->process_response<TwitchBroadcasterSubscription>(response);
         size_t total = std::stoul(get_object_param("\"total\"", subs_response.leftovers, "0"));
         size_t points = std::stoul(get_object_param("\"points\"", subs_response.leftovers, "0"));
         return {{TwitchBroadcasterSubscriptions(total, points, subs_response.data)}, subs_response.cursor, subs_response.code, subs_response.message};

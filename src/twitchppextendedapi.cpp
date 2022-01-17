@@ -21,7 +21,7 @@ namespace TwitchPP {
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
-        VectorResponseLeftovers<TwitchEventSubSubscription> subs_response = this->process_response_leftovers<TwitchEventSubSubscription>(response);
+        VectorResponse<TwitchEventSubSubscription> subs_response = this->process_response<TwitchEventSubSubscription>(response);
         size_t total = std::stoul(get_object_param("\"total\"", response.data, "0"));
         size_t total_cost = std::stoul(get_object_param("\"total_cost\"", subs_response.leftovers, "0"));
         size_t max_total_cost = std::stoul(get_object_param("\"max_total_cost\"", subs_response.leftovers, "0"));
@@ -41,7 +41,7 @@ namespace TwitchPP {
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
-        VectorResponseLeftovers<TwitchEventSubSubscription> subs_response = this->process_response_leftovers<TwitchEventSubSubscription>(response);
+        VectorResponse<TwitchEventSubSubscription> subs_response = this->process_response<TwitchEventSubSubscription>(response);
         size_t total = std::stoul(get_object_param("\"total\"", subs_response.leftovers, "0"));
         size_t total_cost = std::stoul(get_object_param("\"total_cost\"", subs_response.leftovers, "0"));
         size_t max_total_cost = std::stoul(get_object_param("\"max_total_cost\"", subs_response.leftovers, "0"));

@@ -14,6 +14,7 @@ namespace TwitchPP {
         size_t code;
         std::string message;
         std::vector<std::string> headers = {};
+        std::string leftovers = "";
     };
 
     template<typename T> struct ResponseLeftovers {
