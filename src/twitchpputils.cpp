@@ -216,7 +216,7 @@ namespace TwitchPP {
         return result;
     }
 
-    std::string string_map_to_string(StringMap elements) {
+    std::string string_map_to_string(const StringMap& elements) {
         std::string result {""};
         for (const auto& x : elements) {
             result +=  "\"" + x.first + "\":\"" + x.second + "\",";

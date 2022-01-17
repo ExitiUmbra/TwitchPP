@@ -2344,8 +2344,8 @@ namespace TwitchPP {
 
     TwitchStreamTag::TwitchStreamTag(const std::string& tag_id,
                                      const bool& is_auto,
-                                     StringMap localization_names,
-                                     StringMap localization_descriptions)
+                                     const StringMap& localization_names,
+                                     const StringMap& localization_descriptions)
                                      : m_tag_id{tag_id},
                                        m_is_auto{is_auto},
                                        m_localization_names{localization_names},
@@ -3452,7 +3452,7 @@ namespace TwitchPP {
                                      const std::vector<std::string>& allowlisted_config_urls,
                                      const std::vector<std::string>& allowlisted_panel_urls,
                                      const std::vector<std::string>& screenshot_urls,
-                                     StringMap icon_urls,
+                                     const StringMap& icon_urls,
                                      std::shared_ptr<TwitchExtensionViews> views)
                                      : m_id{id},
                                        m_name{name},

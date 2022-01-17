@@ -48,5 +48,5 @@ namespace TwitchPP {
     std::vector<std::string> json_to_vector(std::string_view elements);
     std::vector<VideoSegment> json_to_segment_vector(std::string_view elements);
     StringMap string_to_string_map(std::string_view elements);
-    std::string string_map_to_string(StringMap elements);
+    std::string string_map_to_string(const StringMap& elements);
 }

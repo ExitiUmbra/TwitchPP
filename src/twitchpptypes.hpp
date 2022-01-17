@@ -1462,8 +1462,8 @@ namespace TwitchPP {
             TwitchStreamTag(const std::string& json);
             TwitchStreamTag(const std::string& tag_id,
                             const bool& is_auto,
-                            StringMap localization_names,
-                            StringMap localization_descriptions);
+                            const StringMap& localization_names,
+                            const StringMap& localization_descriptions);
             std::string to_json() const;
     };
 
@@ -2018,7 +2018,7 @@ namespace TwitchPP {
                             const std::vector<std::string>& allowlisted_config_urls,
                             const std::vector<std::string>& allowlisted_panel_urls,
                             const std::vector<std::string>& screenshot_urls,
-                            StringMap icon_urls,
+                            const StringMap& icon_urls,
                             std::shared_ptr<TwitchExtensionViews> views = nullptr);
             std::string to_json() const;
     };
