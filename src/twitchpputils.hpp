@@ -17,11 +17,6 @@ namespace TwitchPP {
         std::string leftovers = "";
     };
 
-    struct VideoSegment {
-        size_t duration;
-        size_t offset;
-    };
-
     using StringMap = std::map<std::string, std::string>;
 
     static std::map<char, char> closing_chars { {'\"', '\"'}, {'{', '}'}, {'[', ']'} };
@@ -39,7 +34,6 @@ namespace TwitchPP {
     std::string replace_string(std::string subject, std::string_view search, std::string_view replace);
     std::string vector_to_json(const std::vector<std::string>& elements);
     std::vector<std::string> json_to_vector(std::string_view elements);
-    std::vector<VideoSegment> json_to_segment_vector(std::string_view elements);
     StringMap string_to_string_map(std::string_view elements);
     std::string string_map_to_string(const StringMap& elements);
 }

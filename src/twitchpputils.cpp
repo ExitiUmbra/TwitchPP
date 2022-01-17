@@ -187,18 +187,6 @@ namespace TwitchPP {
         return result;
     }
 
-    std::vector<VideoSegment> json_to_segment_vector(std::string_view elements) {
-        std::vector<VideoSegment> result {};
-        size_t end_pos {std::string::npos};
-        for (size_t start_pos {elements.find("{", 0)}; start_pos < std::string::npos; start_pos = elements.find("\"", start_pos)) {
-            end_pos = elements.find("}", start_pos + 1);
-            std::string_view obj = elements.substr(start_pos + 1, end_pos - start_pos - 1);
-            result.push_back(VideoSegment{std::stoul(get_object_param("\"duration\"", obj, "0")), std::stoul(get_object_param("\"offset\"", obj, "0"))});
-            start_pos = end_pos + 1;
-        }
-        return result;
-    }
-
     StringMap string_to_string_map(std::string_view elements) {
         std::vector<std::string> entries = json_to_vector(elements);
         StringMap result {};

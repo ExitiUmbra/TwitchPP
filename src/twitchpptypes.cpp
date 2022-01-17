@@ -1050,6 +1050,22 @@ namespace TwitchPP {
         return json;
     }
 
+    TwitchVideoSegment::TwitchVideoSegment(const std::string& json) {
+        this->m_duration = std::stoul(get_object_param("\"duration\"", json, "0"));
+        this->m_offset = std::stoul(get_object_param("\"offset\"", json, "0"));
+    }
+
+    TwitchVideoSegment::TwitchVideoSegment(const size_t& duration,
+                                           const size_t& offset)
+                                           : m_duration{duration},
+                                             m_offset{offset} {
+    }
+
+    std::string TwitchVideoSegment::to_json() const {
+        return "{\"duration\":\"" + std::to_string(this->m_duration)
+            + "\",\"offset\":\"" + std::to_string(this->m_offset) + "\"}";
+    }
+
     TwitchVideos::TwitchVideos(const std::string& json) {
         this->m_id = get_object_param("\"id\"", json);
         this->m_stream_id = get_object_param("\"stream_id\"", json);
@@ -1067,7 +1083,10 @@ namespace TwitchPP {
         this->m_language = get_object_param("\"language\"", json);
         this->m_type = get_object_param("\"type\"", json);
         this->m_duration = get_object_param("\"duration\"", json);
-        this->m_muted_segments = json_to_segment_vector(get_object_param("\"muted_segments\"", json));
+        std::vector<std::string> muted_segments = json_to_vector(get_object_param("\"muted_segments\"", json));
+        for (std::string segment : muted_segments) {
+            this->m_muted_segments.push_back(TwitchVideoSegment(segment));
+        }
     }
 
     TwitchVideos::TwitchVideos(const std::string& id,
@@ -1086,7 +1105,7 @@ namespace TwitchPP {
                                const std::string& language,
                                const std::string& type,
                                const std::string& duration,
-                               std::vector<VideoSegment> muted_segments)
+                               const std::vector<TwitchVideoSegment>& muted_segments)
                                : m_id{id},
                                  m_stream_id{stream_id},
                                  m_user_id{user_id},
@@ -1125,8 +1144,7 @@ namespace TwitchPP {
             + "\",\"duration\":\"" + this->m_duration
             + "\",\"muted_segments\":[";
         for (size_t i {0}; i < this->m_muted_segments.size(); ++i) {
-            json += "{\"duration\":" + std::to_string(this->m_muted_segments.at(i).duration)
-                + ",\"offset\":" + std::to_string(this->m_muted_segments.at(i).offset) + "}";
+            json += this->m_muted_segments.at(i).to_json();
             if (i + 1 < this->m_muted_segments.size()) {
                 json += ',';
             }

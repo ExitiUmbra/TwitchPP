@@ -814,6 +814,17 @@ namespace TwitchPP {
             std::string to_json() const;
     };
 
+    class TwitchVideoSegment {
+        protected:
+            size_t m_duration {};
+            size_t m_offset {};
+        public:
+            explicit TwitchVideoSegment(const std::string& json);
+            TwitchVideoSegment(const size_t& duration,
+                               const size_t& offset);
+            std::string to_json() const;
+    };
+
     class TwitchVideos {
         protected:
             std::string m_id {""};
@@ -832,7 +843,7 @@ namespace TwitchPP {
             std::string m_language {""};
             std::string m_type {""};
             std::string m_duration {""};
-            std::vector<VideoSegment> m_muted_segments {};
+            std::vector<TwitchVideoSegment> m_muted_segments {};
         public:
             explicit TwitchVideos(const std::string& json);
             TwitchVideos(const std::string& id,
@@ -851,7 +862,7 @@ namespace TwitchPP {
                          const std::string& language,
                          const std::string& type,
                          const std::string& duration,
-                         std::vector<VideoSegment> muted_segments);
+                         const std::vector<TwitchVideoSegment>& muted_segments);
             std::string to_json() const;
     };
 
