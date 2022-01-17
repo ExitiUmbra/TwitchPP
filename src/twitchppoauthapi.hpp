@@ -7,7 +7,8 @@ namespace TwitchPP {
         public:
             TwitchOauthAPI(const std::string& app_access_token, const std::string& client_id);
             TwitchOauthAPI(const std::string& app_access_token, const std::string& client_id, const std::string& moderator_id);
-            VectorResponse<TwitchModeratorChatSettings> get_chat_settings(std::string_view broadcaster_id, bool chat_delay);
+            VectorResponse<TwitchModeratorChatSettings> get_chat_settings(std::string_view broadcaster_id,
+                                                                          const bool& chat_delay);
             VectorResponse<TwitchModeratorChatSettings> update_chat_settings(const TwitchModeratorChatSettings& settings);
             VectorResponse<TwitchModeratorChatSettings> update_chat_settings(std::string_view broadcaster_id, std::string_view settings);
             VectorResponse<TwitchBasicUser> get_user_block_list(std::string_view broadcaster_id,

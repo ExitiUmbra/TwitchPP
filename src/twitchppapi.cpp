@@ -1,12 +1,15 @@
 #include "twitchppapi.hpp"
 
 namespace TwitchPP {
-    TwitchAPI::TwitchAPI(const std::string& app_access_token, const std::string& client_id)
-        : m_app_access_token{app_access_token}, m_client_id{client_id} {
+    TwitchAPI::TwitchAPI(const std::string& app_access_token,
+                         const std::string& client_id)
+                         : m_app_access_token{app_access_token},
+                           m_client_id{client_id} {
     }
 
     template<typename T>
-    VectorResponse<T> TwitchAPI::process_response(Response<std::string>& response, std::string_view additional_field) {
+    VectorResponse<T> TwitchAPI::process_response(Response<std::string>& response,
+                                                  std::string_view additional_field) {
         auto [data_string, leftovers] = get_first_value(response.data.substr(1, response.data.size() - 1));
         auto [cursor_string, _] = get_first_value(leftovers);
         std::string cursor = get_object_param("\"cursor\"", cursor_string);
@@ -44,7 +47,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchGame> TwitchAPI::get_games(std::string_view game_query,
-                                                    bool search_by_name) {
+                                                    const bool& search_by_name) {
         std::string options {search_by_name ? "?name=" : "?id="};
         options += replace_string(std::string(game_query), " ", "+");
 
@@ -57,7 +60,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchGame> TwitchAPI::get_games(const std::vector<std::string>& game_query,
-                                                    bool search_by_name) {
+                                                    const bool& search_by_name) {
         std::string parameter {search_by_name ? "name" : "id"};
         std::string options {"?"};
         for (std::string_view element : game_query) {
@@ -108,7 +111,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchUser> TwitchAPI::get_users(const std::vector<std::string>& user_query,
-                                                    bool search_by_login) {
+                                                    const bool& search_by_login) {
         std::string parameter {search_by_login ? "login" : "id"};
         std::string options {"?"};
         for (std::string_view element : user_query) {
@@ -264,7 +267,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchUsersFollows> TwitchAPI::get_users_follows(std::string_view user_id,
-                                                                    bool is_from,
+                                                                    const bool& is_from,
                                                                     std::optional<size_t> first,
                                                                     std::optional<std::string> after) {
         std::string options {"?"};
@@ -373,7 +376,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchTeam> TwitchAPI::get_teams(std::string_view team_query,
-                                                    bool search_by_name) {
+                                                    const bool& search_by_name) {
         std::string options {search_by_name ? "?name=" : "?id="};
         options += replace_string(std::string(team_query), " ", "+");
 
@@ -386,7 +389,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchTeam> TwitchAPI::get_teams(const std::vector<std::string>& team_query,
-                                                    bool search_by_name) {
+                                                    const bool& search_by_name) {
         std::string parameter {search_by_name ? "name" : "id"};
         std::string options {"?"};
         for (std::string_view element : team_query) {

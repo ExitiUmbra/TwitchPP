@@ -10,11 +10,15 @@ namespace TwitchPP {
         this->m_moderator_id = user.data[0].get_id();
     }
 
-    TwitchOauthAPI::TwitchOauthAPI(const std::string& app_access_token, const std::string& client_id, const std::string& moderator_id)
-            : TwitchAPI{app_access_token, client_id}, m_moderator_id{moderator_id} {
+    TwitchOauthAPI::TwitchOauthAPI(const std::string& app_access_token,
+                                   const std::string& client_id,
+                                   const std::string& moderator_id)
+                                   : TwitchAPI{app_access_token, client_id},
+                                     m_moderator_id{moderator_id} {
     }
 
-    VectorResponse<TwitchModeratorChatSettings> TwitchOauthAPI::get_chat_settings(std::string_view broadcaster_id, bool chat_delay) {
+    VectorResponse<TwitchModeratorChatSettings> TwitchOauthAPI::get_chat_settings(std::string_view broadcaster_id,
+                                                                                  const bool& chat_delay) {
         std::string url {TWITCH_API_BASE + "chat/settings?broadcaster_id=" + std::string(broadcaster_id)};
         if (chat_delay) {
             url += "&moderator_id=" + this->m_moderator_id;

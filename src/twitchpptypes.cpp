@@ -681,13 +681,13 @@ namespace TwitchPP {
     }
 
     TwitchChatSettings::TwitchChatSettings(const std::string& broadcaster_id,
-                                           bool slow_mode,
-                                           int slow_mode_wait_time,
-                                           bool follower_mode,
-                                           int follower_mode_duration,
-                                           bool subscriber_mode,
-                                           bool emote_mode,
-                                           bool unique_chat_mode)
+                                           const bool& slow_mode,
+                                           const int& slow_mode_wait_time,
+                                           const bool& follower_mode,
+                                           const int& follower_mode_duration,
+                                           const bool& subscriber_mode,
+                                           const bool& emote_mode,
+                                           const bool& unique_chat_mode)
                                            : m_broadcaster_id{broadcaster_id},
                                              m_slow_mode{slow_mode},
                                              m_slow_mode_wait_time{slow_mode_wait_time},
@@ -719,27 +719,27 @@ namespace TwitchPP {
     }
 
     TwitchModeratorChatSettings::TwitchModeratorChatSettings(const std::string& broadcaster_id,
-                                                                    bool slow_mode,
-                                                                    int slow_mode_wait_time,
-                                                                    bool follower_mode,
-                                                                    int follower_mode_duration,
-                                                                    bool subscriber_mode,
-                                                                    bool emote_mode,
-                                                                    bool unique_chat_mode,
-                                                                    const std::string& moderator_id,
-                                                                    bool non_moderator_chat_delay,
-                                                                    int non_moderator_chat_delay_duration)
-                                                                    : TwitchChatSettings{broadcaster_id,
-                                                                                         slow_mode,
-                                                                                         slow_mode_wait_time,
-                                                                                         follower_mode,
-                                                                                         follower_mode_duration,
-                                                                                         subscriber_mode,
-                                                                                         emote_mode,
-                                                                                         unique_chat_mode},
-                                                                      m_moderator_id{moderator_id},
-                                                                      m_non_moderator_chat_delay{non_moderator_chat_delay},
-                                                                      m_non_moderator_chat_delay_duration{non_moderator_chat_delay_duration} {
+                                                             const bool& slow_mode,
+                                                             const int& slow_mode_wait_time,
+                                                             const bool& follower_mode,
+                                                             const int& follower_mode_duration,
+                                                             const bool& subscriber_mode,
+                                                             const bool& emote_mode,
+                                                             const bool& unique_chat_mode,
+                                                             const std::string& moderator_id,
+                                                             const bool& non_moderator_chat_delay,
+                                                             const int& non_moderator_chat_delay_duration)
+                                                             : TwitchChatSettings{broadcaster_id,
+                                                                                  slow_mode,
+                                                                                  slow_mode_wait_time,
+                                                                                  follower_mode,
+                                                                                  follower_mode_duration,
+                                                                                  subscriber_mode,
+                                                                                  emote_mode,
+                                                                                  unique_chat_mode},
+                                                               m_moderator_id{moderator_id},
+                                                               m_non_moderator_chat_delay{non_moderator_chat_delay},
+                                                               m_non_moderator_chat_delay_duration{non_moderator_chat_delay_duration} {
     }
 
     std::string TwitchModeratorChatSettings::to_json() const {
@@ -3189,7 +3189,7 @@ namespace TwitchPP {
         this->m_expiration = get_object_param("\"expiration\"", json);
         this->m_domain = get_object_param("\"domain\"", json);
         this->m_cost_type = get_object_param("\"type\"", json);
-        // TODO: check if everywhere fallback for int values
+
         this->m_cost_amount = std::stoul(get_object_param("\"amount\"", json, "0"));
         this->m_in_development = get_object_param("\"in_development\"", json) == "true";
         if (!this->m_in_development) {

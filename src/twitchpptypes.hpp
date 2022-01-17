@@ -614,13 +614,13 @@ namespace TwitchPP {
         public:
             explicit TwitchChatSettings(const std::string& json);
             TwitchChatSettings(const std::string& broadcaster_id,
-                               bool slow_mode,
-                               int slow_mode_wait_time,
-                               bool follower_mode,
-                               int follower_mode_duration,
-                               bool subscriber_mode,
-                               bool emote_mode,
-                               bool unique_chat_mode);
+                               const bool& slow_mode,
+                               const int& slow_mode_wait_time,
+                               const bool& follower_mode,
+                               const int& follower_mode_duration,
+                               const bool& subscriber_mode,
+                               const bool& emote_mode,
+                               const bool& unique_chat_mode);
             std::string to_json() const;
     };
 
@@ -632,16 +632,16 @@ namespace TwitchPP {
         public:
             explicit TwitchModeratorChatSettings(const std::string& json);
             TwitchModeratorChatSettings(const std::string& broadcaster_id,
-                                        bool slow_mode,
-                                        int slow_mode_wait_time,
-                                        bool follower_mode,
-                                        int follower_mode_duration,
-                                        bool subscriber_mode,
-                                        bool emote_mode,
-                                        bool unique_chat_mode,
+                                        const bool& slow_mode,
+                                        const int& slow_mode_wait_time,
+                                        const bool& follower_mode,
+                                        const int& follower_mode_duration,
+                                        const bool& subscriber_mode,
+                                        const bool& emote_mode,
+                                        const bool& unique_chat_mode,
                                         const std::string& moderator_id,
-                                        bool non_moderator_chat_delay,
-                                        int non_moderator_chat_delay_duration);
+                                        const bool& non_moderator_chat_delay,
+                                        const int& non_moderator_chat_delay_duration);
             std::string get_broadcaster_id() const;
             std::string to_json() const;
             std::string to_request() const;
