@@ -5,7 +5,7 @@ namespace TwitchPP {
         public:
             TwitchExtendedAPI(const std::string& app_access_token,
                               const std::string& client_id);
-            // TODO: Mention in documentation is_type parameter and similar to it
+            // DOCS: Mention in documentation is_type parameter and similar to it
             VectorResponse<TwitchEventSubSubscriptions> get_eventsub_subscriptions(std::optional<std::string_view> filter = std::nullopt,
                                                                                    const bool& is_type = false,
                                                                                    std::optional<std::string> after = std::nullopt);

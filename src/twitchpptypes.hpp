@@ -81,7 +81,7 @@ namespace TwitchPP {
     struct StreamsRequest {
         std::optional<size_t> first = std::nullopt;
         std::optional<std::string> cursor = std::nullopt;
-        bool is_after = true;
+        bool is_before = false;
         std::vector<std::string> game_ids;
         std::vector<std::string> languages;
         std::vector<std::string> user_ids;
@@ -143,7 +143,7 @@ namespace TwitchPP {
         std::vector<std::string> ids;
         std::optional<size_t> first = std::nullopt;
         std::optional<std::string> cursor = std::nullopt;
-        bool is_after = true;
+        bool is_before = false;
         std::optional<std::string> started_at = std::nullopt;
         std::optional<std::string> ended_at = std::nullopt;
     };
@@ -154,7 +154,7 @@ namespace TwitchPP {
         std::optional<std::string> game_id = std::nullopt;
         std::optional<size_t> first = std::nullopt;
         std::optional<std::string> cursor = std::nullopt;
-        bool is_after = true;
+        bool is_before = false;
         std::optional<std::string> language = std::nullopt;
         std::optional<std::string> period = std::nullopt;
         std::optional<std::string> sort = std::nullopt;
@@ -1676,7 +1676,7 @@ namespace TwitchPP {
             std::string m_user_id {""};
         public:
             TwitchCondition(const std::string& json);
-            // TODO: Describe possible id_types in doc and is_reward
+            // DOCS: Describe possible id_types in doc and is_reward
             TwitchCondition(const std::string& id,
                             std::string_view id_type);
             TwitchCondition(const std::string& broadcaster_user_id,

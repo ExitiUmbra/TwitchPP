@@ -3302,7 +3302,7 @@ namespace TwitchPP {
         this->m_zoom = get_object_param("\"zoom\"", json) == "true";
         this->m_can_link_external_content = get_object_param("\"can_link_external_content\"", json) == "true";
     }
-    // TODO: check that bool is const everywhere
+
     TwitchExtensionComponent::TwitchExtensionComponent(const std::string& viewer_url,
                                                        const size_t& height,
                                                        const size_t& aspect_width,

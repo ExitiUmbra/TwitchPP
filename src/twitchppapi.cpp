@@ -80,13 +80,13 @@ namespace TwitchPP {
 
     VectorResponse<TwitchGame> TwitchAPI::get_top_games(std::optional<size_t> first,
                                                         std::optional<std::string> starting_cursor,
-                                                        std::optional<bool> is_after) {
+                                                        const bool& is_before) {
         std::string options {"?"};
         if (first) {
             options += std::string("first=") + std::to_string(first.value()) + (starting_cursor ? "&" : "");
         }
         if (starting_cursor) {
-            options += (is_after.value() ? "after=" : "before=") + starting_cursor.value();
+            options += (is_before ? "before=" : "after=") + starting_cursor.value();
         }
         std::string url {TWITCH_API_BASE + "games/top" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
@@ -243,7 +243,7 @@ namespace TwitchPP {
                 options += "first=" + std::to_string(streams_request.value().first.value()) + "&";
             }
             if (streams_request.value().cursor) {
-                options += (streams_request.value().is_after ? "after=" : "before=") + streams_request.value().cursor.value() + "&";
+                options += (streams_request.value().is_before ? "before=" : "after=") + streams_request.value().cursor.value() + "&";
             }
             for (std::string game_id : streams_request.value().game_ids) {
                 options += "game_id=" + game_id + "&";
@@ -296,7 +296,7 @@ namespace TwitchPP {
             options += "&first=" + std::to_string(clips_request.first.value());
         }
         if (clips_request.cursor) {
-            options += (clips_request.is_after ? "&after=" : "&before=") + clips_request.cursor.value();
+            options += (clips_request.is_before ? "&before=" : "&after=") + clips_request.cursor.value();
         }
         if (clips_request.started_at) {
             options += "&started_at=" + clips_request.started_at.value();
@@ -327,7 +327,7 @@ namespace TwitchPP {
             options += "&first=" + std::to_string(videos_request.first.value());
         }
         if (videos_request.cursor) {
-            options += (videos_request.is_after ? "&after=" : "&before=") + videos_request.cursor.value();
+            options += (videos_request.is_before ? "&before=" : "&after=") + videos_request.cursor.value();
         }
         if (videos_request.language) {
             options += "&language=" + videos_request.language.value();

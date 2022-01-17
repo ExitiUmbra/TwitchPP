@@ -198,7 +198,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchBannedUser> TwitchOauthAPI::get_banned_users(std::string_view broadcaster_id,
-                                                                      const bool& is_after,
+                                                                      const bool& is_before,
                                                                       std::optional<size_t> first,
                                                                       std::optional<std::string> cursor) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
@@ -206,7 +206,7 @@ namespace TwitchPP {
             options += "&first=" + std::to_string(first.value());
         }
         if (cursor) {
-            options += (is_after ? "&after=" : "&before=") + cursor.value();
+            options += (is_before ? "&before=" : "&after=") + cursor.value();
         }
         std::string url {TWITCH_API_BASE + "moderation/banned" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);

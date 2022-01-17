@@ -59,7 +59,7 @@ namespace TwitchPP {
                                                  const bool& search_by_name = false);
             VectorResponse<TwitchGame> get_top_games(std::optional<size_t> first = std::nullopt,
                                                      std::optional<std::string> starting_cursor = std::nullopt,
-                                                     std::optional<bool> is_after = true);
+                                                     const bool& is_before = false);
             VectorResponse<TwitchUser> get_users(std::optional<std::string_view> user_query = std::nullopt,
                                                  std::optional<bool> search_by_login = false);
             VectorResponse<TwitchUser> get_users(const std::vector<std::string>& game_query,
