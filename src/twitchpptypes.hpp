@@ -548,7 +548,7 @@ namespace TwitchPP {
             std::string to_json() const;
     };
 
-
+    // TODO: try to refactor this one
     class TwitchEmote {
         protected:
             std::string m_id {""};
@@ -561,7 +561,7 @@ namespace TwitchPP {
             std::vector<std::string> m_theme_mode {};
             std::string m_template {""};
         public:
-            explicit TwitchEmote(const std::string& json, const std::string& emote_template);
+            explicit TwitchEmote(const std::string& json, const std::string& emote_template = "");
             TwitchEmote(const std::string& id,
                         const std::string& name,
                         const std::string& url_1x,
@@ -582,7 +582,7 @@ namespace TwitchPP {
             std::string m_owner_id {""};
         public:
             explicit TwitchChannelEmote(const std::string& json,
-                                        const std::string& emote_template,
+                                        const std::string& emote_template = "",
                                         std::optional<std::string_view> owner_id = std::nullopt);
             TwitchChannelEmote(const std::string& id,
                                const std::string& name,

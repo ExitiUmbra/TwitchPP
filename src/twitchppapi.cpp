@@ -7,27 +7,6 @@ namespace TwitchPP {
                            m_client_id{client_id} {
     }
 
-    template<typename T>
-    VectorResponse<T> TwitchAPI::process_response(Response<std::string>& response,
-                                                  std::string_view additional_field) {
-        auto [data_string, leftovers] = get_first_value(response.data.substr(1, response.data.size() - 1));
-        auto [cursor_string, _] = get_first_value(leftovers);
-        std::string cursor = get_object_param("\"cursor\"", cursor_string);
-        std::string additional_value = get_object_param(std::string("\"") + additional_field.data() + "\"", leftovers);
-        std::string message = !data_string.size() ? get_object_param("\"message\"", response.data) : "";
-
-        std::pair<std::string, std::string> cycle {"", data_string};
-        std::vector<T> elements;
-        do {
-            cycle = get_first_value(cycle.second);
-            if (cycle.first != "") {
-                elements.push_back(T(cycle.first, additional_value));
-            }
-        } while(cycle.second != "");
-
-        return {elements, cursor, response.code, message};
-    }
-
     VectorResponse<TwitchGame> TwitchAPI::search_categories(std::string_view query,
                                                             std::optional<size_t> first,
                                                             std::optional<std::string_view> starting_cursor) {
@@ -372,7 +351,7 @@ namespace TwitchPP {
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
-        return this->process_single_response<TwitchChannelStreamSchedule>(response);
+        return this->process_response<TwitchChannelStreamSchedule>(response, true);
     }
 
     VectorResponse<TwitchTeam> TwitchAPI::get_teams(std::string_view team_query,

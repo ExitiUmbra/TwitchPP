@@ -19,25 +19,39 @@ namespace TwitchPP {
                 return elements;
             }
             template<typename T>
-            VectorResponse<T> process_response(Response<std::string>& response) {
+            VectorResponse<T> process_response(Response<std::string>& response,
+                                               const bool& is_single = false) {
                 auto [data_string, leftovers] = get_first_value(response.data.substr(1, response.data.size() - 1));
                 auto [cursor_string, _] = get_first_value(leftovers);
                 std::string cursor = get_object_param("\"cursor\"", cursor_string);
                 std::string message = !data_string.size() ? get_object_param("\"message\"", response.data) : "";
+                if (is_single) {
+                    return {{T(data_string)}, cursor, response.code, message, response.headers, leftovers};
+                }
                 std::vector<T> elements = this->string_to_vector_objects<T>(data_string);
                 return {elements, cursor, response.code, message, response.headers, leftovers};
             }
+
             template<typename T>
-            VectorResponse<T> process_single_response(Response<std::string>& response) {
+            VectorResponse<T> process_response(Response<std::string>& response,
+                                               std::string_view additional_field) {
                 auto [data_string, leftovers] = get_first_value(response.data.substr(1, response.data.size() - 1));
                 auto [cursor_string, _] = get_first_value(leftovers);
                 std::string cursor = get_object_param("\"cursor\"", cursor_string);
+                std::string additional_value = get_object_param(std::string("\"") + additional_field.data() + "\"", leftovers);
                 std::string message = !data_string.size() ? get_object_param("\"message\"", response.data) : "";
 
-                return {{T(data_string)}, cursor, response.code, message};
+                std::pair<std::string, std::string> cycle {"", data_string};
+                std::vector<T> elements;
+                do {
+                    cycle = get_first_value(cycle.second);
+                    if (cycle.first != "") {
+                        elements.push_back(T(cycle.first, additional_value));
+                    }
+                } while(cycle.second != "");
+
+                return {elements, cursor, response.code, message};
             }
-            template<typename T>
-            VectorResponse<T> process_response(Response<std::string>& response, std::string_view additional_field);
         public:
             TwitchAPI(const std::string& app_access_token, const std::string& client_id);
             VectorResponse<TwitchGame> search_categories(std::string_view query,

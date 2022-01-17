@@ -665,7 +665,7 @@ namespace TwitchPP {
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
-        return this->process_single_response<TwitchChannelStreamSchedule>(response);
+        return this->process_response<TwitchChannelStreamSchedule>(response, true);
     }
 
     Response<std::string> TwitchOauthAPI::delete_channel_stream_schedule_segment(std::string_view broadcaster_id,
@@ -725,7 +725,7 @@ namespace TwitchPP {
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
-        return this->process_single_response<TwitchChannelStreamSchedule>(response);
+        return this->process_response<TwitchChannelStreamSchedule>(response, true);
     }
 
     VectorResponse<TwitchUser> TwitchOauthAPI::update_user(std::string_view description) {
