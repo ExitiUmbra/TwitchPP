@@ -1586,7 +1586,7 @@ namespace TwitchPP {
         return json;
     }
 
-    std::string TwitchAutoModSettings::to_request(const bool& is_overall) {
+    std::string TwitchAutoModSettings::to_request(const bool& is_overall) const {
         std::string json = (is_overall ? ("{\"overall_level\":" + (this->m_overall_level > -1 ? std::to_string(this->m_overall_level) : "null") + "}")
             : ("{\"disability\":" + std::to_string(this->m_disability)
             + ",\"aggression\":" + std::to_string(this->m_aggression)

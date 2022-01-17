@@ -9,11 +9,6 @@ namespace TwitchPP {
             VectorResponse<TwitchEventSubSubscriptions> get_eventsub_subscriptions(std::optional<std::string_view> filter = std::nullopt,
                                                                                    const bool& is_type = false,
                                                                                    std::optional<std::string> after = std::nullopt);
-            // TODO: Parameters might be optimized
-            VectorResponse<TwitchEventSubSubscriptions> create_eventsub_subscription(std::string_view type,
-                                                                                     std::string_view version,
-                                                                                     TwitchCondition condition,
-                                                                                     TwitchTransport transport);
 
             VectorResponse<TwitchEventSubSubscriptions> create_eventsub_subscription(std::string_view type,
                                                                                      std::string_view version,

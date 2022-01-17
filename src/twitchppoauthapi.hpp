@@ -8,7 +8,7 @@ namespace TwitchPP {
             TwitchOauthAPI(const std::string& app_access_token, const std::string& client_id);
             TwitchOauthAPI(const std::string& app_access_token, const std::string& client_id, const std::string& moderator_id);
             VectorResponse<TwitchModeratorChatSettings> get_chat_settings(std::string_view broadcaster_id, bool chat_delay);
-            VectorResponse<TwitchModeratorChatSettings> update_chat_settings(TwitchModeratorChatSettings& settings);
+            VectorResponse<TwitchModeratorChatSettings> update_chat_settings(const TwitchModeratorChatSettings& settings);
             VectorResponse<TwitchModeratorChatSettings> update_chat_settings(std::string_view broadcaster_id, std::string_view settings);
             VectorResponse<TwitchBasicUser> get_user_block_list(std::string_view broadcaster_id,
                                                                 std::optional<size_t> first = std::nullopt,
@@ -25,7 +25,9 @@ namespace TwitchPP {
                                                                std::string_view text);
             Response<std::string> remove_blocked_term(std::string_view broadcaster_id,
                                                       std::string_view term_id);
-            VectorResponse<TwitchAutoModSettings> update_automod_settings(std::string_view broadcaster_id, TwitchAutoModSettings& settings, const bool& is_overall = false);
+            VectorResponse<TwitchAutoModSettings> update_automod_settings(std::string_view broadcaster_id,
+                                                                          const TwitchAutoModSettings& settings,
+                                                                          const bool& is_overall = false);
             Response<std::string> get_stream_key(std::string_view broadcaster_id);
             VectorResponse<TwitchBasicUser> get_moderators(std::string_view broadcaster_id,
                                                            const std::vector<std::string>& user_ids = {},
@@ -78,7 +80,8 @@ namespace TwitchPP {
                                                                       size_t length);
             VectorResponse<TwitchAnalyticsResponse> get_extension_analytics(std::optional<AnalyticsRequest> request = std::nullopt);
             VectorResponse<TwitchAnalyticsResponse> get_game_analytics(std::optional<AnalyticsRequest> request = std::nullopt);
-            Response<std::string> modify_channel_information(std::string_view broadcaster_id, ChannelInformation& info);
+            Response<std::string> modify_channel_information(std::string_view broadcaster_id,
+                                                             const ChannelInformation& info);
             VectorResponse<TwitchPoll> create_poll(std::string_view broadcaster_id,
                                                    std::string_view title,
                                                    std::vector<std::string_view> choices,
@@ -160,7 +163,7 @@ namespace TwitchPP {
                                                       const std::vector<std::string>& tag_ids = {});
             VectorResponse<TwitchAutoModMessageStatus> check_automod_status(std::string_view broadcaster_id,
                                                                             const std::vector<TwitchAutoModMessage>& messages = {});
-            Response<std::string> manage_held_automod_messages(TwitchAutoModMessageManaging message);
+            Response<std::string> manage_held_automod_messages(const TwitchAutoModMessageManaging message);
             VectorResponse<TwitchHypeTrainEvent> get_hype_train_events(std::string_view broadcaster_id,
                                                                        std::optional<std::string_view> hype_train_id = std::nullopt,
                                                                        std::optional<size_t> first = std::nullopt,

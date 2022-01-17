@@ -26,7 +26,7 @@ namespace TwitchPP {
         return this->process_response<TwitchModeratorChatSettings>(response);
     }
 
-    VectorResponse<TwitchModeratorChatSettings> TwitchOauthAPI::update_chat_settings(TwitchModeratorChatSettings& settings) {
+    VectorResponse<TwitchModeratorChatSettings> TwitchOauthAPI::update_chat_settings(const TwitchModeratorChatSettings& settings) {
         std::string url {TWITCH_API_BASE + "chat/settings?broadcaster_id="
             + std::string(settings.get_broadcaster_id().size() ? settings.get_broadcaster_id() : this->m_moderator_id)
             + "&moderator_id=" + this->m_moderator_id};
@@ -93,7 +93,7 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchAutoModSettings> TwitchOauthAPI::update_automod_settings(std::string_view broadcaster_id,
-                                                                                  TwitchAutoModSettings& settings,
+                                                                                  const TwitchAutoModSettings& settings,
                                                                                   const bool& is_overall) {
         std::string options {"?moderator_id=" + this->m_moderator_id + "&broadcaster_id=" + std::string(broadcaster_id)};
         std::string url {TWITCH_API_BASE + "moderation/automod/settings" + options};
@@ -496,7 +496,8 @@ namespace TwitchPP {
         return this->process_response<TwitchAnalyticsResponse>(response);
     }
 
-    Response<std::string> TwitchOauthAPI::modify_channel_information(std::string_view broadcaster_id, ChannelInformation& info) {
+    Response<std::string> TwitchOauthAPI::modify_channel_information(std::string_view broadcaster_id,
+                                                                     const ChannelInformation& info) {
         std::string options {"?broadcaster_id=" + std::string(broadcaster_id)};
         std::string request {"{"};
         if (info.game_id) {
@@ -1054,7 +1055,7 @@ namespace TwitchPP {
         return this->process_response<TwitchAutoModMessageStatus>(response);
     }
 
-    Response<std::string> TwitchOauthAPI::manage_held_automod_messages(TwitchAutoModMessageManaging message) {
+    Response<std::string> TwitchOauthAPI::manage_held_automod_messages(const TwitchAutoModMessageManaging message) {
         std::string url {TWITCH_API_BASE + "moderation/automod/message"};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id, HTTP_POST, message.to_json());
         return response;
