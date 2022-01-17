@@ -1339,7 +1339,7 @@ namespace TwitchPP {
         this->m_3 = get_object_param("\"3\"", json);
         this->m_4 = get_object_param("\"4\"", json);
     }
-    // TODO: check if can be changed to StringMap
+
     TwitchImageUrls::TwitchImageUrls(const std::string& url_1,
                                      const std::string& url_15,
                                      const std::string& url_2,
