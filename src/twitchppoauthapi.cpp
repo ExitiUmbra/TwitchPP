@@ -440,28 +440,28 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchAnalyticsResponse> TwitchOauthAPI::get_game_analytics(std::optional<AnalyticsRequest> request) {
-        std::string options {""};
+        std::string options {"?"};
         if (request) {
             if (request.value().id) {
-                options += "&game_id=" + request.value().id.value();
+                options += "game_id=" + request.value().id.value() + "&";
             }
             if (request.value().first) {
-                options += "&first=" + std::to_string(request.value().first.value());
+                options += "first=" + std::to_string(request.value().first.value()) + "&";
             }
             if (request.value().started_at) {
-                options += "&started_at=" + request.value().started_at.value();
+                options += "started_at=" + request.value().started_at.value() + "&";
             }
             if (request.value().ended_at) {
-                options += "&ended_at=" + request.value().ended_at.value();
+                options += "ended_at=" + request.value().ended_at.value() + "&";
             }
             if (request.value().type) {
-                options += "&type=" + request.value().type.value();
+                options += "type=" + request.value().type.value() + "&";
             }
             if (request.value().after) {
-                options += "&after=" + request.value().after.value();
+                options += "after=" + request.value().after.value() + "&";
             }
         }
-        std::string url {TWITCH_API_BASE + "analytics/games" + (options.size() ? ("?" + options.substr(1, options.size())) : options)};
+        std::string url {TWITCH_API_BASE + "analytics/games" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
@@ -470,29 +470,28 @@ namespace TwitchPP {
     }
 
     VectorResponse<TwitchAnalyticsResponse> TwitchOauthAPI::get_extension_analytics(std::optional<AnalyticsRequest> request) {
-        std::string options {""};
+        std::string options {"?"};
         if (request) {
-            // TODO: deal with only optional params in the same way everywhere, search for "is_after="
             if (request.value().id) {
-                options += "&extension_id=" + request.value().id.value();
+                options += "extension_id=" + request.value().id.value() + "&";
             }
             if (request.value().first) {
-                options += "&first=" + std::to_string(request.value().first.value());
+                options += "first=" + std::to_string(request.value().first.value()) + "&";
             }
             if (request.value().started_at) {
-                options += "&started_at=" + request.value().started_at.value();
+                options += "started_at=" + request.value().started_at.value() + "&";
             }
             if (request.value().ended_at) {
-                options += "&ended_at=" + request.value().ended_at.value();
+                options += "ended_at=" + request.value().ended_at.value() + "&";
             }
             if (request.value().type) {
-                options += "&type=" + request.value().type.value();
+                options += "type=" + request.value().type.value() + "&";
             }
             if (request.value().after) {
-                options += "&after=" + request.value().after.value();
+                options += "after=" + request.value().after.value() + "&";
             }
         }
-        std::string url {TWITCH_API_BASE + "analytics/extensions" + (options.size() ? ("?" + options.substr(1, options.size())) : options)};
+        std::string url {TWITCH_API_BASE + "analytics/extensions" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};

@@ -315,31 +315,31 @@ namespace TwitchPP {
     VectorResponse<TwitchVideos> TwitchAPI::get_videos(VideosRequest& videos_request) {
         std::string options {"?"};
         for (std::string clip_id : videos_request.ids) {
-            options += (options == "?" ? "id=" : "&id=") + clip_id;
+            options += "id=" + clip_id + "&";
         }
         if (videos_request.user_id) {
-            options += (options == "?" ? "user_id=" : "&user_id=") + videos_request.user_id.value();
+            options += "user_id=" + videos_request.user_id.value() + "&";
         }
         if (videos_request.game_id) {
-            options += (options == "?" ? "game_id=" : "&game_id=") + videos_request.game_id.value();
+            options += "game_id=" + videos_request.game_id.value() + "&";
         }
         if (videos_request.first) {
-            options += "&first=" + std::to_string(videos_request.first.value());
+            options += "first=" + std::to_string(videos_request.first.value()) + "&";
         }
         if (videos_request.cursor) {
-            options += (videos_request.is_before ? "&before=" : "&after=") + videos_request.cursor.value();
+            options += (videos_request.is_before ? "before=" : "after=") + videos_request.cursor.value() + "&";
         }
         if (videos_request.language) {
-            options += "&language=" + videos_request.language.value();
+            options += "language=" + videos_request.language.value() + "&";
         }
         if (videos_request.period) {
-            options += "&period=" + videos_request.period.value();
+            options += "period=" + videos_request.period.value() + "&";
         }
         if (videos_request.sort) {
-            options += "&sort=" + videos_request.sort.value();
+            options += "sort=" + videos_request.sort.value() + "&";
         }
         if (videos_request.type) {
-            options += "&type=" + videos_request.type.value();
+            options += "type=" + videos_request.type.value() + "&";
         }
         std::string url {TWITCH_API_BASE + "videos" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
@@ -476,17 +476,17 @@ namespace TwitchPP {
     VectorResponse<TwitchStreamTag> TwitchAPI::get_all_stream_tags(const std::vector<std::string>& tag_ids,
                                                                    std::optional<size_t> first,
                                                                    std::optional<std::string> after) {
-        std::string options {""};
+        std::string options {"?"};
         for (std::string tag_id : tag_ids) {
-            options += "&tag_id=" + tag_id;
+            options += "tag_id=" + tag_id + "&";
         }
         if (first) {
-            options += "&first=" + std::to_string(first.value());
+            options += "first=" + std::to_string(first.value()) + "&";
         }
         if (after) {
-            options += "&after=" + after.value();
+            options += "after=" + after.value();
         }
-        std::string url {TWITCH_API_BASE + "tags/streams" + (options.size() ? ("?" + options.substr(1, options.size())) : options)};
+        std::string url {TWITCH_API_BASE + "tags/streams" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};

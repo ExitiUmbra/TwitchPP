@@ -154,7 +154,7 @@ namespace TwitchPP {
                                                                            std::string_view user_id);
             VectorResponse<TwitchStreamMarker> create_stream_marker(std::string_view user_id,
                                                                     std::optional<std::string_view> description = std::nullopt);
-            // TODO: replace everywhere is_after => is_before to make things more logical
+
             VectorResponse<TwitchVideosWithMarkers> get_stream_markers(std::string_view user_id,
                                                                        std::string_view video_id,
                                                                        std::optional<size_t> first = std::nullopt,
