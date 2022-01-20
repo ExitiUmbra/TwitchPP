@@ -35,6 +35,7 @@ namespace TwitchPP {
 
             res = curl_easy_perform(curl);
             curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+            // TODO: for some reason seg fault in wrong OAUTH
 
             curl_slist_free_all(chunk);
             curl_easy_cleanup(curl);
@@ -69,16 +70,28 @@ namespace TwitchPP {
         return url;
     }
 
+    size_t get_dqs(std::string_view elements, const size_t& starting_pos, const size_t& ending_pos) {
+        size_t dq_counter {0};
+        for (size_t i {starting_pos}; i <= ending_pos; ++i) {
+            if (elements.at(i) == '"') {
+                if (i > 0 && elements.at(i - 1) == '\\') {
+                    continue;
+                }
+                dq_counter++;
+            }
+        }
+        return dq_counter;
+    }
+
     std::string get_object_param(std::string_view param_name,
                                  std::string_view obj_string,
-                                 std::optional<std::string_view> fallback,
-                                 size_t tmp_first_pos,
-                                 size_t tmp_second_pos) {
+                                 std::optional<std::string_view> fallback) {
+        size_t tmp_first_pos {0};
+        size_t tmp_second_pos {std::string::npos};
         if (!obj_string.size()) {
             return std::string(fallback.value_or(""));
         }
         size_t tmp_start_pos {obj_string.find(param_name)};
-        tmp_second_pos = std::string::npos > tmp_second_pos ? tmp_second_pos : std::string::npos;
         if (tmp_start_pos != std::string::npos) {
             char opening_char {obj_string[tmp_start_pos + param_name.size() + 1]}, closing_char {0};
             try {
@@ -100,6 +113,8 @@ namespace TwitchPP {
                     } else if(checkpoint != std::string::npos && checkpoint < tmp_second_pos && obj_string[checkpoint - 1] != '\\') {
                         tmp_first_pos = tmp_second_pos + 1;
                         checkpoint = obj_string.find(opening_char, checkpoint + 1);
+                    } else if(get_dqs(obj_string, tmp_start_pos - 1, tmp_second_pos) % 2) {
+                        tmp_first_pos = tmp_second_pos + 1;
                     } else {
                         found = true;
                     }
@@ -135,6 +150,9 @@ namespace TwitchPP {
                 if (initial_string[t] == '{' || initial_string[t] == '[') {
                     start_count++;
                 } else {
+                    if (get_dqs(initial_string, starting_pos, t) % 2) {
+                        continue;
+                    }
                     end_count++;
                 }
             }
