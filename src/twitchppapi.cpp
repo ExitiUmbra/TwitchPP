@@ -107,51 +107,41 @@ namespace TwitchPP {
         return this->process_response<TwitchUser>(response);
     }
 
-    VectorResponse<TwitchEmote> TwitchAPI::get_global_emotes() {
+    VectorResponse<TwitchEmoteResponse> TwitchAPI::get_global_emotes() {
         std::string url {TWITCH_API_BASE + "chat/emotes/global"};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
-        return this->process_response<TwitchEmote>(response, "template");
+        VectorResponse<TwitchEmote> emotes = this->process_response<TwitchEmote>(response);
+        std::string emote_template = get_object_param("\"template\"", emotes.leftovers);
+        return {{TwitchEmoteResponse(emote_template, emotes.data)}, response.cursor, response.code, response.message};
     }
 
-    VectorResponse<TwitchChannelEmote> TwitchAPI::get_channel_emotes(std::string_view broadcaster_id) {
+    VectorResponse<TwitchChannelEmoteResponse> TwitchAPI::get_channel_emotes(std::string_view broadcaster_id) {
         std::string url {TWITCH_API_BASE + "chat/emotes?broadcaster_id=" + std::string(broadcaster_id)};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
-
-        auto [data_string, leftovers] = get_first_value(response.data.substr(1, response.data.size() - 1));
-        auto [cursor_string, _] = get_first_value(leftovers);
-        std::string cursor = get_object_param("\"cursor\"", cursor_string);
-        std::string additional_value = get_object_param("\"template\"", leftovers);
-        std::string message = !data_string.size() ? get_object_param("\"message\"", response.data) : "";
-
-        std::pair<std::string, std::string> cycle {"", data_string};
-        std::vector<TwitchChannelEmote> elements;
-        do {
-            cycle = get_first_value(cycle.second);
-            if (cycle.first != "") {
-                elements.push_back(TwitchChannelEmote(cycle.first, additional_value, broadcaster_id));
-            }
-        } while(cycle.second != "");
-
-        return {elements, cursor, response.code, message};
+        VectorResponse<TwitchChannelEmote> emotes = this->process_response<TwitchChannelEmote>(response);
+        std::string emote_template = get_object_param("\"template\"", emotes.leftovers);
+        return {{TwitchChannelEmoteResponse(emote_template, emotes.data)}, response.cursor, response.code, response.message};
     }
 
-    VectorResponse<TwitchChannelEmote> TwitchAPI::get_emote_sets(std::string_view emote_set_id) {
+    VectorResponse<TwitchChannelEmoteResponse> TwitchAPI::get_emote_sets(std::string_view emote_set_id) {
         std::string options {"?emote_set_id=" + std::string(emote_set_id)};
         std::string url {TWITCH_API_BASE + "chat/emotes/set" + options};
         Response<std::string> response = call_api(url, this->m_app_access_token, this->m_client_id);
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
-        return this->process_response<TwitchChannelEmote>(response, "template");
+        VectorResponse<TwitchChannelEmote> emotes = this->process_response<TwitchChannelEmote>(response);
+        std::string emote_template = get_object_param("\"template\"", emotes.leftovers);
+        return {{TwitchChannelEmoteResponse(emote_template, emotes.data)}, response.cursor, response.code, response.message};
     }
 
-    VectorResponse<TwitchChannelEmote> TwitchAPI::get_emote_sets(const std::vector<std::string>& emote_set_ids) {
+    VectorResponse<TwitchChannelEmoteResponse> TwitchAPI::get_emote_sets(const std::vector<std::string>& emote_set_ids) {
         std::string options {"?"};
         for (std::string_view element : emote_set_ids) {
             if (options != "?") {
@@ -164,7 +154,9 @@ namespace TwitchPP {
         if (!response.data.size()) {
             return {{}, "", response.code, "Bad request"};
         }
-        return this->process_response<TwitchChannelEmote>(response, "template");
+        VectorResponse<TwitchChannelEmote> emotes = this->process_response<TwitchChannelEmote>(response);
+        std::string emote_template = get_object_param("\"template\"", emotes.leftovers);
+        return {{TwitchChannelEmoteResponse(emote_template, emotes.data)}, response.cursor, response.code, response.message};
     }
 
     VectorResponse<TwitchChannelInformation> TwitchAPI::get_channel_information(std::string_view broadcaster_id) {

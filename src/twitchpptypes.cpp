@@ -13,7 +13,7 @@ namespace TwitchPP {
 
     std::string_view missing_permission::what() const { return "OAuth token has no permission: " + this->m_permission; }
 
-    TwitchEmote::TwitchEmote(const std::string& json, const std::string& emote_template) {
+    TwitchEmote::TwitchEmote(const std::string& json) {
         this->m_id = get_object_param("\"id\"", json);
         this->m_name = get_object_param("\"name\"", json);
         this->m_url_1x = get_object_param("\"url_1x\"", json);
@@ -22,7 +22,6 @@ namespace TwitchPP {
         this->m_format = json_to_vector(get_object_param("\"format\"", json));
         this->m_scale = json_to_vector(get_object_param("\"scale\"", json));
         this->m_theme_mode = json_to_vector(get_object_param("\"theme_mode\"", json));
-        this->m_template = emote_template;
     }
 
     TwitchEmote::TwitchEmote(const std::string& id,
@@ -32,8 +31,7 @@ namespace TwitchPP {
                              const std::string& url_4x,
                              const std::vector<std::string>& format,
                              const std::vector<std::string>& scale,
-                             const std::vector<std::string>& theme_mode,
-                             const std::string& emote_template)
+                             const std::vector<std::string>& theme_mode)
                              : m_id{id},
                                m_name{name},
                                m_url_1x{url_1x},
@@ -41,8 +39,7 @@ namespace TwitchPP {
                                m_url_4x{url_4x},
                                m_format{format},
                                m_scale{scale},
-                               m_theme_mode{theme_mode},
-                               m_template{emote_template} {
+                               m_theme_mode{theme_mode} {
     }
 
     std::string TwitchEmote::to_json() const {
@@ -56,7 +53,7 @@ namespace TwitchPP {
             + "\"format\":" + vector_to_json(this->m_format)
             + ",\"scale\":" + vector_to_json(this->m_scale)
             + ",\"theme_mode\":" + vector_to_json(this->m_theme_mode)
-            + ",\"template\":\"" + this->m_template + "\"}";
+            + "}";
         return json;
     }
 
@@ -68,12 +65,11 @@ namespace TwitchPP {
                                            const std::vector<std::string>& format,
                                            const std::vector<std::string>& scale,
                                            const std::vector<std::string>& theme_mode,
-                                           const std::string& emote_template,
                                            const std::string& emote_type,
                                            const std::string& emote_set_id,
                                            const std::string& tier,
                                            std::optional<std::string_view> owner_id)
-                                           : TwitchEmote{id, name, url_1x, url_2x, url_4x, format, scale, theme_mode, emote_template},
+                                           : TwitchEmote{id, name, url_1x, url_2x, url_4x, format, scale, theme_mode},
                                              m_emote_type{emote_type},
                                              m_emote_set_id{emote_set_id},
                                              m_tier{tier},
@@ -81,9 +77,8 @@ namespace TwitchPP {
     }
 
     TwitchChannelEmote::TwitchChannelEmote(const std::string& json,
-                                           const std::string& emote_template,
                                            std::optional<std::string_view> owner_id)
-                                           : TwitchEmote{json, emote_template} {
+                                           : TwitchEmote{json} {
         this->m_emote_type = get_object_param("\"emote_type\"", json);
         this->m_emote_set_id = get_object_param("\"emote_set_id\"", json);
         this->m_tier = get_object_param("\"tier\"", json);
@@ -105,8 +100,44 @@ namespace TwitchPP {
             + "\"format\":" + vector_to_json(this->m_format)
             + ",\"scale\":" + vector_to_json(this->m_scale)
             + ",\"theme_mode\":" + vector_to_json(this->m_theme_mode)
-            + ",\"template\":\"" + this->m_template + "\"}";
+            + "}";
         return json;
+    }
+
+    TwitchEmoteResponse::TwitchEmoteResponse(const std::string& emote_template,
+                                             const std::vector<TwitchEmote>& emotes)
+                                             : m_template{emote_template},
+                                               m_emotes{emotes} {
+    }
+
+    std::string TwitchEmoteResponse::to_json() const {
+        std::string json = "{\"template\":\"" + this->m_template
+            + "\",\"emotes\":[";
+        for (size_t i {0}; i < this->m_emotes.size(); ++i) {
+            json += this->m_emotes.at(i).to_json();
+            if (i + 1 < this->m_emotes.size()) {
+                json += ',';
+            }
+        }
+        return json + "]}";
+    }
+
+    TwitchChannelEmoteResponse::TwitchChannelEmoteResponse(const std::string& emote_template,
+                                                           const std::vector<TwitchChannelEmote>& emotes)
+                                                           : m_template{emote_template},
+                                                             m_emotes{emotes} {
+    }
+
+    std::string TwitchChannelEmoteResponse::to_json() const {
+        std::string json = "{\"template\":\"" + this->m_template
+            + "\",\"emotes\":[";
+        for (size_t i {0}; i < this->m_emotes.size(); ++i) {
+            json += this->m_emotes.at(i).to_json();
+            if (i + 1 < this->m_emotes.size()) {
+                json += ',';
+            }
+        }
+        return json + "]}";
     }
 
     TwitchChannelEditor::TwitchChannelEditor(const std::string& json) {
@@ -3157,7 +3188,7 @@ namespace TwitchPP {
     }
 
     std::string TwitchExtensionSecrets::to_json() const {
-        std::string json = "{\"format_version\":\"" + std::to_string(this->m_format_version)
+        std::string json = "{\"format_version\":" + std::to_string(this->m_format_version)
             + ",\"secrets\":[";
         for (size_t i {0}; i < this->m_secrets.size(); ++i) {
             json += this->m_secrets.at(i).to_json();

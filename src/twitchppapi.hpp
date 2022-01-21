@@ -31,27 +31,6 @@ namespace TwitchPP {
                 std::vector<T> elements = this->string_to_vector_objects<T>(data_string);
                 return {elements, cursor, response.code, message, response.headers, leftovers};
             }
-
-            template<typename T>
-            VectorResponse<T> process_response(Response<std::string>& response,
-                                               std::string_view additional_field) {
-                auto [data_string, leftovers] = get_first_value(response.data.substr(1, response.data.size() - 1));
-                auto [cursor_string, _] = get_first_value(leftovers);
-                std::string cursor = get_object_param("\"cursor\"", cursor_string);
-                std::string additional_value = get_object_param(std::string("\"") + additional_field.data() + "\"", leftovers);
-                std::string message = !data_string.size() ? get_object_param("\"message\"", response.data) : "";
-
-                std::pair<std::string, std::string> cycle {"", data_string};
-                std::vector<T> elements;
-                do {
-                    cycle = get_first_value(cycle.second);
-                    if (cycle.first != "") {
-                        elements.push_back(T(cycle.first, additional_value));
-                    }
-                } while(cycle.second != "");
-
-                return {elements, cursor, response.code, message};
-            }
         public:
             TwitchAPI(const std::string& app_access_token, const std::string& client_id);
             VectorResponse<TwitchGame> search_categories(std::string_view query,
@@ -68,12 +47,12 @@ namespace TwitchPP {
                                                  std::optional<bool> search_by_login = false);
             VectorResponse<TwitchUser> get_users(const std::vector<std::string>& game_query,
                                                  const bool& search_by_login = false);
-            VectorResponse<TwitchEmote> get_global_emotes();
-            VectorResponse<TwitchChannelEmote> get_channel_emotes(std::string_view broadcaster_id);
+            VectorResponse<TwitchEmoteResponse> get_global_emotes();
+            VectorResponse<TwitchChannelEmoteResponse> get_channel_emotes(std::string_view broadcaster_id);
             VectorResponse<TwitchBadgeSet> get_global_chat_badges();
             VectorResponse<TwitchBadgeSet> get_channel_chat_badges(std::string_view broadcaster_id);
-            VectorResponse<TwitchChannelEmote> get_emote_sets(std::string_view emote_set_id);
-            VectorResponse<TwitchChannelEmote> get_emote_sets(const std::vector<std::string>& emote_set_ids);
+            VectorResponse<TwitchChannelEmoteResponse> get_emote_sets(std::string_view emote_set_id);
+            VectorResponse<TwitchChannelEmoteResponse> get_emote_sets(const std::vector<std::string>& emote_set_ids);
             VectorResponse<TwitchChannelInformation> get_channel_information(std::string_view broadcaster_id);
             VectorResponse<TwitchChatSettings> get_chat_settings(std::string_view broadcaster_id);
             VectorResponse<TwitchChannel> search_channels(std::string_view query,
