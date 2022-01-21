@@ -35,7 +35,6 @@ namespace TwitchPP {
 
             res = curl_easy_perform(curl);
             curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
-            // TODO: for some reason seg fault in wrong OAUTH
 
             curl_slist_free_all(chunk);
             curl_easy_cleanup(curl);
