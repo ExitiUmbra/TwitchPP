@@ -777,10 +777,10 @@ namespace TwitchPP {
         size_t remaining {};
         auto [data_string, _] = get_first_value(response.data.substr(1, response.data.size() - 1));
         for (std::string header : response.headers) {
-            if (header.starts_with("ratelimit-limit:")) {
+            if (header.find("ratelimit-limit:") != std::string::npos) {
                 limit = std::stoul(header.substr(17, header.size()));
             }
-            if (header.starts_with("ratelimit-remaining:")) {
+            if (header.find("ratelimit-remaining:") != std::string::npos) {
                 remaining = std::stoul(header.substr(21, header.size()));
             }
         }
