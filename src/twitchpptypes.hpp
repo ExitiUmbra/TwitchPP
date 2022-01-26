@@ -1701,11 +1701,10 @@ namespace TwitchPP {
             std::string m_user_id {""};
 
             TwitchCondition(const std::string& json);
-            // DOCS: Describe possible id_types in doc and is_reward
             TwitchCondition(const std::string& id,
                             std::string_view id_type);
             TwitchCondition(const std::string& broadcaster_user_id,
-                            const std::string& seconcary_parameter,
+                            const std::string& secondary_parameter,
                             const bool& is_reward);
             TwitchCondition(const std::string& organization_id,
                             const std::string& category_id,

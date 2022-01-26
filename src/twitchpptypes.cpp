@@ -2825,6 +2825,7 @@ namespace TwitchPP {
         this->m_user_id = get_object_param("\"user_id\"", json);
     }
 
+    /* Condition ID types required for this constructor, check constants in header file */
     TwitchCondition::TwitchCondition(const std::string& id,
                                      std::string_view id_type) {
         if (id_type == CONDITION_BROADCASTER) {
@@ -2839,14 +2840,14 @@ namespace TwitchPP {
     }
 
     TwitchCondition::TwitchCondition(const std::string& broadcaster_user_id,
-                                     const std::string& seconcary_parameter,
+                                     const std::string& secondary_parameter,
                                      const bool& is_reward) {
         if (is_reward) {
             this->m_broadcaster_user_id = broadcaster_user_id;
-            this->m_reward_id = seconcary_parameter;
+            this->m_reward_id = secondary_parameter;
         } else {
             this->m_from_broadcaster_user_id = broadcaster_user_id;
-            this->m_to_broadcaster_user_id = seconcary_parameter;
+            this->m_to_broadcaster_user_id = secondary_parameter;
         }
     }
 
